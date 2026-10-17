@@ -478,6 +478,8 @@ class Retriever(Protocol):
 
 Ассистент зависит только от `Retriever`. Если поиск нужно поменять (другой реранкер, другой индекс), меняется только модуль `search`.
 
+> Реализация M2 (D-053): одна функция `search.retriever.search(db, providers, settings, handover_id, query) -> SearchResult` без протокола — реализация пока одна. Протокол выделяется, когда появится вторая. Ассистент по-прежнему знает только эту функцию и `SearchResult`.
+
 ---
 
 ## 6. Диаграммы последовательности
@@ -546,7 +548,8 @@ worker ─► handler extract_cards
    1. retriever.search(q, scope=handover)
         вектор top-20 ┐
         FTS   top-20  ┴─► rrf(k=60) → top-8 чанков → ≤ 5 карточек               [domain]
-   2. should_refuse(best_cosine, fts_hits, threshold) ── да ──┐                   [domain]
+   2. refuse_before_llm(best_cosine, text_coverage, пороги) ── да ──┐             [domain]
+      (отказ, если и косинус, и доля слов вопроса в одном чанке ниже порогов, D-047)
    3. LLM answer.md → текст | NO_ANSWER ────────── NO_ANSWER ─┤
    4. split_claims(текст) → LLM verify_claims (пакетом ≤ 8)                       [domain]
    5. assemble(claims, supported) → итоговый ответ | пусто ── пусто ──┤           [domain]
@@ -701,22 +704,22 @@ successor/
 │   │   │   │   └── models, schemas, repo, service, router, handlers
 │   │   │   ├── search/
 │   │   │   │   ├── domain/          # chunking.py, rrf.py
-│   │   │   │   ├── retriever.py     # Vector/FullText/Hybrid
+│   │   │   │   ├── retriever.py     # гибридный поиск: вектор + полнотекст + RRF (D-053)
 │   │   │   │   ├── indexer.py
 │   │   │   │   └── models, repo, handlers
 │   │   │   ├── assistant/
 │   │   │   │   ├── domain/          # claims.py (разбиение, сборка), refusal.py
-│   │   │   │   ├── answerer.py
-│   │   │   │   ├── verifier.py
-│   │   │   │   └── models, schemas, repo, service, router, handlers
-│   │   │   ├── gaps/                # models, schemas, repo, service, router, handlers, sources.py
+│   │   │   │   ├── pipeline.py      # поиск → отказ / ответ → проверка утверждений (без записи в БД)
+│   │   │   │   └── models, schemas, service, router, events
+│   │   │   ├── gaps/                # models, schemas, service, router, handlers (+ SourceResolver), events
 │   │   │   ├── analytics/
 │   │   │   │   ├── domain/          # risk.py, coverage.py (по подтверждённым карточкам)
 │   │   │   │   ├── metrics.py       # SQL-агрегаты, CSV
 │   │   │   │   └── models, schemas, router, handlers
 │   │   │   └── audit/               # models, service, router, handlers
 │   │   └── prompts/                 # interviewer_system.md, analyze_turn.md, extract_cards.md,
-│   │                                # segment_recording.md, answer.md, verify_claims.md, consent_v1.md
+│   │                                # segment_recording.md, answer.md, verify_claims.md,
+│   │                                # eval_correctness.md, consent_v1.md
 │   └── tests/
 │       ├── conftest.py              # fake-провайдеры, БД, фабрики
 │       ├── unit/                    # повторяет modules/*/domain — без БД и сети
@@ -736,8 +739,8 @@ successor/
 │
 ├── eval/
 │   ├── datasets/                    # demo_qa.jsonl, demo_extraction_gold.json
-│   ├── run_eval.py                  # вызывает сервисы app напрямую (без HTTP), --provider fake|real
-│   ├── judge.py
+│   ├── run_eval.py                  # вызывает пайплайн ассистента напрямую (без HTTP), --provider fake|real;
+│   │                                # судья — промпт eval_correctness.md
 │   └── reports/
 │
 ├── seed/
