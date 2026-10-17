@@ -388,12 +388,14 @@ class SourceResolver(Protocol):    # регистрирует каждый мо�
 
 ```python
 class DataEraser(Protocol):        # регистрирует каждый модуль, который хранит данные сотрудника
-    async def erase(self, db: AsyncSession, *, user_id: UUID, handover_id: UUID) -> list[SourceRef]: ...
+    async def describe(self, db, *, user_id: UUID, handover_id: UUID) -> dict[str, int]: ...  # «Мои данные»
+    async def erase(self, db, settings, *, user_id: UUID, handover_id: UUID) -> Erased: ...
+    # Erased: counts, sources: list[ErasedSource(source_type: str, source_id)], files
 
-# privacy.service.erase_my_data():
-#   refs = [ref for e in registry for ref in await e.erase(...)]
-#   await knowledge.on_sources_deleted(db, refs)   # архивирует карточки без источников
-#   audit(...)
+# privacy.erasure.erase():
+#   для каждого eraser → Erased; затем оставшиеся файлы сотрудника в передаче
+#   bus.publish(SourcesErased(sources))   # privacy ниже knowledge, поэтому событие, а не вызов (D-074)
+# knowledge.handlers.on_sources_erased: удаляет CardSource, карточки без источников → archived → CardArchived
 ```
 
 ### 5.3 События и задачи
@@ -587,10 +589,11 @@ worker:
        interview  → удалить сообщения, аудио-assets (файлы физически)  → SourceRef[]
        recordings → удалить записи, сегменты, шаги, видео и скриншоты  → SourceRef[]
        gaps       → удалить тексты ответов эксперта                    → SourceRef[]
-    knowledge.on_sources_deleted(refs):
+    остальные файлы сотрудника в передаче → удалить с диска (assets.deleted_at)
+    событие SourcesErased(refs) → knowledge.on_sources_erased (в той же транзакции):
        удалить CardSource по refs
        карточки без источников → archived(source_deleted) → CardArchived → unindex_card
-    audit: DataErased
+    audit: data.erased
 ```
 
 ---
