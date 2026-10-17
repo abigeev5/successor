@@ -1,6 +1,16 @@
-import { CheckCircle2, Circle, CircleDot, MinusCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Circle,
+  CircleAlert,
+  CircleDot,
+  MinusCircle,
+  ShieldCheck,
+} from "lucide-react";
 
+import type { AspectCell, RiskLevel } from "@/api/client";
 import { cn } from "@/lib/cn";
+import { RISK_LEVEL_LABELS } from "@/lib/labels";
 
 /** Aspect coverage: always icon + text, not only color (SPEC 9.2). */
 export function AspectBadge({
@@ -47,3 +57,49 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
     </div>
   );
 }
+
+const RISK_VIEW: Record<RiskLevel, { icon: typeof Circle; className: string }> = {
+  high: { icon: AlertTriangle, className: "text-danger" },
+  medium: { icon: CircleAlert, className: "text-amber-700" },
+  low: { icon: ShieldCheck, className: "text-emerald-700" },
+};
+
+/** Risk level: icon + word (SPEC 7.9, 9.2). */
+export function RiskBadge({ level }: { level: RiskLevel }) {
+  const { icon: Icon, className } = RISK_VIEW[level];
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 text-sm font-medium", className)}>
+      <Icon className="size-4 shrink-0" aria-hidden />
+      {RISK_LEVEL_LABELS[level]}
+    </span>
+  );
+}
+
+const CELL_VIEW: Record<
+  AspectCell["status"],
+  { icon: typeof Circle; text: string; className: string }
+> = {
+  covered: {
+    icon: CheckCircle2,
+    text: "есть подтверждённая карточка",
+    className: "text-emerald-700",
+  },
+  partial: { icon: CircleDot, text: "рассказано, карточки пока нет", className: "text-amber-700" },
+  missing: { icon: Circle, text: "нет", className: "text-ink-muted/60" },
+  not_applicable: { icon: MinusCircle, text: "не относится", className: "text-ink-muted" },
+};
+
+/** A cell of the «processes × aspects» matrix; the text is for screen readers and the tooltip. */
+export function AspectCellIcon({ cell }: { cell: AspectCell }) {
+  const { icon: Icon, text, className } = CELL_VIEW[cell.status];
+  return (
+    <span title={`${cell.label}: ${text}`} className="inline-flex">
+      <Icon className={cn("size-4", className)} aria-hidden />
+      <span className="sr-only">
+        {cell.label}: {text}
+      </span>
+    </span>
+  );
+}
+
+export const CELL_LEGEND = Object.entries(CELL_VIEW).map(([status, view]) => ({ status, ...view }));

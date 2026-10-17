@@ -8,10 +8,12 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useCards } from "@/api/cards";
+import { useProgress } from "@/api/dashboard";
 import { useHandover, useMyConsent } from "@/api/handovers";
 import { useCoverage, useSessions, useStartInterview } from "@/api/interviews";
 import { useRecordings } from "@/api/recordings";
 import { ErrorNote } from "@/components/ErrorNote";
+import { ProgressFacts } from "@/components/ProgressFacts";
 import { FullPageSpinner } from "@/components/Spinner";
 import { AspectBadge, ProgressBar } from "@/components/StatusBadges";
 import { Button } from "@/components/ui/button";
@@ -43,6 +45,7 @@ export function HandoverPage() {
   const drafts = useCards(role && role !== "successor" ? id : undefined, "draft");
   const canSeeRecordings = canSeeSessions || role === "manager";
   const recordings = useRecordings(id, canSeeRecordings);
+  const progress = useProgress(id, canSeeRecordings);
   const start = useStartInterview();
   const navigate = useNavigate();
 
@@ -150,6 +153,14 @@ export function HandoverPage() {
         </div>
 
         <div className="space-y-6">
+          {progress.data && (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold">Прогресс</h2>
+              <Card className="p-4 text-sm">
+                <ProgressFacts progress={progress.data} />
+              </Card>
+            </div>
+          )}
           {canSeeSessions && (
             <div className="space-y-3">
               <h2 className="text-lg font-semibold">Сессии интервью</h2>

@@ -29,6 +29,7 @@ const READY = {
   duration_ms: 47_000,
   created_at: "2026-10-17T00:00:00Z",
   video_asset_id: "v1",
+  video_available: true,
   steps: [
     STEP,
     {

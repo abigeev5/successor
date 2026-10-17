@@ -338,6 +338,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/privacy/my-data": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** My Data */
+    get: operations["my_data_api_privacy_my_data_get"];
+    put?: never;
+    post?: never;
+    /** Erase My Data */
+    delete: operations["erase_my_data_api_privacy_my_data_delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/interviews": {
     parameters: {
       query?: never;
@@ -765,7 +783,8 @@ export interface paths {
     get: operations["get_recording_api_recordings__recording_id__get"];
     put?: never;
     post?: never;
-    delete?: never;
+    /** Delete Recording */
+    delete: operations["delete_recording_api_recordings__recording_id__delete"];
     options?: never;
     head?: never;
     patch?: never;
@@ -797,6 +816,94 @@ export interface paths {
     };
     /** Get Asset */
     get: operations["get_asset_api_assets__asset_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/dashboard/risk": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Risk */
+    get: operations["risk_api_dashboard_risk_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/handovers/{handover_id}/progress": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Progress */
+    get: operations["progress_api_handovers__handover_id__progress_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/dashboard/metrics": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Metrics */
+    get: operations["metrics_api_dashboard_metrics_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/dashboard/metrics.csv": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Metrics Csv
+     * @description For the financial model and the jury report: «Показатель;Значение», UTF-8 with BOM for Excel.
+     */
+    get: operations["metrics_csv_api_dashboard_metrics_csv_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/audit": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Audit Log */
+    get: operations["audit_log_api_audit_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -866,6 +973,18 @@ export interface components {
       /** Question */
       question: string;
     };
+    /** AspectCellOut */
+    AspectCellOut: {
+      /** Key */
+      key: string;
+      /** Label */
+      label: string;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "covered" | "partial" | "missing" | "not_applicable";
+    };
     /** AspectOut */
     AspectOut: {
       /** Key */
@@ -888,6 +1007,33 @@ export interface components {
       text: string;
       /** Duration Ms */
       duration_ms: number | null;
+    };
+    /** AuditEntryOut */
+    AuditEntryOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * At
+       * Format: date-time
+       */
+      at: string;
+      /** User Id */
+      user_id: string | null;
+      /** User Name */
+      user_name: string | null;
+      /** Action */
+      action: string;
+      /** Entity */
+      entity: string;
+      /** Entity Id */
+      entity_id: string | null;
+      /** Meta */
+      meta: {
+        [key: string]: unknown;
+      };
     };
     /** Body_audio_api_gaps__gap_id__audio_post */
     Body_audio_api_gaps__gap_id__audio_post: {
@@ -1121,6 +1267,17 @@ export interface components {
       /** Hash */
       hash: string;
     };
+    /** ErasedOut */
+    ErasedOut: {
+      /** Counts */
+      counts: {
+        [key: string]: number;
+      };
+      /** Files */
+      files: number;
+      /** Sources */
+      sources: number;
+    };
     /** FeedbackIn */
     FeedbackIn: {
       /** Helpful */
@@ -1247,6 +1404,38 @@ export interface components {
       created_at: string;
       my_role?: components["schemas"]["HandoverRole"] | null;
     };
+    /** HandoverProgressOut */
+    HandoverProgressOut: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Deadline */
+      deadline: string | null;
+      /** Days Left */
+      days_left: number | null;
+      /** Interview Sessions */
+      interview_sessions: number;
+      /** Interview Minutes */
+      interview_minutes: number;
+      /** Recordings */
+      recordings: number;
+      /** Recording Minutes */
+      recording_minutes: number;
+      /** Review Minutes */
+      review_minutes: number;
+      /** Cards Draft */
+      cards_draft: number;
+      /** Cards Approved */
+      cards_approved: number;
+      /** Cards Rejected */
+      cards_rejected: number;
+      /** Open Gaps */
+      open_gaps: number;
+      /** Processes */
+      processes: components["schemas"]["ProcessRiskOut"][];
+    };
     /**
      * HandoverReason
      * @enum {string}
@@ -1366,6 +1555,104 @@ export interface components {
       /** Version */
       version: string;
     };
+    /**
+     * MetricsOut
+     * @description Product metrics for a period (SPEC 7.10). Shares are 0..1 or null when there is nothing to divide.
+     */
+    MetricsOut: {
+      /** Handover Id */
+      handover_id: string | null;
+      /**
+       * Org Unit Id
+       * Format: uuid
+       */
+      org_unit_id: string;
+      /** Date From */
+      date_from: string | null;
+      /** Date To */
+      date_to: string | null;
+      /** Expert Minutes */
+      expert_minutes: number;
+      /** Interview Minutes */
+      interview_minutes: number;
+      /** Recording Minutes */
+      recording_minutes: number;
+      /** Review Minutes */
+      review_minutes: number;
+      /** Interview Turns */
+      interview_turns: number;
+      /** Recordings Processed */
+      recordings_processed: number;
+      /** Cards Generated */
+      cards_generated: number;
+      /** Cards Dropped No Evidence */
+      cards_dropped_no_evidence: number;
+      /** Cards Approved */
+      cards_approved: number;
+      /** Cards Approved Edited */
+      cards_approved_edited: number;
+      /** Cards Rejected */
+      cards_rejected: number;
+      /** Approved Share */
+      approved_share: number | null;
+      /** Questions */
+      questions: number;
+      /** Answered Share */
+      answered_share: number | null;
+      /** Partial Share */
+      partial_share: number | null;
+      /** Refused Share */
+      refused_share: number | null;
+      /** Helpful Share */
+      helpful_share: number | null;
+      /** Feedback Count */
+      feedback_count: number;
+      /** Answer Latency P95 Ms */
+      answer_latency_p95_ms: number | null;
+      /** Gaps Created */
+      gaps_created: number;
+      /** Gaps Answered */
+      gaps_answered: number;
+      /** Gaps Open Now */
+      gaps_open_now: number;
+      /** Key Processes Coverage */
+      key_processes_coverage: number | null;
+      /** Top Open Gaps */
+      top_open_gaps: components["schemas"]["OpenGapOut"][];
+    };
+    /** MyDataOut */
+    MyDataOut: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      consent: components["schemas"]["ConsentOut"] | null;
+      /** Counts */
+      counts: {
+        [key: string]: number;
+      };
+    };
+    /** OpenGapOut */
+    OpenGapOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Question */
+      question: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
     /** OrgUnitCreate */
     OrgUnitCreate: {
       /** Name */
@@ -1469,6 +1756,33 @@ export interface components {
        */
       holders: components["schemas"]["HolderOut"][];
     };
+    /** ProcessRiskOut */
+    ProcessRiskOut: {
+      /**
+       * Process Id
+       * Format: uuid
+       */
+      process_id: string;
+      /** Name */
+      name: string;
+      /** Criticality */
+      criticality: number;
+      /** Holders */
+      holders: components["schemas"]["HolderOut"][];
+      /** Coverage */
+      coverage: number;
+      /** Open Gaps */
+      open_gaps: number;
+      /** Deadline */
+      deadline: string | null;
+      /** Days Left */
+      days_left: number | null;
+      /** Risk */
+      risk: number;
+      level: components["schemas"]["RiskLevel"];
+      /** Aspects */
+      aspects: components["schemas"]["AspectCellOut"][];
+    };
     /** ProcessUpdate */
     ProcessUpdate: {
       /** Name */
@@ -1539,6 +1853,8 @@ export interface components {
        * Format: uuid
        */
       video_asset_id: string;
+      /** Video Available */
+      video_available: boolean;
       /** Steps */
       steps: components["schemas"]["StepOut"][];
       /** Card Id */
@@ -1566,6 +1882,27 @@ export interface components {
        * @default 0
        */
       review_seconds: number;
+    };
+    /**
+     * RiskLevel
+     * @enum {string}
+     */
+    RiskLevel: "high" | "medium" | "low";
+    /** RiskMapOut */
+    RiskMapOut: {
+      /**
+       * Org Unit Id
+       * Format: uuid
+       */
+      org_unit_id: string;
+      /** Org Unit Name */
+      org_unit_name: string;
+      /** High Threshold */
+      high_threshold: number;
+      /** Medium Threshold */
+      medium_threshold: number;
+      /** Processes */
+      processes: components["schemas"]["ProcessRiskOut"][];
     };
     /** SessionBrief */
     SessionBrief: {
@@ -2472,6 +2809,68 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["ConsentOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  my_data_api_privacy_my_data_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MyDataOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  erase_my_data_api_privacy_my_data_delete: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErasedOut"];
         };
       };
       /** @description Validation Error */
@@ -3473,6 +3872,35 @@ export interface operations {
       };
     };
   };
+  delete_recording_api_recordings__recording_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        recording_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   retry_api_recordings__recording_id__retry_post: {
     parameters: {
       query?: never;
@@ -3521,6 +3949,167 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  risk_api_dashboard_risk_get: {
+    parameters: {
+      query?: {
+        org_unit_id?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RiskMapOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  progress_api_handovers__handover_id__progress_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        handover_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HandoverProgressOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  metrics_api_dashboard_metrics_get: {
+    parameters: {
+      query?: {
+        handover_id?: string | null;
+        org_unit_id?: string | null;
+        from?: string | null;
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MetricsOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  metrics_csv_api_dashboard_metrics_csv_get: {
+    parameters: {
+      query?: {
+        handover_id?: string | null;
+        org_unit_id?: string | null;
+        from?: string | null;
+        to?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  audit_log_api_audit_get: {
+    parameters: {
+      query?: {
+        entity?: string | null;
+        entity_id?: string | null;
+        limit?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuditEntryOut"][];
+        };
       };
       /** @description Validation Error */
       422: {

@@ -50,13 +50,19 @@ export function RecordingPage() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <div className="space-y-3 lg:sticky lg:top-4 lg:self-start">
-          <video
-            ref={player}
-            src={`/api/assets/${r.video_asset_id}`}
-            controls
-            preload="metadata"
-            className="w-full rounded-lg bg-black"
-          />
+          {r.video_available ? (
+            <video
+              ref={player}
+              src={`/api/assets/${r.video_asset_id}`}
+              controls
+              preload="metadata"
+              className="w-full rounded-lg bg-black"
+            />
+          ) : (
+            <p className="rounded-lg bg-surface p-6 text-sm text-ink-muted">
+              Видео удалено по сроку хранения. Шаги и скриншоты остались.
+            </p>
+          )}
           {r.card_id && (
             <p className="text-sm">
               {r.card_status === "draft" ? (

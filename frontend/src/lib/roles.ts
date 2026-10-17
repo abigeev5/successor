@@ -17,6 +17,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
     { to: "/gaps", label: "Пробелы" },
     { to: "/knowledge", label: "База знаний" },
     { to: "/assistant", label: "Ассистент" },
+    { to: "/audit", label: "Журнал" },
   ],
   expert: [
     { to: "/handovers", label: "Передачи дел" },
@@ -31,6 +32,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
   ],
   admin: [
     { to: "/handovers", label: "Передачи дел" },
+    { to: "/audit", label: "Журнал" },
     { to: "/admin", label: "Администрирование" },
   ],
 };

@@ -5,13 +5,16 @@ import { useMe } from "@/api/auth";
 import type { User, UserRole } from "@/api/client";
 import { FullPageSpinner } from "@/components/Spinner";
 import { AssistantPage } from "@/features/assistant/AssistantPage";
+import { AuditPage } from "@/features/audit/AuditPage";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { ConsentPage } from "@/features/consent/ConsentPage";
+import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { GapsPage } from "@/features/gaps/GapsPage";
 import { HandoverPage } from "@/features/handovers/HandoverPage";
 import { HandoversPage } from "@/features/handovers/HandoversPage";
 import { InterviewPage } from "@/features/interview/InterviewPage";
 import { KnowledgePage } from "@/features/knowledge/KnowledgePage";
+import { PrivacyPage } from "@/features/privacy/PrivacyPage";
 import { NewRecordingPage } from "@/features/recordings/NewRecordingPage";
 import { RecordingPage } from "@/features/recordings/RecordingPage";
 import { ReviewPage } from "@/features/review/ReviewPage";
@@ -34,9 +37,10 @@ const PAGES: { path: string; roles: UserRole[]; element: ReactNode }[] = [
   { path: "assistant", roles: ["successor", "manager"], element: <AssistantPage /> },
   { path: "knowledge", roles: ALL, element: <KnowledgePage /> },
   { path: "gaps", roles: ["manager", "expert", "admin"], element: <GapsPage /> },
-  // Placeholders until their milestones (docs/plan.md).
-  { path: "dashboard", roles: ["manager"], element: <SectionPage section="dashboard" /> },
-  { path: "privacy", roles: ["expert"], element: <SectionPage section="privacy" /> },
+  { path: "dashboard", roles: ["manager"], element: <DashboardPage /> },
+  { path: "privacy", roles: ["expert"], element: <PrivacyPage /> },
+  { path: "audit", roles: ["manager", "admin"], element: <AuditPage /> },
+  // Placeholder until its milestone (docs/plan.md).
   { path: "admin", roles: ["admin"], element: <SectionPage section="admin" /> },
 ];
 

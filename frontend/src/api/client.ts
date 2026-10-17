@@ -37,6 +37,15 @@ export type RecordingStatus = Schemas["RecordingStatus"];
 export type RecordingStage = Schemas["RecordingStage"];
 export type RecordingStep = Schemas["StepOut"];
 export type ConsentText = Schemas["ConsentTextOut"];
+export type RiskMap = Schemas["RiskMapOut"];
+export type ProcessRisk = Schemas["ProcessRiskOut"];
+export type RiskLevel = Schemas["RiskLevel"];
+export type AspectCell = Schemas["AspectCellOut"];
+export type HandoverProgress = Schemas["HandoverProgressOut"];
+export type Metrics = Schemas["MetricsOut"];
+export type AuditEntry = Schemas["AuditEntryOut"];
+export type MyData = Schemas["MyDataOut"];
+export type Erased = Schemas["ErasedOut"];
 
 /**
  * Typed API client. Same origin: nginx (prod) or the Vite proxy (dev) forward /api to the backend.

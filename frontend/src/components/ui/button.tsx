@@ -2,12 +2,13 @@ import type { ButtonHTMLAttributes } from "react";
 
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 const VARIANTS: Record<Variant, string> = {
   primary: "bg-primary text-white hover:bg-primary-dark disabled:bg-primary/50",
   secondary: "bg-surface text-ink hover:bg-primary-light disabled:text-ink-muted",
   ghost: "text-ink-muted hover:bg-surface hover:text-ink",
+  danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/50",
 };
 
 export function Button({

@@ -6,6 +6,7 @@ import type {
   ProcessFrequency,
   RecordingStage,
   RecordingStatus,
+  RiskLevel,
   Verification,
 } from "@/api/client";
 
@@ -110,4 +111,52 @@ export const RECORDING_STAGE_LABELS: Record<RecordingStage, string> = {
 export function timecode(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+export const RISK_LEVEL_LABELS: Record<RiskLevel, string> = {
+  high: "Высокий",
+  medium: "Средний",
+  low: "Низкий",
+};
+
+/** Audit actions (SPEC 12) in plain words. Unknown actions are shown as is. */
+export const AUDIT_ACTION_LABELS: Record<string, string> = {
+  "auth.login": "Вход",
+  "auth.login_failed": "Неудачный вход",
+  "user.created": "Создан пользователь",
+  "user.updated": "Изменён пользователь",
+  "org_unit.created": "Создано подразделение",
+  "process.created": "Создан процесс",
+  "process.updated": "Изменён процесс",
+  "handover.created": "Создана передача дел",
+  "handover.updated": "Изменена передача дел",
+  "consent.accepted": "Принято согласие",
+  "consent.revoked": "Отозвано согласие",
+  "card.created": "Карточка создана вручную",
+  "card.edited": "Карточка исправлена",
+  "card.approved": "Карточка подтверждена",
+  "card.rejected": "Карточка отклонена",
+  "card.merged": "Карточки объединены",
+  "recording.uploaded": "Загружена запись экрана",
+  "recording.viewed": "Просмотр записи экрана",
+  "recording.deleted": "Удалена запись экрана",
+  "gap.answered": "Ответ на пробел",
+  "gap.dismissed": "Пробел закрыт",
+  "gap.reassigned": "Пробел переназначен",
+  "data.erased": "Удалены данные сотрудника",
+  "media.purged": "Удалены медиа по сроку хранения",
+};
+
+/** What is stored about an expert (the «Мои данные» page). */
+export const MY_DATA_LABELS: Record<string, string> = {
+  interview_messages: "Сообщения интервью",
+  recordings: "Записи экрана",
+  gap_answers: "Ответы на вопросы преемника",
+  files: "Файлы (голос, видео, скриншоты)",
+};
+
+/** 1 572 864 → «1,5 МБ». */
+export function formatBytes(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} КБ`;
+  return `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} МБ`;
 }

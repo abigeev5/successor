@@ -1,19 +1,9 @@
-import { LayoutDashboard, Settings, ShieldCheck, type LucideIcon } from "lucide-react";
+import { Settings, type LucideIcon } from "lucide-react";
 
 import { EmptyState } from "@/components/EmptyState";
 
 /** Placeholder sections of M0. Each one is replaced by a real page in its milestone (docs/plan.md). */
 export const SECTIONS: Record<string, { title: string; icon: LucideIcon; text: string }> = {
-  dashboard: {
-    title: "Панель руководителя",
-    icon: LayoutDashboard,
-    text: "Здесь будет карта рисков: какие процессы держатся на одном человеке и сколько знаний уже сохранено.",
-  },
-  privacy: {
-    title: "Мои данные",
-    icon: ShieldCheck,
-    text: "Здесь будут ваши согласия и записи. Любые свои данные можно будет удалить.",
-  },
   admin: {
     title: "Администрирование",
     icon: Settings,
