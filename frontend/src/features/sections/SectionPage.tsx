@@ -1,7 +1,5 @@
 import {
   BookOpen,
-  ClipboardCheck,
-  FolderKanban,
   LayoutDashboard,
   MessageCircleQuestion,
   MessagesSquare,
@@ -18,16 +16,6 @@ export const SECTIONS: Record<string, { title: string; icon: LucideIcon; text: s
     title: "Панель руководителя",
     icon: LayoutDashboard,
     text: "Здесь будет карта рисков: какие процессы держатся на одном человеке и сколько знаний уже сохранено.",
-  },
-  handovers: {
-    title: "Передачи дел",
-    icon: FolderKanban,
-    text: "Передач дел пока нет. Руководитель создаёт передачу: эксперт, преемник, процессы и срок.",
-  },
-  review: {
-    title: "Проверка карточек",
-    icon: ClipboardCheck,
-    text: "Черновиков пока нет. Они появятся после первой сессии интервью. В базу попадёт только то, что вы подтвердите.",
   },
   gaps: {
     title: "Пробелы",

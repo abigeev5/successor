@@ -39,7 +39,8 @@ class Providers:
 
 def _llm(settings: Settings) -> LLMProvider:
     if settings.llm_provider == "fake":
-        return FakeLLM()
+        # Without a model the interviewer asks its fixed probe questions (D-045).
+        return FakeLLM(unknown_text_raises=True)
     if settings.llm_provider == "openai_compatible":
         return OpenAICompatibleLLM(settings, model=settings.llm_model)
     raise _not_yet("LLM", settings.llm_provider)

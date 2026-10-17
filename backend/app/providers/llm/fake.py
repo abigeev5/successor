@@ -4,6 +4,9 @@ Answers come from rules: {"match": "<substring>", "response": "<text>" | ["<1st 
 or {"match": ..., "response_json": {...}}. A rule matches if its substring occurs in any message.
 Rules are passed directly or loaded from *.json files (each file holds a list of rules).
 A list of responses is returned one by one; the last one repeats.
+
+Unknown text prompts get a deterministic stub (SPEC 5.3). With `unknown_text_raises=True`
+(the app without a model, D-045) they raise LLMError instead, so callers use their fixed fallbacks.
 """
 
 import json
@@ -14,7 +17,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from app.providers.llm.base import LLMStructuredOutputError, Message, T
+from app.providers.llm.base import LLMError, LLMStructuredOutputError, Message, T
 from app.providers.llm.structured import complete_json_with_retries
 
 
@@ -45,6 +48,7 @@ class FakeLLM:
     name: str = "fake"
     model: str = "fake"
     calls: list[list[Message]] = field(default_factory=list)
+    unknown_text_raises: bool = False
 
     @classmethod
     def from_dir(cls, directory: Path | None) -> "FakeLLM":
@@ -72,6 +76,8 @@ class FakeLLM:
     async def complete(
         self, messages: list[Message], *, temperature: float = 0.2, max_tokens: int = 1024
     ) -> str:
+        if self.unknown_text_raises and self._find(messages) is None:
+            raise LLMError("FakeLLM: модель не подключена")
         return await self._raw(messages)
 
     async def complete_json(self, messages: list[Message], schema: type[T], *, temperature: float = 0.0) -> T:

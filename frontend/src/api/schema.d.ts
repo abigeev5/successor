@@ -89,6 +89,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/users": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Directory
+     * @description People a manager can pick as expert or successor: their org unit (admin: everyone).
+     */
+    get: operations["directory_api_users_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/users": {
     parameters: {
       query?: never;
@@ -142,10 +162,636 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/processes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Processes */
+    get: operations["list_processes_api_processes_get"];
+    put?: never;
+    /** Create Process */
+    post: operations["create_process_api_processes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/processes/{process_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Process */
+    patch: operations["update_process_api_processes__process_id__patch"];
+    trace?: never;
+  };
+  "/api/processes/{process_id}/holders": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Set Holder */
+    post: operations["set_holder_api_processes__process_id__holders_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/processes/{process_id}/holders/{user_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Remove Holder */
+    delete: operations["remove_holder_api_processes__process_id__holders__user_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/handovers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Handovers */
+    get: operations["list_handovers_api_handovers_get"];
+    put?: never;
+    /** Create Handover */
+    post: operations["create_handover_api_handovers_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/handovers/{handover_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Handover */
+    get: operations["get_handover_api_handovers__handover_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Handover */
+    patch: operations["update_handover_api_handovers__handover_id__patch"];
+    trace?: never;
+  };
+  "/api/consents/current-text": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Current Text */
+    get: operations["current_text_api_consents_current_text_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/consents/my": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * My Consent
+     * @description The active consent of the current user for a handover, or null.
+     */
+    get: operations["my_consent_api_consents_my_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/consents": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Accept */
+    post: operations["accept_api_consents_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/consents/{consent_id}/revoke": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Revoke */
+    post: operations["revoke_api_consents__consent_id__revoke_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Sessions */
+    get: operations["list_sessions_api_interviews_get"];
+    put?: never;
+    /** Start */
+    post: operations["start_api_interviews_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/coverage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Coverage */
+    get: operations["coverage_api_interviews_coverage_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Session */
+    get: operations["get_session_api_interviews__session_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/messages": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Post Message */
+    post: operations["post_message_api_interviews__session_id__messages_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/audio": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Audio */
+    post: operations["audio_api_interviews__session_id__audio_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/confirm-processes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Confirm Processes */
+    post: operations["confirm_processes_api_interviews__session_id__confirm_processes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/next-process": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Next Process */
+    post: operations["next_process_api_interviews__session_id__next_process_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/pause": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Pause */
+    post: operations["pause_api_interviews__session_id__pause_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/resume": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Resume */
+    post: operations["resume_api_interviews__session_id__resume_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/interviews/{session_id}/finish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Finish */
+    post: operations["finish_api_interviews__session_id__finish_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/cards": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Cards */
+    get: operations["list_cards_api_cards_get"];
+    put?: never;
+    /** Create Card */
+    post: operations["create_card_api_cards_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/cards/{card_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Card */
+    get: operations["get_card_api_cards__card_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Edit Card */
+    patch: operations["edit_card_api_cards__card_id__patch"];
+    trace?: never;
+  };
+  "/api/cards/{card_id}/approve": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Approve */
+    post: operations["approve_api_cards__card_id__approve_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/cards/{card_id}/reject": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Reject */
+    post: operations["reject_api_cards__card_id__reject_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/cards/{card_id}/merge": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Merge */
+    post: operations["merge_api_cards__card_id__merge_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** ApproveIn */
+    ApproveIn: {
+      edits?: components["schemas"]["CardEdit"] | null;
+      /**
+       * Review Seconds
+       * @default 0
+       */
+      review_seconds: number;
+    };
+    /** AspectOut */
+    AspectOut: {
+      /** Key */
+      key: string;
+      /** Label */
+      label: string;
+      /** Status */
+      status: string;
+      /** Not Applicable */
+      not_applicable: boolean;
+    };
+    /** AudioOut */
+    AudioOut: {
+      /**
+       * Asset Id
+       * Format: uuid
+       */
+      asset_id: string;
+      /** Text */
+      text: string;
+      /** Duration Ms */
+      duration_ms: number | null;
+    };
+    /** Body_audio_api_interviews__session_id__audio_post */
+    Body_audio_api_interviews__session_id__audio_post: {
+      /** File */
+      file: string;
+    };
+    /** CandidateDecision */
+    CandidateDecision: {
+      /** Name */
+      name: string;
+      /**
+       * Description
+       * @default
+       */
+      description: string;
+      /** @default adhoc */
+      frequency: components["schemas"]["ProcessFrequency"];
+      /**
+       * Criticality
+       * @default 2
+       */
+      criticality: number;
+      /**
+       * Include
+       * @default true
+       */
+      include: boolean;
+    };
+    /** CardCreate */
+    CardCreate: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      type: components["schemas"]["CardType"];
+      /** Process Id */
+      process_id?: string | null;
+      /** Title */
+      title: string;
+      /**
+       * Summary
+       * @default
+       */
+      summary: string;
+      /**
+       * Body Md
+       * @default
+       */
+      body_md: string;
+      /** Applies When */
+      applies_when?: string | null;
+    };
+    /** CardDetail */
+    CardDetail: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Process Id */
+      process_id: string | null;
+      type: components["schemas"]["CardType"];
+      /** Title */
+      title: string;
+      /** Summary */
+      summary: string;
+      status: components["schemas"]["CardStatus"];
+      origin: components["schemas"]["CardOrigin"];
+      /** Version */
+      version: number;
+      /** Duplicate Of */
+      duplicate_of: string | null;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Body Md */
+      body_md: string;
+      /** Applies When */
+      applies_when: string | null;
+      /** Archived Reason */
+      archived_reason: string | null;
+      /** Reject Reason */
+      reject_reason: string | null;
+      /** Approved At */
+      approved_at: string | null;
+      /** Review Seconds */
+      review_seconds: number;
+      /**
+       * Sources
+       * @default []
+       */
+      sources: components["schemas"]["SourceOut"][];
+    };
+    /** CardEdit */
+    CardEdit: {
+      type?: components["schemas"]["CardType"] | null;
+      /** Process Id */
+      process_id?: string | null;
+      /** Title */
+      title?: string | null;
+      /** Summary */
+      summary?: string | null;
+      /** Body Md */
+      body_md?: string | null;
+      /** Applies When */
+      applies_when?: string | null;
+    };
+    /** CardListItem */
+    CardListItem: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Process Id */
+      process_id: string | null;
+      type: components["schemas"]["CardType"];
+      /** Title */
+      title: string;
+      /** Summary */
+      summary: string;
+      status: components["schemas"]["CardStatus"];
+      origin: components["schemas"]["CardOrigin"];
+      /** Version */
+      version: number;
+      /** Duplicate Of */
+      duplicate_of: string | null;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+    };
+    /**
+     * CardOrigin
+     * @enum {string}
+     */
+    CardOrigin: "interview" | "recording" | "gap_answer" | "manual";
+    /**
+     * CardStatus
+     * @enum {string}
+     */
+    CardStatus: "draft" | "approved" | "rejected" | "archived";
+    /**
+     * CardType
+     * @enum {string}
+     */
+    CardType: "procedure" | "rule" | "exception" | "pitfall" | "contact" | "deadline" | "term";
     /** ComponentHealth */
     ComponentHealth: {
       /** Ok */
@@ -155,10 +801,129 @@ export interface components {
       /** Detail */
       detail?: string | null;
     };
+    /** ConfirmIn */
+    ConfirmIn: {
+      /** Items */
+      items: components["schemas"]["CandidateDecision"][];
+    };
+    /** ConsentIn */
+    ConsentIn: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+    };
+    /** ConsentOut */
+    ConsentOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Text Version */
+      text_version: string;
+      /**
+       * Accepted At
+       * Format: date-time
+       */
+      accepted_at: string;
+      /** Revoked At */
+      revoked_at: string | null;
+    };
+    /** ConsentTextOut */
+    ConsentTextOut: {
+      /** Version */
+      version: string;
+      /** Text */
+      text: string;
+      /** Hash */
+      hash: string;
+    };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
+    };
+    /** HandoverCreate */
+    HandoverCreate: {
+      /** Org Unit Id */
+      org_unit_id?: string | null;
+      /**
+       * Expert Id
+       * Format: uuid
+       */
+      expert_id: string;
+      /** Successor Id */
+      successor_id?: string | null;
+      reason: components["schemas"]["HandoverReason"];
+      /** Deadline */
+      deadline?: string | null;
+      /** Process Ids */
+      process_ids?: string[];
+    };
+    /** HandoverOut */
+    HandoverOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Org Unit Id
+       * Format: uuid
+       */
+      org_unit_id: string;
+      /** Org Unit Name */
+      org_unit_name: string;
+      manager: components["schemas"]["UserBrief"];
+      /** Experts */
+      experts: components["schemas"]["UserBrief"][];
+      /** Successors */
+      successors: components["schemas"]["UserBrief"][];
+      reason: components["schemas"]["HandoverReason"];
+      /** Deadline */
+      deadline: string | null;
+      status: components["schemas"]["HandoverStatus"];
+      /** Processes */
+      processes: components["schemas"]["ProcessBrief"][];
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      my_role?: components["schemas"]["HandoverRole"] | null;
+    };
+    /**
+     * HandoverReason
+     * @enum {string}
+     */
+    HandoverReason: "retirement" | "leave" | "resignation" | "transfer" | "other";
+    /**
+     * HandoverRole
+     * @enum {string}
+     */
+    HandoverRole: "admin" | "manager" | "expert" | "successor";
+    /**
+     * HandoverStatus
+     * @enum {string}
+     */
+    HandoverStatus: "draft" | "active" | "completed" | "cancelled";
+    /** HandoverUpdate */
+    HandoverUpdate: {
+      reason?: components["schemas"]["HandoverReason"] | null;
+      /** Deadline */
+      deadline?: string | null;
+      status?: components["schemas"]["HandoverStatus"] | null;
+      /** Successor Id */
+      successor_id?: string | null;
+      /** Process Ids */
+      process_ids?: string[] | null;
     };
     /** HealthOut */
     HealthOut: {
@@ -169,6 +934,31 @@ export interface components {
         [key: string]: components["schemas"]["ComponentHealth"];
       };
     };
+    /**
+     * HolderLevel
+     * @enum {string}
+     */
+    HolderLevel: "owner" | "knows" | "learning";
+    /** HolderOut */
+    HolderOut: {
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      /** Full Name */
+      full_name: string;
+      level: components["schemas"]["HolderLevel"];
+    };
+    /** HolderSet */
+    HolderSet: {
+      /**
+       * User Id
+       * Format: uuid
+       */
+      user_id: string;
+      level: components["schemas"]["HolderLevel"];
+    };
     /** LoginIn */
     LoginIn: {
       /** Email */
@@ -176,6 +966,49 @@ export interface components {
       /** Password */
       password: string;
     };
+    /** MergeIn */
+    MergeIn: {
+      /**
+       * Into Card Id
+       * Format: uuid
+       */
+      into_card_id: string;
+    };
+    /** MessageOut */
+    MessageOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Seq */
+      seq: number;
+      role: components["schemas"]["MessageRole"];
+      /** Content */
+      content: string;
+      /**
+       * Has Audio
+       * @default false
+       */
+      has_audio: boolean;
+      /**
+       * Meta
+       * @default {}
+       */
+      meta: {
+        [key: string]: unknown;
+      };
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /**
+     * MessageRole
+     * @enum {string}
+     */
+    MessageRole: "interviewer" | "expert";
     /** MetaOut */
     MetaOut: {
       /** Demo Mode */
@@ -199,6 +1032,244 @@ export interface components {
       id: string;
       /** Name */
       name: string;
+    };
+    /** ProcessBrief */
+    ProcessBrief: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Name */
+      name: string;
+      /** Criticality */
+      criticality: number;
+      frequency: components["schemas"]["ProcessFrequency"];
+    };
+    /** ProcessCandidate */
+    ProcessCandidate: {
+      /** Name */
+      name: string;
+      /**
+       * Description
+       * @default
+       */
+      description: string;
+    };
+    /** ProcessCoverageOut */
+    ProcessCoverageOut: {
+      /**
+       * Process Id
+       * Format: uuid
+       */
+      process_id: string;
+      /** Name */
+      name: string;
+      /** Criticality */
+      criticality: number;
+      /** Coverage */
+      coverage: number;
+      /** Aspects */
+      aspects: components["schemas"]["AspectOut"][];
+    };
+    /** ProcessCreate */
+    ProcessCreate: {
+      /** Org Unit Id */
+      org_unit_id?: string | null;
+      /** Name */
+      name: string;
+      /**
+       * Description
+       * @default
+       */
+      description: string;
+      /** @default adhoc */
+      frequency: components["schemas"]["ProcessFrequency"];
+      /**
+       * Criticality
+       * @default 2
+       */
+      criticality: number;
+    };
+    /**
+     * ProcessFrequency
+     * @enum {string}
+     */
+    ProcessFrequency: "daily" | "weekly" | "monthly" | "quarterly" | "yearly" | "adhoc";
+    /** ProcessOut */
+    ProcessOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Org Unit Id
+       * Format: uuid
+       */
+      org_unit_id: string;
+      /** Name */
+      name: string;
+      /** Description */
+      description: string;
+      frequency: components["schemas"]["ProcessFrequency"];
+      /** Criticality */
+      criticality: number;
+      /**
+       * Holders
+       * @default []
+       */
+      holders: components["schemas"]["HolderOut"][];
+    };
+    /** ProcessUpdate */
+    ProcessUpdate: {
+      /** Name */
+      name?: string | null;
+      /** Description */
+      description?: string | null;
+      frequency?: components["schemas"]["ProcessFrequency"] | null;
+      /** Criticality */
+      criticality?: number | null;
+    };
+    /** RejectIn */
+    RejectIn: {
+      /** Reason */
+      reason?: string | null;
+      /**
+       * Review Seconds
+       * @default 0
+       */
+      review_seconds: number;
+    };
+    /** SessionBrief */
+    SessionBrief: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      status: components["schemas"]["SessionStatus"];
+      /** Phase */
+      phase: string;
+      /**
+       * Started At
+       * Format: date-time
+       */
+      started_at: string;
+      /** Finished At */
+      finished_at: string | null;
+      /** Active Seconds */
+      active_seconds: number;
+      /** Messages Count */
+      messages_count: number;
+    };
+    /** SessionOut */
+    SessionOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      status: components["schemas"]["SessionStatus"];
+      /** Phase */
+      phase: string;
+      /**
+       * Started At
+       * Format: date-time
+       */
+      started_at: string;
+      /** Finished At */
+      finished_at: string | null;
+      /** Active Seconds */
+      active_seconds: number;
+      /** Messages Count */
+      messages_count: number;
+      /** Current Process Id */
+      current_process_id: string | null;
+      /** Candidates */
+      candidates: components["schemas"]["ProcessCandidate"][];
+      /** Messages */
+      messages: components["schemas"]["MessageOut"][];
+      /** Coverage */
+      coverage: components["schemas"]["ProcessCoverageOut"][];
+    };
+    /**
+     * SessionStatus
+     * @enum {string}
+     */
+    SessionStatus: "active" | "paused" | "finished";
+    /** SourceOut */
+    SourceOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      source_type: components["schemas"]["SourceType"];
+      /**
+       * Source Id
+       * Format: uuid
+       */
+      source_id: string;
+      /** Quote */
+      quote: string;
+      /** Start Ms */
+      start_ms: number | null;
+      /** End Ms */
+      end_ms: number | null;
+      /** Label */
+      label: string;
+      /** Context */
+      context: string | null;
+      /** Link */
+      link: {
+        [key: string]: string;
+      } | null;
+      /** Available */
+      available: boolean;
+    };
+    /**
+     * SourceType
+     * @enum {string}
+     */
+    SourceType: "interview_message" | "transcript_segment" | "recording_step" | "gap_answer";
+    /** StartIn */
+    StartIn: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+    };
+    /** TurnIn */
+    TurnIn: {
+      /** Text */
+      text: string;
+      /** Audio Asset Id */
+      audio_asset_id?: string | null;
+    };
+    /** UserBrief */
+    UserBrief: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Full Name */
+      full_name: string;
+      /** Email */
+      email: string;
+      role: components["schemas"]["UserRole"];
     };
     /** UserCreate */
     UserCreate: {
@@ -379,6 +1450,37 @@ export interface operations {
       };
     };
   };
+  directory_api_users_get: {
+    parameters: {
+      query?: {
+        role?: components["schemas"]["UserRole"] | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserBrief"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   list_users_api_admin_users_get: {
     parameters: {
       query?: never;
@@ -507,6 +1609,999 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["OrgUnitOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_processes_api_processes_get: {
+    parameters: {
+      query?: {
+        org_unit_id?: string | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_process_api_processes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ProcessCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_process_api_processes__process_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        process_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ProcessUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  set_holder_api_processes__process_id__holders_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        process_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["HolderSet"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  remove_holder_api_processes__process_id__holders__user_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        process_id: string;
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_handovers_api_handovers_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HandoverOut"][];
+        };
+      };
+    };
+  };
+  create_handover_api_handovers_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["HandoverCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HandoverOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_handover_api_handovers__handover_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        handover_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HandoverOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_handover_api_handovers__handover_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        handover_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["HandoverUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HandoverOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  current_text_api_consents_current_text_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConsentTextOut"];
+        };
+      };
+    };
+  };
+  my_consent_api_consents_my_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConsentOut"] | null;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  accept_api_consents_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ConsentIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConsentOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  revoke_api_consents__consent_id__revoke_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        consent_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ConsentOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_sessions_api_interviews_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionBrief"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  start_api_interviews_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["StartIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  coverage_api_interviews_coverage_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ProcessCoverageOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_session_api_interviews__session_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  post_message_api_interviews__session_id__messages_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TurnIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  audio_api_interviews__session_id__audio_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_audio_api_interviews__session_id__audio_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AudioOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  confirm_processes_api_interviews__session_id__confirm_processes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ConfirmIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  next_process_api_interviews__session_id__next_process_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  pause_api_interviews__session_id__pause_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  resume_api_interviews__session_id__resume_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  finish_api_interviews__session_id__finish_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SessionOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_cards_api_cards_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+        status?: components["schemas"]["CardStatus"] | null;
+        process_id?: string | null;
+        type?: components["schemas"]["CardType"] | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardListItem"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_card_api_cards_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CardCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_card_api_cards__card_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        card_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  edit_card_api_cards__card_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        card_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CardEdit"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  approve_api_cards__card_id__approve_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        card_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ApproveIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  reject_api_cards__card_id__reject_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        card_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RejectIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  merge_api_cards__card_id__merge_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        card_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MergeIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CardDetail"];
         };
       };
       /** @description Validation Error */

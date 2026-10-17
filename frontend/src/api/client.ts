@@ -2,9 +2,30 @@ import createClient from "openapi-fetch";
 
 import type { components, paths } from "./schema";
 
-export type User = components["schemas"]["UserOut"];
+type Schemas = components["schemas"];
+export type User = Schemas["UserOut"];
 export type UserRole = User["role"];
-export type Meta = components["schemas"]["MetaOut"];
+export type UserBrief = Schemas["UserBrief"];
+export type Meta = Schemas["MetaOut"];
+export type Handover = Schemas["HandoverOut"];
+export type HandoverCreate = Schemas["HandoverCreate"];
+export type HandoverReason = Schemas["HandoverReason"];
+export type Process = Schemas["ProcessOut"];
+export type ProcessFrequency = Schemas["ProcessFrequency"];
+export type Session = Schemas["SessionOut"];
+export type SessionBrief = Schemas["SessionBrief"];
+export type Message = Schemas["MessageOut"];
+export type ProcessCoverage = Schemas["ProcessCoverageOut"];
+export type Candidate = Schemas["ProcessCandidate"];
+export type CandidateDecision = Schemas["CandidateDecision"];
+export type CardListItem = Schemas["CardListItem"];
+export type CardDetail = Schemas["CardDetail"];
+export type CardEdit = Schemas["CardEdit"];
+export type CardType = Schemas["CardType"];
+export type CardStatus = Schemas["CardStatus"];
+export type Source = Schemas["SourceOut"];
+export type Consent = Schemas["ConsentOut"];
+export type ConsentText = Schemas["ConsentTextOut"];
 
 /**
  * Typed API client. Same origin: nginx (prod) or the Vite proxy (dev) forward /api to the backend.

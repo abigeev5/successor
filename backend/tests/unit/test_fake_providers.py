@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from app.providers.asr.fake import FakeASR
 from app.providers.embeddings.fake import FakeEmbeddings
-from app.providers.llm.base import LLMStructuredOutputError, Message
+from app.providers.llm.base import LLMError, LLMStructuredOutputError, Message
 from app.providers.llm.fake import FakeLLM
 from app.providers.ocr.fake import FakeOCR
 
@@ -35,6 +35,15 @@ async def test_fake_llm_unknown_prompt_gives_deterministic_stub() -> None:
     first = await llm.complete([Message("user", "Что-то новое")])
     assert first == await llm.complete([Message("user", "Что-то новое")])
     assert first.startswith("Заглушка FakeLLM")
+
+
+async def test_fake_llm_without_model_raises_for_unknown_text() -> None:
+    llm = FakeLLM(unknown_text_raises=True)
+    llm.add_rule("известный", "ответ")
+    assert await llm.complete([Message("user", "известный вопрос")]) == "ответ"
+    with pytest.raises(LLMError):
+        await llm.complete([Message("user", "новый вопрос")])
+    assert await llm.complete_json([Message("user", "x")], Defaults) == Defaults()
 
 
 async def test_fake_llm_sequential_responses_repeat_last() -> None:
