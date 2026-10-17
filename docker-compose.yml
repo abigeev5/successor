@@ -13,6 +13,9 @@ x-backend: &backend
     STORAGE_DIR: /data
   volumes:
     - appdata:/data
+    - models:/home/app/.cache/huggingface  # faster-whisper weights survive rebuilds
+  extra_hosts:
+    - "host.docker.internal:host-gateway"  # llama-server runs on the host (D-033); Linux needs this line
   restart: unless-stopped
 
 services:
@@ -64,3 +67,4 @@ services:
 volumes:
   pgdata:
   appdata:
+  models:

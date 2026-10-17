@@ -10,7 +10,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 RUN pip install --no-cache-dir uv==0.11.32 \
     && useradd --create-home --uid 1000 app \
-    && mkdir -p /data && chown app:app /data
+    && mkdir -p /data /home/app/.cache/huggingface \
+    && chown -R app:app /data /home/app/.cache
 
 WORKDIR /app/backend
 COPY backend/pyproject.toml backend/uv.lock backend/.python-version ./

@@ -678,15 +678,13 @@ successor/
 │   │   │   └── vlm/                 # base.py, openai_compatible.py, fake.py
 │   │   ├── modules/
 │   │   │   ├── identity/            # models, schemas, repo, service, router
-│   │   │   ├── org/                 # + domain/holders.py
+│   │   │   ├── org/                 # + domain/matching.py (нечёткое сравнение названий процессов)
 │   │   │   ├── handovers/           # + access.py
 │   │   │   ├── privacy/             # + erasure.py (реестр DataEraser), retention.py, consent_text
 │   │   │   ├── interview/
-│   │   │   │   ├── domain/          # aspects.py, state.py, planner.py, coverage.py, timing.py
-│   │   │   │   ├── analyzer.py      # analyze_turn (LLM)
-│   │   │   │   ├── questions.py     # generate_question (LLM)
-│   │   │   │   ├── audio.py         # приём аудио → ASR
-│   │   │   │   ├── sources.py       # SourceResolver, DataEraser, build_source_document
+│   │   │   │   ├── domain/          # aspects.py, state.py, analysis.py, planner.py, timing.py, fallback.py
+│   │   │   │   ├── llm.py           # analyze_turn и генерация вопроса (LLM)
+│   │   │   │   ├── sources.py       # SourceResolver, build_source_document (DataEraser — M4)
 │   │   │   │   └── models, schemas, repo, service, router, handlers
 │   │   │   ├── recordings/
 │   │   │   │   ├── domain/          # steps.py (валидация интервалов)
@@ -697,7 +695,7 @@ successor/
 │   │   │   │   └── models, schemas, repo, service, router, handlers
 │   │   │   ├── knowledge/
 │   │   │   │   ├── domain/          # sources.py (SourceRef/Fragment/Document), card_types.py,
-│   │   │   │   │                    # quotes.py, windows.py, dedup.py, process_match.py
+│   │   │   │   │                    # quotes.py, windows.py, dedup.py
 │   │   │   │   ├── extraction.py    # extract(SourceDocument)
 │   │   │   │   ├── resolvers.py     # реестр SourceResolver
 │   │   │   │   └── models, schemas, repo, service, router, handlers
