@@ -14,6 +14,7 @@ from app.providers.llm.fake import FakeLLM
 from app.providers.llm.openai_compatible import OpenAICompatibleLLM
 from app.providers.ocr.base import OCRProvider
 from app.providers.ocr.fake import FakeOCR
+from app.providers.ocr.tesseract import TesseractOCR
 from app.providers.vlm.base import VLMProvider
 from app.providers.vlm.fake import FakeVLM
 
@@ -70,15 +71,21 @@ def _judge(settings: Settings, llm: LLMProvider) -> LLMProvider:
     return llm
 
 
+def _ocr(settings: Settings) -> OCRProvider:
+    if settings.ocr_engine == "fake":
+        return FakeOCR()
+    if settings.ocr_engine == "tesseract":
+        return TesseractOCR()
+    raise _not_yet("OCR", settings.ocr_engine)
+
+
 def build_providers(settings: Settings) -> Providers:
-    if settings.ocr_engine != "fake":
-        raise _not_yet("OCR", settings.ocr_engine)
     llm = _llm(settings)
     return Providers(
         llm=llm,
         judge_llm=_judge(settings, llm),
         embeddings=_embeddings(settings),
         asr=_asr(settings),
-        ocr=FakeOCR(),
+        ocr=_ocr(settings),
         vlm=FakeVLM() if settings.vlm_enabled else None,
     )

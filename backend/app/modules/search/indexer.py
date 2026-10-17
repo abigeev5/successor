@@ -8,6 +8,7 @@ from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.handovers.service import get_handover
+from app.modules.knowledge.domain.markdown import strip_images
 from app.modules.knowledge.models import CardStatus, KnowledgeCard
 from app.modules.search.domain.chunking import chunk_card
 from app.modules.search.models import EMBEDDING_DIM, CardChunk
@@ -31,7 +32,7 @@ async def index_card(db: AsyncSession, providers: Providers, card_id: uuid.UUID)
     if card is None or card.status is not CardStatus.APPROVED:
         return 0
     handover = await get_handover(db, card.handover_id)
-    texts = chunk_card(card.title, card.summary, card.body_md, card.applies_when)
+    texts = chunk_card(card.title, card.summary, strip_images(card.body_md), card.applies_when)
     vectors = await asyncio.to_thread(providers.embeddings.embed, texts)
     if any(len(v) != EMBEDDING_DIM for v in vectors):
         raise IndexingError(f"Эмбеддинги должны иметь размерность {EMBEDDING_DIM} (EMBEDDINGS_DIM)")

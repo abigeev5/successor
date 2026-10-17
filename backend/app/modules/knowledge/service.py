@@ -2,6 +2,7 @@
 
 import uuid
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import UTC, datetime
 
 from sqlalchemy import select, update
@@ -293,7 +294,16 @@ async def create_manual(db: AsyncSession, data: CardCreate, user: User) -> Knowl
     return card
 
 
-async def create_draft_from_source(
+@dataclass(frozen=True)
+class DraftSource:
+    source_type: SourceType
+    source_id: uuid.UUID
+    quote: str
+    start_ms: int | None = None
+    end_ms: int | None = None
+
+
+async def create_draft(
     db: AsyncSession,
     *,
     handover_id: uuid.UUID,
@@ -301,17 +311,18 @@ async def create_draft_from_source(
     title: str,
     body_md: str,
     origin: CardOrigin,
-    source_type: SourceType,
-    source_id: uuid.UUID,
-    quote: str,
+    sources: list[DraftSource],
     created_by: uuid.UUID | None,
+    summary: str = "",
+    process_id: uuid.UUID | None = None,
 ) -> KnowledgeCard:
-    """A draft built by another module from its own source (e.g. an answer to a gap). No commit."""
+    """A draft built by another module from its own sources (a gap answer, a recording). No commit."""
     card = KnowledgeCard(
         handover_id=handover_id,
+        process_id=process_id,
         type=card_type,
         title=title.strip()[:300],
-        summary="",
+        summary=summary,
         body_md=body_md.strip(),
         status=CardStatus.DRAFT,
         origin=origin,
@@ -319,6 +330,16 @@ async def create_draft_from_source(
     )
     db.add(card)
     await db.flush()
-    db.add(CardSource(card_id=card.id, source_type=source_type, source_id=source_id, quote=quote))
+    for s in sources:
+        db.add(
+            CardSource(
+                card_id=card.id,
+                source_type=s.source_type,
+                source_id=s.source_id,
+                quote=s.quote,
+                start_ms=s.start_ms,
+                end_ms=s.end_ms,
+            )
+        )
     await bus.publish(db, CardDrafted(card_id=card.id, handover_id=handover_id, origin=origin.value))
     return card

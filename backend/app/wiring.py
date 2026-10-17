@@ -19,6 +19,7 @@ def import_models() -> None:
     import app.modules.knowledge.models
     import app.modules.org.models
     import app.modules.privacy.models
+    import app.modules.recordings.models
     import app.modules.search.models  # noqa: F401
 
 
@@ -29,6 +30,7 @@ def wire() -> None:
     from app.modules.gaps import handlers as gaps
     from app.modules.interview import handlers as interview
     from app.modules.knowledge import resolvers
+    from app.modules.recordings import handlers as recordings
     from app.modules.search import handlers as search
 
     import_models()
@@ -36,6 +38,7 @@ def wire() -> None:
     jobs.clear_handlers()
     resolvers.clear()
     interview.register(bus)
+    recordings.register(bus)
     search.register(bus)
     gaps.register(bus)
     analytics.register(bus)

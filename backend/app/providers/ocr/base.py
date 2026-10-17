@@ -11,6 +11,7 @@ class OcrBox:
     width: int
     height: int
     confidence: float = 1.0
+    line: str | None = None  # words with the same key are one text line (Tesseract); None — unknown
 
 
 class OCRProvider(Protocol):

@@ -9,6 +9,7 @@ import uuid
 from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
+from typing import BinaryIO
 
 from sqlalchemy import DateTime, ForeignKey, String
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -56,7 +57,7 @@ class FileTooLarge(AppError):
 # (mime, extension, kind) by signature.
 def sniff_media(head: bytes) -> tuple[str, str, AssetKind] | None:
     if head.startswith(b"\x1a\x45\xdf\xa3"):  # EBML: webm / matroska; video tracks have V_VP8/V_VP9/V_AV1
-        if b"V_VP" in head or b"V_AV1" in head:
+        if b"V_VP" in head or b"V_AV1" in head or b"V_MPEG4" in head:
             return "video/webm", "webm", AssetKind.VIDEO
         return "audio/webm", "webm", AssetKind.AUDIO
     if head.startswith(b"OggS"):
@@ -83,6 +84,59 @@ def absolute_path(settings: Settings, asset: Asset) -> Path:
     return settings.storage_dir / asset.storage_path
 
 
+def _target(settings: Settings, asset_id: uuid.UUID, handover_id: uuid.UUID | None, ext: str) -> Path:
+    relative = Path(str(handover_id or "common")) / f"{asset_id}.{ext}"
+    (settings.storage_dir / relative).parent.mkdir(parents=True, exist_ok=True)
+    return relative
+
+
+def store_stream(
+    settings: Settings,
+    source: BinaryIO,
+    *,
+    expected_kind: AssetKind,
+    max_bytes: int,
+    owner_id: uuid.UUID | None,
+    handover_id: uuid.UUID | None,
+) -> Asset:
+    """Copies a large file (a video up to 1 GB) in chunks and returns an Asset NOT added to a session.
+
+    Blocking: run it in a thread and add the asset to the session in the event loop.
+    """
+    head = source.read(4096)
+    sniffed = sniff_media(head)
+    if sniffed is None or sniffed[2] != expected_kind:
+        raise UnsupportedMedia()
+    mime, ext, _ = sniffed
+    asset_id = uuid.uuid4()
+    relative = _target(settings, asset_id, handover_id, ext)
+    target = settings.storage_dir / relative
+    digest = hashlib.sha256(head)
+    size = len(head)
+    try:
+        with target.open("wb") as out:
+            out.write(head)
+            while chunk := source.read(1024 * 1024):
+                size += len(chunk)
+                if size > max_bytes:
+                    raise FileTooLarge(f"Файл больше {max_bytes // (1024 * 1024)} МБ")
+                digest.update(chunk)
+                out.write(chunk)
+    except BaseException:
+        target.unlink(missing_ok=True)
+        raise
+    return Asset(
+        id=asset_id,
+        kind=expected_kind,
+        storage_path=str(relative),
+        mime=mime,
+        size_bytes=size,
+        sha256=digest.hexdigest(),
+        owner_id=owner_id,
+        handover_id=handover_id,
+    )
+
+
 async def save_bytes(
     db: AsyncSession,
     settings: Settings,
@@ -101,10 +155,8 @@ async def save_bytes(
         raise UnsupportedMedia()
     mime, ext, _ = sniffed
     asset_id = uuid.uuid4()
-    relative = Path(str(handover_id or "common")) / f"{asset_id}.{ext}"
-    target = settings.storage_dir / relative
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_bytes(data)
+    relative = _target(settings, asset_id, handover_id, ext)
+    (settings.storage_dir / relative).write_bytes(data)
     asset = Asset(
         id=asset_id,
         kind=expected_kind,

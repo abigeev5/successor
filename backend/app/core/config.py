@@ -57,7 +57,8 @@ class Settings(BaseSettings):
     vlm_enabled: bool = False
     vlm_base_url: str = ""
     vlm_model: str = ""
-    ocr_engine: Literal["easyocr", "tesseract", "fake"] = "fake"
+    # Real OCR by default: without it screenshots cannot be checked for personal data (D-058).
+    ocr_engine: Literal["easyocr", "tesseract", "fake"] = "tesseract"
 
     # Assistant search (SPEC 7.8). Thresholds are calibrated by `make eval` (D-047).
     rag_min_similarity: float = 0.45
@@ -65,6 +66,10 @@ class Settings(BaseSettings):
     rag_top_k: int = 20
     rag_top_chunks: int = 8
     rag_max_cards: int = 5
+
+    # Screen recordings (SPEC 7.6)
+    recording_max_mb: int = 1024
+    recording_max_minutes: int = 30
 
     # Privacy
     offline_mode: bool = False

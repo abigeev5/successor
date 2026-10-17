@@ -11,6 +11,7 @@ from app.modules.assistant.events import AnswerFeedback, AnswerRefused, AnswerSh
 from app.modules.gaps.events import GapAnswered, GapCreated
 from app.modules.interview.events import InterviewSessionFinished, InterviewTurnCompleted
 from app.modules.knowledge.events import CardApproved, CardDrafted, CardDropped, CardRejected
+from app.modules.recordings.events import RecordingProcessed, RecordingUploaded
 
 
 def _add(
@@ -114,6 +115,22 @@ async def on_gap_answered(db: AsyncSession, e: GapAnswered) -> None:
     _add(db, "gap_answered", user_id=e.user_id, handover_id=e.handover_id, gap_id=str(e.gap_id))
 
 
+async def on_recording_uploaded(db: AsyncSession, e: RecordingUploaded) -> None:
+    _add(db, "recording_uploaded", user_id=e.user_id, handover_id=e.handover_id, size_bytes=e.size_bytes)
+
+
+async def on_recording_processed(db: AsyncSession, e: RecordingProcessed) -> None:
+    _add(
+        db,
+        "recording_processed",
+        user_id=None,
+        handover_id=e.handover_id,
+        duration_ms=e.duration_ms,
+        steps=e.steps,
+        blurred_screenshots=e.blurred_screenshots,
+    )
+
+
 def register(bus: EventBus) -> None:
     bus.subscribe(InterviewTurnCompleted, on_turn)
     bus.subscribe(InterviewSessionFinished, on_session_finished)
@@ -126,3 +143,5 @@ def register(bus: EventBus) -> None:
     bus.subscribe(AnswerFeedback, on_feedback)
     bus.subscribe(GapCreated, on_gap_created)
     bus.subscribe(GapAnswered, on_gap_answered)
+    bus.subscribe(RecordingUploaded, on_recording_uploaded)
+    bus.subscribe(RecordingProcessed, on_recording_processed)

@@ -13,6 +13,7 @@ from app.core.http import check_offline_config
 from app.core.logging import setup_logging
 from app.modules.assistant.router import router as assistant_router
 from app.modules.gaps.router import router as gaps_router
+from app.modules.handovers.files import router as files_router
 from app.modules.handovers.router import router as handovers_router
 from app.modules.identity.router import admin_router as users_admin_router
 from app.modules.identity.router import auth_router, users_router
@@ -21,6 +22,7 @@ from app.modules.knowledge.router import router as cards_router
 from app.modules.org.router import admin_router as org_admin_router
 from app.modules.org.router import processes_router
 from app.modules.privacy.router import router as consents_router
+from app.modules.recordings.router import router as recordings_router
 from app.providers.registry import build_providers
 from app.wiring import wire
 
@@ -60,6 +62,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         cards_router,
         assistant_router,
         gaps_router,
+        recordings_router,
+        files_router,
     )
     for router in routers:
         app.include_router(router, prefix="/api")

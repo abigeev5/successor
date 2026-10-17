@@ -22,7 +22,7 @@ from app.modules.interview.service import recognize_audio
 from app.modules.knowledge.domain.card_types import CardType
 from app.modules.knowledge.domain.sources import CardOrigin, SourceType
 from app.modules.knowledge.models import CardStatus, KnowledgeCard
-from app.modules.knowledge.service import create_draft_from_source
+from app.modules.knowledge.service import DraftSource, create_draft
 from app.modules.org.domain.matching import normalize_name
 from app.modules.privacy.service import require_consent
 from app.providers.registry import Providers
@@ -106,16 +106,14 @@ async def answer(db: AsyncSession, user: User, gap_id: uuid.UUID, text: str) -> 
             )
     gap.answer_text = text.strip()
     gap.answered_by = user.id
-    card = await create_draft_from_source(
+    card = await create_draft(
         db,
         handover_id=gap.handover_id,
         card_type=CardType.RULE,
         title=gap.question,
         body_md=gap.answer_text,
         origin=CardOrigin.GAP_ANSWER,
-        source_type=SourceType.GAP_ANSWER,
-        source_id=gap.id,
-        quote=gap.answer_text,
+        sources=[DraftSource(SourceType.GAP_ANSWER, gap.id, gap.answer_text)],
         created_by=user.id,
     )
     gap.answered_card_id = card.id

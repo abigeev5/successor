@@ -19,6 +19,8 @@ dependencies = [
     "rapidfuzz>=3.9",
     "python-multipart>=0.0.9",
     "pgvector>=0.3",
+    "opencv-python-headless>=4.10",
+    "natasha>=1.6",
 ]
 
 [dependency-groups]
@@ -71,7 +73,7 @@ layers = [
     "app.modules.analytics",
     "app.modules.gaps",
     "app.modules.assistant",
-    "app.modules.interview",
+    "app.modules.interview | app.modules.recordings",
     "app.modules.search",
     "app.modules.knowledge",
     "app.modules.privacy",

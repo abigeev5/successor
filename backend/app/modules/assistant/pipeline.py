@@ -26,6 +26,7 @@ from app.modules.assistant.domain.claims import (
 from app.modules.assistant.domain.refusal import is_no_answer, refuse_before_llm
 from app.modules.assistant.models import AnswerStatus
 from app.modules.knowledge.domain.card_types import CARD_TYPE_LABELS, CardType
+from app.modules.knowledge.domain.markdown import strip_images
 from app.modules.knowledge.models import CardStatus, KnowledgeCard
 from app.modules.search.retriever import SearchResult, search
 from app.providers.llm.base import LLMError, Message
@@ -78,7 +79,7 @@ class AnswerResult:
 
 
 def _source_text(card: KnowledgeCard) -> str:
-    parts = [card.summary, card.body_md]
+    parts = [card.summary, strip_images(card.body_md)]
     if card.applies_when:
         parts.append(f"Когда применять: {card.applies_when}")
     return "\n".join(p.strip() for p in parts if p and p.strip())
