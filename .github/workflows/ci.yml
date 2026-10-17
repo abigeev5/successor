@@ -57,6 +57,7 @@ jobs:
           uv run python ../eval/run_eval.py --provider fake --out ../eval/reports
         env:
           DATABASE_URL: postgresql+psycopg://preemnik:preemnik@localhost:5432/preemnik
+          STORAGE_DIR: ${{ runner.temp }}/data  # the seed stores the demo recording's files
       - uses: actions/upload-artifact@v4
         with:
           name: eval-report-fake
