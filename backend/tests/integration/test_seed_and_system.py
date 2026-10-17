@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import Base, get_engine
 from app.modules.identity.models import User
+from app.modules.knowledge.models import KnowledgeCard
 
 SEED_PATH = Path(__file__).resolve().parents[3] / "seed" / "seed.py"
 
@@ -26,9 +27,18 @@ async def test_seed_is_idempotent_and_demo_accounts_log_in(
     client: httpx.AsyncClient, db: AsyncSession
 ) -> None:
     seed = load_seed()
-    assert (await seed.seed(db))["users_created"] == 4
-    assert (await seed.seed(db))["users_created"] == 0
-    assert await db.scalar(select(func.count()).select_from(User)) == 4
+    first = await seed.seed(db)
+    assert first == {
+        "users_created": 5,
+        "users_total": 5,
+        "processes": 4,
+        "messages": 38,
+        "cards_approved": 25,
+        "cards_draft": 5,
+    }
+    assert (await seed.seed(db))["users_created"] == 0  # second run: same known state
+    assert await db.scalar(select(func.count()).select_from(User)) == 5
+    assert await db.scalar(select(func.count()).select_from(KnowledgeCard)) == 30
 
     for email, role in [
         ("manager@demo.local", "manager"),
@@ -39,6 +49,16 @@ async def test_seed_is_idempotent_and_demo_accounts_log_in(
         response = await client.post("/api/auth/login", json={"email": email, "password": seed.DEMO_PASSWORD})
         assert response.status_code == 200, email
         assert response.json()["role"] == role
+
+    # The successor sees the approved cards of the demo handover; the risky process has one holder.
+    await client.post(
+        "/api/auth/login", json={"email": "successor@demo.local", "password": seed.DEMO_PASSWORD}
+    )
+    [handover] = (await client.get("/api/handovers")).json()
+    cards = (await client.get("/api/cards", params={"handover_id": handover["id"]})).json()
+    assert len(cards) == 25 and {c["status"] for c in cards} == {"approved"}
+    coverage = (await client.get("/api/interviews/coverage", params={"handover_id": handover["id"]})).json()
+    assert coverage[0]["name"] == "Отчёт о движении контингента" and coverage[0]["coverage"] > 0.8
 
 
 async def test_health_reports_db_and_fake_providers(client: httpx.AsyncClient) -> None:

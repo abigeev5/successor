@@ -1,10 +1,22 @@
 {
-  "_comment": "Демо-данные. Всё вымышленное (SPEC, 13.1). Пароль всех демо-учёток задаётся в seed.py.",
+  "_comment": "Демо-данные. Всё вымышленное (SPEC 13.1). Пароль всех демо-учёток задаётся в seed.py.",
   "org_unit": "Учебный отдел (демо)",
   "users": [
-    {"email": "manager@demo.local", "full_name": "Ольга Викторовна", "role": "manager"},
-    {"email": "expert@demo.local", "full_name": "Ирина Сергеевна", "role": "expert"},
-    {"email": "successor@demo.local", "full_name": "Дмитрий", "role": "successor"},
-    {"email": "admin@demo.local", "full_name": "Администратор (демо)", "role": "admin"}
-  ]
+    {"key": "manager", "email": "manager@demo.local", "full_name": "Ольга Викторовна", "role": "manager"},
+    {"key": "expert", "email": "expert@demo.local", "full_name": "Ирина Сергеевна", "role": "expert"},
+    {"key": "successor", "email": "successor@demo.local", "full_name": "Дмитрий", "role": "successor"},
+    {"key": "methodist", "email": "methodist@demo.local", "full_name": "Марина Андреевна", "role": "expert"},
+    {"key": "admin", "email": "admin@demo.local", "full_name": "Администратор (демо)", "role": "admin"}
+  ],
+  "processes": [
+    {"key": "report", "name": "Отчёт о движении контингента", "frequency": "monthly", "criticality": 3,
+     "description": "Ежемесячный отчёт о численности студентов для отдела статистики.", "also_known_by": []},
+    {"key": "sheets", "name": "Подготовка экзаменационных ведомостей", "frequency": "quarterly", "criticality": 3,
+     "description": "Ведомости на каждую дисциплину перед сессией и внесение оценок.", "also_known_by": ["methodist"]},
+    {"key": "retakes", "name": "Оформление пересдач", "frequency": "weekly", "criticality": 2,
+     "description": "Направления на пересдачу и комиссии.", "also_known_by": ["methodist"]},
+    {"key": "certificates", "name": "Ответы на запросы студентов о справках", "frequency": "daily", "criticality": 1,
+     "description": "Справки об обучении, для военкомата, архивные.", "also_known_by": ["methodist"]}
+  ],
+  "handover": {"reason": "retirement", "deadline_in_days": 21}
 }
