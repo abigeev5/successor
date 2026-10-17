@@ -6,10 +6,10 @@ from app.modules.assistant.pipeline import DEGRADED_LEAD, Source, degraded_answe
 
 
 def test_refuse_before_llm_only_without_any_relevant_signal() -> None:
-    assert refuse_before_llm(None, 0, 0.45)
-    assert refuse_before_llm(0.30, 0, 0.45)
-    assert not refuse_before_llm(0.50, 0, 0.45)
-    assert not refuse_before_llm(0.10, 2, 0.45)  # a full-text match is enough to try
+    assert refuse_before_llm(None, 0.0, 0.45, 0.6)
+    assert refuse_before_llm(0.30, 0.5, 0.45, 0.6)  # one or two shared words are not a text match
+    assert not refuse_before_llm(0.50, 0.0, 0.45, 0.6)
+    assert not refuse_before_llm(0.10, 0.6, 0.45, 0.6)  # most question words in one chunk → try
 
 
 def test_no_answer_marker() -> None:

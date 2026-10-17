@@ -164,7 +164,10 @@ async def answer_question(
 
     retrieval = await search(db, providers, settings, handover_id, question)
     if not retrieval.cards or refuse_before_llm(
-        retrieval.best_cosine, retrieval.fts_hits, settings.rag_min_similarity
+        retrieval.best_cosine,
+        retrieval.text_coverage,
+        settings.rag_min_similarity,
+        settings.rag_min_text_coverage,
     ):
         return _refused("no_relevant_sources", retrieval, started, version, model)
 

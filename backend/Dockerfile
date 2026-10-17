@@ -19,6 +19,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 COPY backend/ ./
 COPY seed/ /app/seed/
+COPY eval/ /app/eval/
 RUN uv sync --frozen --no-dev
 
 USER app

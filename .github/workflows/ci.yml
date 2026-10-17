@@ -48,6 +48,17 @@ jobs:
         env:
           REQUIRE_DB: "1"
           TEST_DATABASE_URL: postgresql+psycopg://preemnik:preemnik@localhost:5432/preemnik_test
+      - name: eval на fake-провайдерах (пайплайн ассистента не сломан)
+        run: |
+          uv run alembic upgrade head
+          uv run python ../seed/seed.py
+          uv run python ../eval/run_eval.py --provider fake --out ../eval/reports
+        env:
+          DATABASE_URL: postgresql+psycopg://preemnik:preemnik@localhost:5432/preemnik
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-report-fake
+          path: eval/reports/*.md
 
   frontend:
     name: Frontend — lint, типы, тесты, сборка

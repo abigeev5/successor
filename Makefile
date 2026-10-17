@@ -62,8 +62,10 @@ gen-api:  ## Сгенерировать типы API для frontend из OpenAP
 	cd backend && uv run python scripts/export_openapi.py
 	cd frontend && npm run gen-api
 
-eval:  ## Оценка качества ассистента (появится в M2)
-	@echo "make eval появится на этапе M2 (docs/plan.md)"; exit 1
+PROVIDER ?= real
+eval:  ## Оценка ассистента на демо-наборе → eval/reports/ (без модели: make eval PROVIDER=fake)
+	$(COMPOSE) run --rm --user "$$(id -u):$$(id -g)" -v "$(CURDIR)/eval/reports:/app/eval/reports" \
+		backend python /app/eval/run_eval.py --provider $(PROVIDER)
 
 # --- Локальная разработка без контейнеров backend/frontend ---
 dev-backend: db  ## Backend с автоперезагрузкой на :8000

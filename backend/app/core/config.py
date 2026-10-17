@@ -59,8 +59,9 @@ class Settings(BaseSettings):
     vlm_model: str = ""
     ocr_engine: Literal["easyocr", "tesseract", "fake"] = "fake"
 
-    # Assistant search (SPEC 7.8). The threshold is calibrated by `make eval` (D-047).
+    # Assistant search (SPEC 7.8). Thresholds are calibrated by `make eval` (D-047).
     rag_min_similarity: float = 0.45
+    rag_min_text_coverage: float = 0.6  # share of question words in one chunk that counts as a text match
     rag_top_k: int = 20
     rag_top_chunks: int = 8
     rag_max_cards: int = 5
