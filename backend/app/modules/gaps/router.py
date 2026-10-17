@@ -1,16 +1,24 @@
 import uuid
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import Settings, get_settings
 from app.core.db import get_db
 from app.modules.gaps import service
 from app.modules.gaps.models import GapStatus
 from app.modules.gaps.schemas import GapAnswerIn, GapAssignIn, GapCreate, GapOut
 from app.modules.identity.deps import current_user
 from app.modules.identity.models import User
+from app.modules.interview.schemas import AudioOut
+from app.modules.interview.service import MAX_AUDIO_BYTES
+from app.providers.registry import Providers
 
 router = APIRouter(prefix="/gaps", tags=["gaps"])
+
+
+def providers(request: Request) -> Providers:
+    return request.app.state.providers  # type: ignore[no-any-return]
 
 
 @router.get("", response_model=list[GapOut])
@@ -29,6 +37,19 @@ async def create(
 ) -> GapOut:
     gap = await service.create_manual(db, user, data.handover_id, data.question, data.qa_log_id)
     return await service.gap_view(db, user, gap.id)
+
+
+@router.post("/{gap_id}/audio", response_model=AudioOut)
+async def audio(
+    gap_id: uuid.UUID,
+    file: UploadFile,
+    user: User = Depends(current_user),
+    db: AsyncSession = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+    p: Providers = Depends(providers),
+) -> AudioOut:
+    data = await file.read(MAX_AUDIO_BYTES + 1)
+    return await service.transcribe(db, settings, p, user, gap_id, data)
 
 
 @router.post("/{gap_id}/answer", response_model=GapOut)

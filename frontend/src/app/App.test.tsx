@@ -81,9 +81,10 @@ describe("App", () => {
         },
       },
       "/api/meta": META,
+      "/api/handovers": { status: 200, body: [] },
     });
     renderAt("/dashboard");
-    expect(await screen.findByRole("heading", { name: "Ассистент" })).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: "Ассистент пока недоступен" })).toBeTruthy();
     expect(screen.queryByRole("link", { name: "Панель" })).toBeNull();
     expect(screen.getByText("Дмитрий")).toBeTruthy();
   });

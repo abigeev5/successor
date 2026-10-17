@@ -22,7 +22,8 @@ from app.modules.search.indexer import index_card
 from app.modules.search.models import CardChunk
 from app.providers.llm.base import LLMError, Message
 from app.providers.llm.fake import FakeLLM, FakeRule
-from tests.factories import login, make_handover, make_org_unit, make_user
+from tests.factories import give_consent, login, make_handover, make_org_unit, make_user
+from tests.integration.test_voice import WEBM_AUDIO, StubASR
 
 ANSWER_PROMPT = "Ты — ассистент преемника"
 VERIFY_PROMPT = "Проверь, подтверждается ли"
@@ -346,3 +347,21 @@ async def test_ask_expert_dismiss_and_reassign(client: httpx.AsyncClient, world:
     assert dismissed["status"] == "dismissed"
     closed = await client.post(f"/api/gaps/{gap_id}/answer", json={"text": "Поздно"})
     assert closed.status_code == 409
+
+
+async def test_gap_voice_answer_needs_consent(
+    client: httpx.AsyncClient, db: AsyncSession, app: FastAPI, world: dict[str, Any]
+) -> None:
+    app.state.providers.asr = StubASR(duration_ms=3000)
+    await login(client, world["successor"])
+    await ask(client, world, UNRELATED)
+    gap_id = (await db.execute(select(Gap.id))).scalar_one()
+    upload = {"file": ("voice.webm", WEBM_AUDIO, "audio/webm")}
+
+    await login(client, world["expert"])
+    assert (await client.post(f"/api/gaps/{gap_id}/audio", files=upload)).status_code == 403
+    await give_consent(db, world["expert"], world["handover"])
+    await db.commit()
+    response = await client.post(f"/api/gaps/{gap_id}/audio", files=upload)
+    assert response.status_code == 200, response.text
+    assert response.json()["text"] == "Сначала открываю портал"

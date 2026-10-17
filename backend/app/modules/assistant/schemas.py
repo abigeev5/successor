@@ -1,9 +1,15 @@
 import uuid
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from app.modules.assistant.models import AnswerStatus
+from app.modules.knowledge.domain.card_types import CardType
+
+# verified — every claim is confirmed; partially_removed — unconfirmed claims were removed;
+# not_verified — the judge failed; degraded — no model, excerpts of the found cards; none — refusal.
+Verification = Literal["verified", "partially_removed", "not_verified", "degraded", "none"]
 
 
 class AskIn(BaseModel):
@@ -15,7 +21,7 @@ class SourceRef(BaseModel):
     n: int
     card_id: uuid.UUID
     title: str
-    type: str
+    type: CardType
 
 
 class AnswerOut(BaseModel):
@@ -25,7 +31,7 @@ class AnswerOut(BaseModel):
     answer: str | None
     sources: list[SourceRef]
     groundedness: float | None
-    verification: str
+    verification: Verification
     refusal_reason: str | None
     forwarded_to: str | None = None  # who got the question as a gap («Я передал его …»)
     feedback: int | None

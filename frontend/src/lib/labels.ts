@@ -1,4 +1,11 @@
-import type { CardStatus, CardType, HandoverReason, ProcessFrequency } from "@/api/client";
+import type {
+  CardStatus,
+  CardType,
+  GapStatus,
+  HandoverReason,
+  ProcessFrequency,
+  Verification,
+} from "@/api/client";
 
 export const REASON_LABELS: Record<HandoverReason, string> = {
   retirement: "Выход на пенсию",
@@ -66,3 +73,18 @@ export function plural(n: number, one: string, few: string, many: string): strin
 export function formatMinutes(seconds: number): string {
   return plural(Math.round(seconds / 60), "минута", "минуты", "минут");
 }
+
+export const GAP_STATUS_LABELS: Record<GapStatus, string> = {
+  open: "Ждёт ответа",
+  answered: "Есть ответ",
+  dismissed: "Закрыт без ответа",
+};
+
+/** The note under an answer (SPEC 7.8). */
+export const VERIFICATION_NOTES: Record<Verification, string | null> = {
+  verified: "Все утверждения подтверждены источниками",
+  partially_removed: "Часть ответа удалена: не нашлось подтверждения",
+  not_verified: "Ответ не удалось проверить — сверьтесь с источниками",
+  degraded: null, // the answer itself says that the model is unavailable
+  none: null,
+};

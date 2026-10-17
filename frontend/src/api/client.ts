@@ -25,6 +25,12 @@ export type CardType = Schemas["CardType"];
 export type CardStatus = Schemas["CardStatus"];
 export type Source = Schemas["SourceOut"];
 export type Consent = Schemas["ConsentOut"];
+export type Answer = Schemas["AnswerOut"];
+export type AnswerSource = Schemas["SourceRef"];
+export type Verification = Answer["verification"];
+export type Gap = Schemas["GapOut"];
+export type GapStatus = Schemas["GapStatus"];
+export type Recognized = Schemas["AudioOut"];
 export type ConsentText = Schemas["ConsentTextOut"];
 
 /**

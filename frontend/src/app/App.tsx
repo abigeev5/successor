@@ -4,11 +4,14 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useMe } from "@/api/auth";
 import type { User, UserRole } from "@/api/client";
 import { FullPageSpinner } from "@/components/Spinner";
+import { AssistantPage } from "@/features/assistant/AssistantPage";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { ConsentPage } from "@/features/consent/ConsentPage";
+import { GapsPage } from "@/features/gaps/GapsPage";
 import { HandoverPage } from "@/features/handovers/HandoverPage";
 import { HandoversPage } from "@/features/handovers/HandoversPage";
 import { InterviewPage } from "@/features/interview/InterviewPage";
+import { KnowledgePage } from "@/features/knowledge/KnowledgePage";
 import { ReviewPage } from "@/features/review/ReviewPage";
 import { SectionPage } from "@/features/sections/SectionPage";
 import { homePath } from "@/lib/roles";
@@ -24,15 +27,11 @@ const PAGES: { path: string; roles: UserRole[]; element: ReactNode }[] = [
   { path: "consent/:handoverId", roles: ["expert"], element: <ConsentPage /> },
   { path: "interview/:sessionId", roles: ["expert", "admin"], element: <InterviewPage /> },
   { path: "review", roles: ["expert", "admin"], element: <ReviewPage /> },
+  { path: "assistant", roles: ["successor", "manager"], element: <AssistantPage /> },
+  { path: "knowledge", roles: ALL, element: <KnowledgePage /> },
+  { path: "gaps", roles: ["manager", "expert", "admin"], element: <GapsPage /> },
   // Placeholders until their milestones (docs/plan.md).
   { path: "dashboard", roles: ["manager"], element: <SectionPage section="dashboard" /> },
-  { path: "gaps", roles: ["manager", "expert"], element: <SectionPage section="gaps" /> },
-  { path: "knowledge", roles: ALL, element: <SectionPage section="knowledge" /> },
-  {
-    path: "assistant",
-    roles: ["successor", "manager"],
-    element: <SectionPage section="assistant" />,
-  },
   { path: "privacy", roles: ["expert"], element: <SectionPage section="privacy" /> },
   { path: "admin", roles: ["admin"], element: <SectionPage section="admin" /> },
 ];

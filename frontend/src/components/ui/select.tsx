@@ -1,4 +1,4 @@
-import type { SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { forwardRef, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 
 import { cn } from "@/lib/cn";
 
@@ -9,6 +9,9 @@ export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectE
   return <select className={cn(FIELD, className)} {...props} />;
 }
 
-export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn(FIELD, "resize-y", className)} {...props} />;
-}
+export const Textarea = forwardRef<
+  HTMLTextAreaElement,
+  TextareaHTMLAttributes<HTMLTextAreaElement>
+>(function Textarea({ className, ...props }, ref) {
+  return <textarea ref={ref} className={cn(FIELD, "resize-y", className)} {...props} />;
+});

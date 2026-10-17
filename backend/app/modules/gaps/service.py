@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import Settings
 from app.core.errors import AppError, Conflict, NotFound
 from app.core.events import bus
 from app.modules import audit
@@ -16,11 +17,15 @@ from app.modules.handovers.access import HandoverRole, ensure_handover_access
 from app.modules.handovers.models import HandoverMember, MemberRole
 from app.modules.handovers.service import get_handover, member_ids
 from app.modules.identity.models import User, UserRole
+from app.modules.interview.schemas import AudioOut
+from app.modules.interview.service import recognize_audio
 from app.modules.knowledge.domain.card_types import CardType
 from app.modules.knowledge.domain.sources import CardOrigin, SourceType
 from app.modules.knowledge.models import CardStatus, KnowledgeCard
 from app.modules.knowledge.service import create_draft_from_source
 from app.modules.org.domain.matching import normalize_name
+from app.modules.privacy.service import require_consent
+from app.providers.registry import Providers
 
 ASKERS = [HandoverRole.SUCCESSOR, HandoverRole.MANAGER, HandoverRole.ADMIN]
 TEAM = [HandoverRole.EXPERT, HandoverRole.MANAGER, HandoverRole.ADMIN]
@@ -117,6 +122,17 @@ async def answer(db: AsyncSession, user: User, gap_id: uuid.UUID, text: str) -> 
     await audit.record(db, action="gap.answered", entity="gap", entity_id=gap.id, user_id=user.id)
     await db.commit()
     return gap
+
+
+async def transcribe(
+    db: AsyncSession, settings: Settings, providers: Providers, user: User, gap_id: uuid.UUID, data: bytes
+) -> AudioOut:
+    """Voice answer to a gap (SPEC 7.8): recognized text goes to the answer field for editing."""
+    gap = await _load(db, user, gap_id, ANSWERERS)
+    if gap.status is not GapStatus.OPEN:
+        raise Conflict("На этот вопрос уже ответили или он закрыт", code="gap_closed")
+    await require_consent(db, user.id, gap.handover_id)  # the voice is personal data, as in the interview
+    return await recognize_audio(db, settings, providers, user, gap.handover_id, data)
 
 
 async def dismiss(db: AsyncSession, user: User, gap_id: uuid.UUID) -> Gap:

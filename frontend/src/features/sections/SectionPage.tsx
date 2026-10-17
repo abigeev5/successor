@@ -1,12 +1,4 @@
-import {
-  BookOpen,
-  LayoutDashboard,
-  MessageCircleQuestion,
-  MessagesSquare,
-  Settings,
-  ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
+import { LayoutDashboard, Settings, ShieldCheck, type LucideIcon } from "lucide-react";
 
 import { EmptyState } from "@/components/EmptyState";
 
@@ -16,21 +8,6 @@ export const SECTIONS: Record<string, { title: string; icon: LucideIcon; text: s
     title: "Панель руководителя",
     icon: LayoutDashboard,
     text: "Здесь будет карта рисков: какие процессы держатся на одном человеке и сколько знаний уже сохранено.",
-  },
-  gaps: {
-    title: "Пробелы",
-    icon: MessageCircleQuestion,
-    text: "Здесь будут вопросы преемника, на которые в базе знаний пока нет ответа.",
-  },
-  knowledge: {
-    title: "База знаний",
-    icon: BookOpen,
-    text: "Подтверждённых карточек пока нет. Они появятся после проверки экспертом.",
-  },
-  assistant: {
-    title: "Ассистент",
-    icon: MessagesSquare,
-    text: "Здесь можно будет задать вопрос о работе и получить ответ со ссылками на проверенные карточки.",
   },
   privacy: {
     title: "Мои данные",

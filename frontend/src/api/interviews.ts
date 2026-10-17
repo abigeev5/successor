@@ -7,6 +7,7 @@ import {
   unwrap,
   type CandidateDecision,
   type ProcessCoverage,
+  type Recognized,
   type Session,
   type SessionBrief,
 } from "./client";
@@ -96,13 +97,11 @@ export function useSessionActions(id: string) {
   };
 }
 
-export type Recognized = { asset_id: string; text: string; duration_ms: number | null };
-
 /** Multipart upload goes through plain fetch: openapi-fetch does not build FormData bodies. */
-export async function uploadAudio(sessionId: string, audio: Blob): Promise<Recognized> {
+export async function postAudio(url: string, audio: Blob): Promise<Recognized> {
   const form = new FormData();
   form.append("file", audio, "answer.webm");
-  const response = await fetch(`/api/interviews/${sessionId}/audio`, {
+  const response = await fetch(url, {
     method: "POST",
     body: form,
     credentials: "same-origin",
@@ -110,4 +109,8 @@ export async function uploadAudio(sessionId: string, audio: Blob): Promise<Recog
   const body = await response.json().catch(() => undefined);
   if (!response.ok) throw toApiError(response.status, body);
   return body as Recognized;
+}
+
+export function uploadAudio(sessionId: string, audio: Blob): Promise<Recognized> {
+  return postAudio(`/api/interviews/${sessionId}/audio`, audio);
 }

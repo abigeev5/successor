@@ -596,10 +596,188 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/assistant/ask": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Ask
+     * @description The full answer after the groundedness check (no streaming, D-012).
+     */
+    post: operations["ask_api_assistant_ask_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/assistant/{qa_id}/feedback": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Feedback */
+    post: operations["feedback_api_assistant__qa_id__feedback_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/assistant/history": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** History */
+    get: operations["history_api_assistant_history_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/gaps": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Gaps */
+    get: operations["list_gaps_api_gaps_get"];
+    put?: never;
+    /** Create */
+    post: operations["create_api_gaps_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/gaps/{gap_id}/audio": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Audio */
+    post: operations["audio_api_gaps__gap_id__audio_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/gaps/{gap_id}/answer": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Answer */
+    post: operations["answer_api_gaps__gap_id__answer_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/gaps/{gap_id}/dismiss": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Dismiss */
+    post: operations["dismiss_api_gaps__gap_id__dismiss_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/gaps/{gap_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Reassign */
+    patch: operations["reassign_api_gaps__gap_id__patch"];
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** AnswerOut */
+    AnswerOut: {
+      /**
+       * Qa Id
+       * Format: uuid
+       */
+      qa_id: string;
+      /** Question */
+      question: string;
+      status: components["schemas"]["AnswerStatus"];
+      /** Answer */
+      answer: string | null;
+      /** Sources */
+      sources: components["schemas"]["SourceRef"][];
+      /** Groundedness */
+      groundedness: number | null;
+      /**
+       * Verification
+       * @enum {string}
+       */
+      verification: "verified" | "partially_removed" | "not_verified" | "degraded" | "none";
+      /** Refusal Reason */
+      refusal_reason: string | null;
+      /** Forwarded To */
+      forwarded_to?: string | null;
+      /** Feedback */
+      feedback: number | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /**
+     * AnswerStatus
+     * @enum {string}
+     */
+    AnswerStatus: "answered" | "partial" | "refused";
     /** ApproveIn */
     ApproveIn: {
       edits?: components["schemas"]["CardEdit"] | null;
@@ -608,6 +786,16 @@ export interface components {
        * @default 0
        */
       review_seconds: number;
+    };
+    /** AskIn */
+    AskIn: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Question */
+      question: string;
     };
     /** AspectOut */
     AspectOut: {
@@ -631,6 +819,11 @@ export interface components {
       text: string;
       /** Duration Ms */
       duration_ms: number | null;
+    };
+    /** Body_audio_api_gaps__gap_id__audio_post */
+    Body_audio_api_gaps__gap_id__audio_post: {
+      /** File */
+      file: string;
     };
     /** Body_audio_api_interviews__session_id__audio_post */
     Body_audio_api_interviews__session_id__audio_post: {
@@ -845,6 +1038,78 @@ export interface components {
       /** Hash */
       hash: string;
     };
+    /** FeedbackIn */
+    FeedbackIn: {
+      /** Helpful */
+      helpful: boolean;
+      /** Comment */
+      comment?: string | null;
+    };
+    /** GapAnswerIn */
+    GapAnswerIn: {
+      /** Text */
+      text: string;
+    };
+    /** GapAssignIn */
+    GapAssignIn: {
+      /**
+       * Assignee Id
+       * Format: uuid
+       */
+      assignee_id: string;
+    };
+    /** GapCreate */
+    GapCreate: {
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Question */
+      question: string;
+      /** Qa Log Id */
+      qa_log_id?: string | null;
+    };
+    /** GapOut */
+    GapOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Question */
+      question: string;
+      status: components["schemas"]["GapStatus"];
+      /** Asked By Name */
+      asked_by_name: string | null;
+      /** Assignee Id */
+      assignee_id: string | null;
+      /** Assignee Name */
+      assignee_name: string | null;
+      /** Answer Text */
+      answer_text: string | null;
+      /** Answered Card Id */
+      answered_card_id: string | null;
+      /** Answer On Review */
+      answer_on_review: boolean;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Answered At */
+      answered_at: string | null;
+    };
+    /**
+     * GapStatus
+     * @enum {string}
+     */
+    GapStatus: "open" | "answered" | "dismissed";
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
@@ -1237,6 +1502,19 @@ export interface components {
       } | null;
       /** Available */
       available: boolean;
+    };
+    /** SourceRef */
+    SourceRef: {
+      /** N */
+      n: number;
+      /**
+       * Card Id
+       * Format: uuid
+       */
+      card_id: string;
+      /** Title */
+      title: string;
+      type: components["schemas"]["CardType"];
     };
     /**
      * SourceType
@@ -2602,6 +2880,306 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["CardDetail"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  ask_api_assistant_ask_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AskIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AnswerOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  feedback_api_assistant__qa_id__feedback_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        qa_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["FeedbackIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AnswerOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  history_api_assistant_history_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AnswerOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_gaps_api_gaps_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+        status?: components["schemas"]["GapStatus"] | null;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GapOut"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_api_gaps_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GapCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GapOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  audio_api_gaps__gap_id__audio_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        gap_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_audio_api_gaps__gap_id__audio_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AudioOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  answer_api_gaps__gap_id__answer_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        gap_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GapAnswerIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GapOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  dismiss_api_gaps__gap_id__dismiss_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        gap_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GapOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  reassign_api_gaps__gap_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        gap_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GapAssignIn"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GapOut"];
         };
       };
       /** @description Validation Error */

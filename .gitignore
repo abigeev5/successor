@@ -7,3 +7,6 @@ dist/
 *.tsbuildinfo
 /data/
 backend/data/
+
+# eval: fake-run reports are CI checks, not results
+/eval/reports/*_fake.md

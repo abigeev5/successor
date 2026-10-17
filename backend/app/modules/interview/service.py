@@ -414,6 +414,18 @@ async def transcribe_audio(
 ) -> AudioOut:
     """Voice answer (SPEC 7.4): store the audio, recognize it; the expert edits the text and sends it."""
     session = await _own_session(db, user, session_id)
+    return await recognize_audio(db, settings, providers, user, session.handover_id, data)
+
+
+async def recognize_audio(
+    db: AsyncSession,
+    settings: Settings,
+    providers: Providers,
+    user: User,
+    handover_id: uuid.UUID,
+    data: bytes,
+) -> AudioOut:
+    """Stores a voice answer (≤ 2 min) and recognizes it. Access and consent are checked by the caller."""
     asset = await save_bytes(
         db,
         settings,
@@ -421,7 +433,7 @@ async def transcribe_audio(
         expected_kind=AssetKind.AUDIO,
         max_bytes=MAX_AUDIO_BYTES,
         owner_id=user.id,
-        handover_id=session.handover_id,
+        handover_id=handover_id,
     )
     path = absolute_path(settings, asset)
     await db.commit()  # release the session lock while the recognizer works

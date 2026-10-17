@@ -1,6 +1,7 @@
 """Assistant use cases: ask (stores qa_logs, publishes events), feedback, history."""
 
 import uuid
+from typing import cast
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,7 +12,7 @@ from app.core.events import bus
 from app.modules.assistant.events import AnswerFeedback, AnswerRefused, AnswerShown
 from app.modules.assistant.models import AnswerStatus, QaLog
 from app.modules.assistant.pipeline import answer_question
-from app.modules.assistant.schemas import AnswerOut, SourceRef
+from app.modules.assistant.schemas import AnswerOut, SourceRef, Verification
 from app.modules.handovers.access import HandoverRole, ensure_handover_access
 from app.modules.handovers.models import MemberRole
 from app.modules.handovers.service import get_handover, member_ids
@@ -30,7 +31,7 @@ def to_out(log: QaLog, forwarded_to: str | None = None) -> AnswerOut:
         answer=log.answer,
         sources=[SourceRef.model_validate(s) for s in log.sources],
         groundedness=log.groundedness,
-        verification=log.verification,
+        verification=cast(Verification, log.verification),  # validated by pydantic
         refusal_reason=log.refusal_reason,
         forwarded_to=forwarded_to,
         feedback=log.feedback,
