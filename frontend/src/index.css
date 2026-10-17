@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Palette from SPEC 9.2 (hackathon presentation template). */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-primary: #0a86e0;
+  --color-primary-dark: #0870bb;
+  --color-primary-light: #cfe9fe;
+  --color-surface: #f4f4f4;
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #434343;
+  --color-danger: #c62828;
+  --color-danger-light: #fdecea;
+  --color-warning-light: #fff4d6;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+}
