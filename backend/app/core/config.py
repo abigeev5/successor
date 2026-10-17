@@ -4,11 +4,14 @@ from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Repo-root .env (local runs from backend/); inside docker the variables come from compose.
+_ROOT_ENV = Path(__file__).resolve().parents[3] / ".env"
+
 
 class Settings(BaseSettings):
     """Application settings, read from environment / .env (see .env.example)."""
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=(_ROOT_ENV, ".env"), env_file_encoding="utf-8", extra="ignore")
 
     # Database
     database_url: str = "postgresql+psycopg://preemnik:preemnik@localhost:5432/preemnik"

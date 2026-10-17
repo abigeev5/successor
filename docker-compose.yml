@@ -1,0 +1,66 @@
+name: preemnik
+
+x-backend: &backend
+  image: preemnik-backend
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  env_file:
+    - path: .env
+      required: false
+  environment:
+    DATABASE_URL: postgresql+psycopg://preemnik:${POSTGRES_PASSWORD:-preemnik}@db:5432/preemnik
+    STORAGE_DIR: /data
+  volumes:
+    - appdata:/data
+  restart: unless-stopped
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: preemnik
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-preemnik}
+      POSTGRES_DB: preemnik
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U preemnik"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  backend:
+    <<: *backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  worker:
+    <<: *backend
+    command: ["python", "-m", "app.worker"]
+    depends_on:
+      backend:
+        condition: service_healthy  # backend applies migrations first
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  appdata:

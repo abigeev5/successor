@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend — lint и тесты
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: preemnik
+          POSTGRES_PASSWORD: preemnik
+          POSTGRES_DB: preemnik
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U preemnik"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.32"
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: ruff
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: import-linter (правила зависимостей модулей)
+        run: uv run lint-imports
+      - name: mypy (мягко)
+        run: uv run mypy app
+        continue-on-error: true
+      - name: pytest (fake-провайдеры, реальная PostgreSQL)
+        run: uv run pytest -q
+        env:
+          REQUIRE_DB: "1"
+          TEST_DATABASE_URL: postgresql+psycopg://preemnik:preemnik@localhost:5432/preemnik_test
+
+  frontend:
+    name: Frontend — lint, типы, тесты, сборка
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  docker:
+    name: Docker — сборка образов
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
