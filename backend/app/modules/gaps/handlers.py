@@ -8,11 +8,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.events import EventBus
 from app.modules.assistant.events import AnswerRefused
 from app.modules.gaps import service
+from app.modules.gaps.erasure import GapAnswersEraser
 from app.modules.gaps.models import Gap
 from app.modules.knowledge import resolvers
 from app.modules.knowledge.domain.sources import SourceType
 from app.modules.knowledge.events import CardApproved, CardRejected
 from app.modules.knowledge.resolvers import ResolvedSource
+from app.modules.privacy import erasure
 
 
 async def on_refused(db: AsyncSession, e: AnswerRefused) -> None:
@@ -50,3 +52,4 @@ def register(bus: EventBus) -> None:
     bus.subscribe(CardApproved, on_card_approved)
     bus.subscribe(CardRejected, on_card_rejected)
     resolvers.register(GapAnswerResolver())
+    erasure.register(GapAnswersEraser())

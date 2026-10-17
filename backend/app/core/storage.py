@@ -6,7 +6,7 @@ no path traversal. The type is detected from the first bytes (D-037).
 
 import hashlib
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import BinaryIO
@@ -82,6 +82,18 @@ def sniff_media(head: bytes) -> tuple[str, str, AssetKind] | None:
 
 def absolute_path(settings: Settings, asset: Asset) -> Path:
     return settings.storage_dir / asset.storage_path
+
+
+def erase_file(settings: Settings, asset: Asset) -> bool:
+    """Deletes the file and marks the asset deleted; the row stays (other tables point to it).
+
+    Returns False if the asset was already deleted. No commit here.
+    """
+    if asset.deleted_at is not None:
+        return False
+    absolute_path(settings, asset).unlink(missing_ok=True)
+    asset.deleted_at = datetime.now(UTC)
+    return True
 
 
 def _target(settings: Settings, asset_id: uuid.UUID, handover_id: uuid.UUID | None, ext: str) -> Path:

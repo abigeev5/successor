@@ -199,6 +199,7 @@ async def approve(
             origin=card.origin.value,
             edited=bool(changes),
             user_id=user.id,
+            review_seconds=review_seconds,
         ),
     )
     await audit.record(
@@ -221,7 +222,12 @@ async def reject(
     card.status = CardStatus.REJECTED
     card.reject_reason = (reason or "").strip() or None
     card.review_seconds += review_seconds
-    await bus.publish(db, CardRejected(card_id=card.id, handover_id=card.handover_id, user_id=user.id))
+    await bus.publish(
+        db,
+        CardRejected(
+            card_id=card.id, handover_id=card.handover_id, user_id=user.id, review_seconds=review_seconds
+        ),
+    )
     await audit.record(db, action="card.rejected", entity="card", entity_id=card.id, user_id=user.id)
     await db.commit()
     return card

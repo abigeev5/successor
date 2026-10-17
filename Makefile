@@ -4,7 +4,7 @@ COMPOSE := docker compose
 DB_PORT ?= 5432
 TEST_DATABASE_URL ?= postgresql+psycopg://preemnik:preemnik@localhost:$(DB_PORT)/preemnik_test
 
-.PHONY: help up down logs ps db migrate seed-demo test test-unit test-backend test-frontend \
+.PHONY: help up up-local-llm down logs ps db migrate seed-demo test test-unit test-backend test-frontend \
         lint format gen-api eval dev-backend dev-worker dev-frontend install
 
 help:  ## Показать команды
@@ -15,8 +15,11 @@ up:  ## Собрать и поднять всё: db, backend, worker, frontend (
 	$(COMPOSE) up -d --build --wait
 	@echo "Готово: http://localhost:$${FRONTEND_PORT:-3000}. Демо-данные: make seed-demo"
 
+up-local-llm:  ## То же + LLM и эмбеддинги в контейнерах llama.cpp (GGUF из ./models, см. README)
+	$(COMPOSE) --profile local-llm up -d --build --wait
+
 down:  ## Остановить (данные в volume сохраняются)
-	$(COMPOSE) down
+	$(COMPOSE) --profile local-llm down
 
 logs:  ## Логи всех сервисов
 	$(COMPOSE) logs -f --tail=100

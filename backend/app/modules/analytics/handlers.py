@@ -53,11 +53,19 @@ async def on_card_approved(db: AsyncSession, e: CardApproved) -> None:
         card_id=str(e.card_id),
         version=e.version,
         edited=e.edited,
+        origin=e.origin,
     )
+    _review_time(db, e.user_id, e.handover_id, e.review_seconds)
 
 
 async def on_card_rejected(db: AsyncSession, e: CardRejected) -> None:
     _add(db, "card_rejected", user_id=e.user_id, handover_id=e.handover_id, card_id=str(e.card_id))
+    _review_time(db, e.user_id, e.handover_id, e.review_seconds)
+
+
+def _review_time(db: AsyncSession, user_id: uuid.UUID | None, handover_id: uuid.UUID, seconds: int) -> None:
+    if seconds > 0:
+        _add(db, "review_time", user_id=user_id, handover_id=handover_id, seconds=seconds)
 
 
 async def on_answer_shown(db: AsyncSession, e: AnswerShown) -> None:

@@ -66,6 +66,27 @@ services:
       - backend
     restart: unless-stopped
 
+  # --- Profile local-llm: models inside the contour, in containers (D-027, D-033) ---
+  # docker compose --profile local-llm up -d (make up-local-llm). GGUF files are taken from ./models;
+  # in .env: LLM_BASE_URL=http://llm:8080/v1, EMBEDDINGS_BASE_URL=http://embeddings:8080/v1.
+  # The default image runs on CPU; for an NVIDIA GPU set LLAMA_CPP_IMAGE=ghcr.io/ggml-org/llama.cpp:server-cuda
+  # and add a GPU reservation. On macOS keep llama-server on the host (Docker has no access to Metal).
+  llm:
+    image: ${LLAMA_CPP_IMAGE:-ghcr.io/ggml-org/llama.cpp:server}
+    profiles: ["local-llm"]
+    command: ["-m", "/models/${LLM_GGUF:-llm.gguf}", "--host", "0.0.0.0", "--port", "8080", "-c", "16384", "--jinja"]
+    volumes:
+      - ./models:/models:ro
+    restart: unless-stopped
+
+  embeddings:
+    image: ${LLAMA_CPP_IMAGE:-ghcr.io/ggml-org/llama.cpp:server}
+    profiles: ["local-llm"]
+    command: ["-m", "/models/${EMBEDDINGS_GGUF:-bge-m3.gguf}", "--host", "0.0.0.0", "--port", "8080", "--embeddings", "--pooling", "cls"]
+    volumes:
+      - ./models:/models:ro
+    restart: unless-stopped
+
 volumes:
   pgdata:
   appdata:

@@ -28,6 +28,7 @@ class CardApproved(Event):
     origin: str
     edited: bool
     user_id: uuid.UUID | None
+    review_seconds: int = 0  # time the expert spent on this review (SPEC 7.10, `review_time`)
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,7 @@ class CardRejected(Event):
     card_id: uuid.UUID
     handover_id: uuid.UUID
     user_id: uuid.UUID | None
+    review_seconds: int = 0
 
 
 @dataclass(frozen=True)

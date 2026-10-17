@@ -8,16 +8,18 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
-from app.core.errors import AppError, Conflict, NotFound
+from app.core.errors import AppError, Conflict, Forbidden, NotFound
 from app.core.events import bus
-from app.core.storage import AssetKind, store_stream
+from app.core.storage import Asset, AssetKind, store_stream
 from app.modules import audit
 from app.modules.handovers.access import HandoverRole, ensure_handover_access
 from app.modules.handovers.service import list_processes
-from app.modules.identity.models import User
+from app.modules.identity.models import User, UserRole
 from app.modules.knowledge.domain.sources import SourceType
 from app.modules.knowledge.models import CardSource, KnowledgeCard
+from app.modules.privacy.erasure import sources_erased
 from app.modules.privacy.service import require_consent
+from app.modules.recordings.erasure import erase_recordings
 from app.modules.recordings.events import RecordingUploaded
 from app.modules.recordings.models import Recording, RecordingStatus, RecordingStep
 from app.modules.recordings.schemas import RecordingBrief, RecordingOut, StepOut
@@ -90,6 +92,29 @@ async def _load(
     return recording
 
 
+async def delete_recording(db: AsyncSession, settings: Settings, user: User, recording_id: uuid.UUID) -> None:
+    """`DELETE /recordings/{id}` (SPEC 7.3): the expert deletes their own recording; admin — any."""
+    recording = await _load(db, user, recording_id, UPLOADERS)
+    if user.role is not UserRole.ADMIN and recording.created_by != user.id:
+        raise Forbidden("Удалить запись может только тот, кто её сделал", code="recording_forbidden")
+    if recording.status is RecordingStatus.PROCESSING:
+        raise Conflict(
+            "Запись ещё обрабатывается. Удалите её, когда обработка закончится.", code="recording_busy"
+        )
+    handover_id = recording.handover_id
+    erased = await erase_recordings(db, settings, [recording])
+    await sources_erased(db, handover_id=handover_id, user_id=user.id, sources=erased.sources)
+    await audit.record(
+        db,
+        action="recording.deleted",
+        entity="recording",
+        entity_id=recording_id,
+        user_id=user.id,
+        meta={"handover_id": str(handover_id), "files": erased.files},
+    )
+    await db.commit()
+
+
 async def retry(db: AsyncSession, user: User, recording_id: uuid.UUID) -> Recording:
     recording = await _load(db, user, recording_id, UPLOADERS)
     if recording.status is not RecordingStatus.FAILED:
@@ -157,9 +182,11 @@ async def view(db: AsyncSession, user: User, recording_id: uuid.UUID) -> Recordi
                 .limit(1)
             )
         ).scalar_one_or_none()
+    video = await db.get(Asset, recording.video_asset_id)
     return RecordingOut(
         **_brief(recording).model_dump(),
         video_asset_id=recording.video_asset_id,
+        video_available=video is not None and video.deleted_at is None,
         steps=[
             StepOut(
                 id=s.id,

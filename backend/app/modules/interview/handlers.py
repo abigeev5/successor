@@ -8,11 +8,13 @@ from app.core import jobs
 from app.core.events import EventBus
 from app.core.jobs import JobContext
 from app.modules.handovers.service import list_processes
+from app.modules.interview.erasure import InterviewEraser
 from app.modules.interview.events import InterviewSessionFinished
 from app.modules.interview.models import InterviewSession
 from app.modules.interview.sources import InterviewMessageResolver, build_source_document
 from app.modules.knowledge import resolvers
 from app.modules.knowledge.extraction import extract
+from app.modules.privacy import erasure
 
 EXTRACT_JOB = "extract_cards_from_session"
 
@@ -36,3 +38,4 @@ def register(bus: EventBus) -> None:
     )
     jobs.register_handler(EXTRACT_JOB, extract_cards_from_session)
     resolvers.register(InterviewMessageResolver())
+    erasure.register(InterviewEraser())

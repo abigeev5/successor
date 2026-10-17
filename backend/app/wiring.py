@@ -29,7 +29,9 @@ def wire() -> None:
     from app.modules.analytics import handlers as analytics
     from app.modules.gaps import handlers as gaps
     from app.modules.interview import handlers as interview
+    from app.modules.knowledge import handlers as knowledge
     from app.modules.knowledge import resolvers
+    from app.modules.privacy import erasure, retention
     from app.modules.recordings import handlers as recordings
     from app.modules.search import handlers as search
 
@@ -37,6 +39,9 @@ def wire() -> None:
     bus.clear()
     jobs.clear_handlers()
     resolvers.clear()
+    erasure.clear()
+    knowledge.register(bus)
+    retention.register()
     interview.register(bus)
     recordings.register(bus)
     search.register(bus)

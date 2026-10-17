@@ -10,6 +10,9 @@ from app.core.config import Settings
 from app.core.errors import Forbidden, NotFound
 from app.core.prompts import get_prompts
 from app.modules import audit
+from app.modules.handovers.access import HandoverRole, ensure_handover_access
+from app.modules.identity.models import User
+from app.modules.privacy import erasure
 from app.modules.privacy.models import Consent
 
 CONSENT_PROMPT = "consent_v1"
@@ -84,3 +87,31 @@ async def revoke(db: AsyncSession, *, consent_id: uuid.UUID, user_id: uuid.UUID)
         )
         await db.commit()
     return consent
+
+
+async def my_data(
+    db: AsyncSession, user: User, handover_id: uuid.UUID
+) -> tuple[Consent | None, dict[str, int]]:
+    """The expert's consent and what is stored about them in the handover (the «Мои данные» page)."""
+    await ensure_handover_access(db, user, handover_id, [HandoverRole.EXPERT])
+    consent = await active_consent(db, user.id, handover_id)
+    return consent, await erasure.describe(db, user_id=user.id, handover_id=handover_id)
+
+
+async def erase_my_data(
+    db: AsyncSession, settings: Settings, user: User, handover_id: uuid.UUID
+) -> erasure.Erased:
+    """`DELETE /privacy/my-data` (SPEC 7.3): files, transcripts, interview messages, recording steps,
+    gap answers; cards without sources are archived. The consent record stays as a legal trace."""
+    await ensure_handover_access(db, user, handover_id, [HandoverRole.EXPERT])
+    erased = await erasure.erase(db, settings, user_id=user.id, handover_id=handover_id)
+    await audit.record(
+        db,
+        action="data.erased",
+        entity="handover",
+        entity_id=handover_id,
+        user_id=user.id,
+        meta={**erased.counts, "files": erased.files, "sources": len(erased.sources)},
+    )
+    await db.commit()
+    return erased

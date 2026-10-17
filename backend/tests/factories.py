@@ -5,7 +5,9 @@ import uuid
 import httpx
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
 from app.core.security import hash_password
+from app.core.storage import Asset, AssetKind
 from app.modules.handovers.models import Handover, HandoverMember, HandoverProcess, HandoverReason, MemberRole
 from app.modules.identity.models import User, UserRole
 from app.modules.org.models import OrgUnit, Process
@@ -79,3 +81,26 @@ async def give_consent(db: AsyncSession, user: User, handover: Handover) -> None
 async def login(client: httpx.AsyncClient, user: User) -> None:
     response = await client.post("/api/auth/login", json={"email": user.email, "password": PASSWORD})
     assert response.status_code == 200, response.text
+
+
+async def make_asset(
+    db: AsyncSession, kind: AssetKind, owner_id: uuid.UUID | None, handover_id: uuid.UUID
+) -> Asset:
+    asset_id = uuid.uuid4()
+    relative = f"{handover_id}/{asset_id}.bin"
+    path = get_settings().storage_dir / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"media")
+    asset = Asset(
+        id=asset_id,
+        kind=kind,
+        storage_path=relative,
+        mime="application/octet-stream",
+        size_bytes=5,
+        sha256="0" * 64,
+        owner_id=owner_id,
+        handover_id=handover_id,
+    )
+    db.add(asset)
+    await db.flush()
+    return asset

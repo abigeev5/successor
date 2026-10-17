@@ -13,6 +13,7 @@ from app.modules.identity.models import User
 from app.modules.privacy import service
 
 router = APIRouter(prefix="/consents", tags=["privacy"])
+data_router = APIRouter(prefix="/privacy", tags=["privacy"])
 
 
 class ConsentTextOut(BaseModel):
@@ -69,3 +70,38 @@ async def revoke(
     consent_id: uuid.UUID, user: User = Depends(current_user), db: AsyncSession = Depends(get_db)
 ) -> object:
     return await service.revoke(db, consent_id=consent_id, user_id=user.id)
+
+
+class MyDataOut(BaseModel):
+    handover_id: uuid.UUID
+    consent: ConsentOut | None
+    counts: dict[str, int]  # interview_messages, recordings, gap_answers, files, files_bytes
+
+
+class ErasedOut(BaseModel):
+    counts: dict[str, int]
+    files: int
+    sources: int
+
+
+@data_router.get("/my-data", response_model=MyDataOut)
+async def my_data(
+    handover_id: uuid.UUID, user: User = Depends(current_user), db: AsyncSession = Depends(get_db)
+) -> MyDataOut:
+    consent, counts = await service.my_data(db, user, handover_id)
+    return MyDataOut(
+        handover_id=handover_id,
+        consent=ConsentOut.model_validate(consent) if consent else None,
+        counts=counts,
+    )
+
+
+@data_router.delete("/my-data", response_model=ErasedOut)
+async def erase_my_data(
+    handover_id: uuid.UUID,
+    user: User = Depends(current_user),
+    db: AsyncSession = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+) -> ErasedOut:
+    erased = await service.erase_my_data(db, settings, user, handover_id)
+    return ErasedOut(counts=erased.counts, files=erased.files, sources=len(erased.sources))

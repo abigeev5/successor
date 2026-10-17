@@ -32,6 +32,18 @@ def test_offline_config_flags_external_urls() -> None:
     assert check_offline_config(settings) == ["http://8.8.8.8/v1"]
 
 
+def test_local_llm_profile_passes_offline_mode() -> None:
+    """The compose profile `local-llm` (services llm and embeddings) works with OFFLINE_MODE=true."""
+    settings = Settings(
+        offline_mode=True,
+        llm_provider="openai_compatible",
+        llm_base_url="http://llm:8080/v1",
+        embeddings_provider="openai_compatible",
+        embeddings_base_url="http://embeddings:8080/v1",
+    )
+    assert check_offline_config(settings) == []
+
+
 def test_offline_config_is_ignored_when_online() -> None:
     assert check_offline_config(Settings(offline_mode=False, llm_base_url="http://8.8.8.8/v1")) == []
 

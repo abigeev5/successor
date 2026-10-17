@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings, get_settings
@@ -49,3 +49,14 @@ async def retry(
 ) -> RecordingOut:
     await service.retry(db, user, recording_id)
     return await service.view(db, user, recording_id)
+
+
+@router.delete("/{recording_id}", status_code=204)
+async def delete_recording(
+    recording_id: uuid.UUID,
+    user: User = Depends(current_user),
+    db: AsyncSession = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+) -> Response:
+    await service.delete_recording(db, settings, user, recording_id)
+    return Response(status_code=204)

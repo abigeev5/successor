@@ -32,6 +32,7 @@ class RecordingBrief(BaseModel):
 
 class RecordingOut(RecordingBrief):
     video_asset_id: uuid.UUID
+    video_available: bool  # False after deletion by the retention period (RETENTION_DAYS_RAW_MEDIA)
     steps: list[StepOut]
     card_id: uuid.UUID | None  # the procedure draft made from the steps
     card_status: str | None

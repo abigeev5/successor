@@ -71,9 +71,14 @@ class Settings(BaseSettings):
     recording_max_mb: int = 1024
     recording_max_minutes: int = 30
 
+    # Manager dashboard: risk level boundaries (SPEC 7.9; the team may change them, SPEC 17.5)
+    risk_high: float = 0.35
+    risk_medium: float = 0.15
+
     # Privacy
     offline_mode: bool = False
     retention_days_raw_media: int = 180
+    retention_check_interval_s: float = 60 * 60  # how often the worker looks for expired raw media
 
     # Worker
     worker_poll_interval_s: float = 1.0
