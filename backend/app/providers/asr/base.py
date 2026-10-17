@@ -21,6 +21,7 @@ class Segment:
 @dataclass(frozen=True)
 class Transcript:
     segments: list[Segment]
+    duration_ms: int | None = None  # audio length, when the recognizer reports it
 
     @property
     def text(self) -> str:
@@ -37,7 +38,8 @@ class Transcript:
                     words=[Word(int(w["start_ms"]), int(w["end_ms"]), w["word"]) for w in s.get("words", [])],
                 )
                 for s in raw["segments"]
-            ]
+            ],
+            duration_ms=raw.get("duration_ms"),
         )
 
 

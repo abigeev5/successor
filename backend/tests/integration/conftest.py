@@ -12,13 +12,13 @@ import psycopg
 import pytest
 from alembic import command
 from alembic.config import Config
+from fastapi import FastAPI
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core import jobs
 from app.core.db import Base, dispose_engine, get_sessionmaker
-from app.core.events import bus
+from app.wiring import wire
 from tests.conftest import TEST_DATABASE_URL
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -64,23 +64,29 @@ def database() -> Iterator[None]:
 
 
 @pytest.fixture
-async def db() -> AsyncIterator[AsyncSession]:
+async def db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> AsyncIterator[AsyncSession]:
+    from app.core.config import get_settings
+
+    monkeypatch.setattr(get_settings(), "storage_dir", tmp_path)
+    wire()  # tests may add their own subscribers; start every test from the real wiring
     async with get_sessionmaker()() as session:
         yield session
     tables = ", ".join(t.name for t in reversed(Base.metadata.sorted_tables))
     async with get_sessionmaker()() as session:
         await session.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
         await session.commit()
-    bus.clear()
-    jobs.clear_handlers()
 
 
 @pytest.fixture
-async def client(db: AsyncSession) -> AsyncIterator[httpx.AsyncClient]:
+def app(db: AsyncSession) -> FastAPI:
     from app.main import create_app
 
-    transport = httpx.ASGITransport(app=create_app())
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as c:
+    return create_app()
+
+
+@pytest.fixture
+async def client(app: FastAPI) -> AsyncIterator[httpx.AsyncClient]:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         yield c
 
 

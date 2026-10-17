@@ -96,3 +96,16 @@ def make_http_client(settings: Settings, **kwargs: Any) -> httpx.AsyncClient:
     hooks.setdefault("request", []).append(_guard)
     kwargs.setdefault("timeout", settings.llm_timeout_s)
     return httpx.AsyncClient(event_hooks=hooks, **kwargs)
+
+
+def make_sync_http_client(settings: Settings, **kwargs: Any) -> httpx.Client:
+    """Synchronous twin of make_http_client (embeddings are called from worker threads)."""
+
+    def _guard(request: httpx.Request) -> None:
+        if settings.offline_mode and not is_local_url(str(request.url)):
+            raise OfflineModeViolation()
+
+    hooks = kwargs.pop("event_hooks", {})
+    hooks.setdefault("request", []).append(_guard)
+    kwargs.setdefault("timeout", settings.llm_timeout_s)
+    return httpx.Client(event_hooks=hooks, **kwargs)

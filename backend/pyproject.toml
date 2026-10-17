@@ -15,6 +15,9 @@ dependencies = [
     "pyjwt>=2.8",
     "jinja2>=3.1",
     "httpx>=0.27",
+    "faster-whisper>=1.1",
+    "rapidfuzz>=3.9",
+    "python-multipart>=0.0.9",
 ]
 
 [dependency-groups]
@@ -64,6 +67,10 @@ root_package = "app"
 name = "Modules import only downward (docs/architecture.md, 3.2)"
 type = "layers"
 layers = [
+    "app.modules.analytics",
+    "app.modules.interview",
+    "app.modules.knowledge",
+    "app.modules.privacy",
     "app.modules.handovers",
     "app.modules.org",
     "app.modules.identity",

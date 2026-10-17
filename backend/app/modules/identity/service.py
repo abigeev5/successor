@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.errors import Conflict, NotAuthenticated, NotFound
 from app.core.security import hash_password, verify_password
 from app.modules import audit
-from app.modules.identity.models import User
+from app.modules.identity.models import User, UserRole
 from app.modules.identity.schemas import UserCreate, UserUpdate
 
 INVALID_CREDENTIALS = "Неверный email или пароль"
@@ -81,3 +81,14 @@ async def update_user(
     )
     await db.commit()
     return user
+
+
+async def directory(
+    db: AsyncSession, *, org_unit_id: uuid.UUID | None, role: UserRole | None, restrict: bool
+) -> list[User]:
+    stmt = select(User).where(User.is_active.is_(True)).order_by(User.full_name)
+    if restrict:
+        stmt = stmt.where(User.org_unit_id == org_unit_id)
+    if role is not None:
+        stmt = stmt.where(User.role == role)
+    return list((await db.execute(stmt)).scalars())

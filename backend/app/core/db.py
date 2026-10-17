@@ -2,6 +2,7 @@ import uuid
 from collections.abc import AsyncIterator
 from datetime import datetime
 from enum import StrEnum
+from typing import Any, ClassVar
 
 from sqlalchemy import DateTime, Enum, MetaData, func
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
@@ -28,6 +29,10 @@ class UUIDPk:
 
 
 class Timestamps:
+    # Server-generated values come back via RETURNING right away. Without it, reading `updated_at`
+    # after an UPDATE triggers a lazy load, which fails in async code (docs/lessons.md, L-006).
+    __mapper_args__: ClassVar[dict[str, Any]] = {"eager_defaults": True}
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

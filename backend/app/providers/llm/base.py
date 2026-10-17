@@ -13,7 +13,11 @@ class Message:
     content: str
 
 
-class LLMStructuredOutputError(Exception):
+class LLMError(Exception):
+    """The model server failed: network, timeout, HTTP error, unexpected response."""
+
+
+class LLMStructuredOutputError(LLMError):
     """The model did not return valid JSON for the schema after all attempts (SPEC, 5.2)."""
 
 

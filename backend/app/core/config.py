@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     llm_model: str = ""
     llm_judge_model: str = ""
     llm_timeout_s: float = 60.0
+    llm_json_mode: Literal["json_schema", "json_object", "none"] = "json_schema"
     gigachat_credentials: str = ""
     gigachat_scope: str = "GIGACHAT_API_PERS"
 
@@ -41,12 +42,14 @@ class Settings(BaseSettings):
     embeddings_provider: Literal["sentence_transformers", "openai_compatible", "fake"] = "fake"
     embeddings_model: str = "BAAI/bge-m3"
     embeddings_base_url: str = ""
+    embeddings_api_key: str = ""
     embeddings_device: str = "cpu"
     embeddings_dim: int = 1024
 
     # Speech recognition
     asr_provider: Literal["faster_whisper", "gigaam", "fake"] = "fake"
-    asr_model: str = "large-v3"
+    asr_model: str = "small"  # D-031; a local directory path also works (offline contour)
+    asr_download_root: str = ""  # where faster-whisper keeps downloaded models; empty = HF cache
     asr_device: str = "cpu"
     asr_compute_type: str = "int8"
 
