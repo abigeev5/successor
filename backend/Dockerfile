@@ -8,6 +8,11 @@ ENV PYTHONUNBUFFERED=1 \
     UV_PROJECT_ENVIRONMENT=/opt/venv \
     PATH=/opt/venv/bin:$PATH
 
+# ffmpeg — audio and frames of screen recordings; Tesseract (rus+eng) — OCR for personal data on screenshots.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ffmpeg tesseract-ocr tesseract-ocr-rus \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir uv==0.11.32 \
     && useradd --create-home --uid 1000 app \
     && mkdir -p /data /home/app/.cache/huggingface \

@@ -35,6 +35,8 @@ jobs:
         with:
           version: "0.11.32"
           enable-cache: true
+      - name: ffmpeg и Tesseract (записи экрана, ПДн)
+        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg tesseract-ocr tesseract-ocr-rus
       - run: uv sync --frozen
       - name: ruff
         run: uv run ruff check . && uv run ruff format --check .

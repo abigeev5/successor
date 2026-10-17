@@ -33,14 +33,15 @@ async def test_seed_is_idempotent_and_demo_accounts_log_in(
         "users_total": 5,
         "processes": 4,
         "messages": 38,
-        "cards_approved": 25,
+        "cards_approved": 26,  # 25 from the interview + the demo recording's procedure
         "cards_draft": 5,
-        "chunks": 25,
+        "chunks": 26,
+        "recording_steps": 6,
         "open_gaps": 2,
     }
     assert (await seed.seed(db))["users_created"] == 0  # second run: same known state
     assert await db.scalar(select(func.count()).select_from(User)) == 5
-    assert await db.scalar(select(func.count()).select_from(KnowledgeCard)) == 30
+    assert await db.scalar(select(func.count()).select_from(KnowledgeCard)) == 31
 
     for email, role in [
         ("manager@demo.local", "manager"),
@@ -58,7 +59,7 @@ async def test_seed_is_idempotent_and_demo_accounts_log_in(
     )
     [handover] = (await client.get("/api/handovers")).json()
     cards = (await client.get("/api/cards", params={"handover_id": handover["id"]})).json()
-    assert len(cards) == 25 and {c["status"] for c in cards} == {"approved"}
+    assert len(cards) == 26 and {c["status"] for c in cards} == {"approved"}
     coverage = (await client.get("/api/interviews/coverage", params={"handover_id": handover["id"]})).json()
     assert coverage[0]["name"] == "Отчёт о движении контингента" and coverage[0]["coverage"] > 0.8
 

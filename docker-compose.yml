@@ -60,6 +60,8 @@ services:
     build: ./frontend
     ports:
       - "${FRONTEND_PORT:-3000}:80"
+    volumes:
+      - ./demo/mock-portal:/usr/share/nginx/html/mock-portal:ro  # demo portal for screen recordings
     depends_on:
       - backend
     restart: unless-stopped

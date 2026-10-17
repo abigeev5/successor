@@ -66,10 +66,29 @@ def test_lines_by_geometry_when_ocr_gives_no_line_keys() -> None:
     assert [[boxes[i].text for i in line] for line in group_lines(boxes)] == [["а", "б"], ["в"]]
 
 
+def test_ocr_noise_does_not_hide_emails_and_names() -> None:
+    found = kinds(
+        words("Towra anna.smimova@student demo", "‘Смирнова Анна Павловна. эк обучается", "Петров А. В.")
+    )
+    assert found[PiiKind.EMAIL] == "anna.smimova@student"
+    lines = words("‘Смирнова Анна Павловна. эк", "Преподаватель Петров А. В.", "сотрудник: Ирина Сергеевна")
+    assert {h.text for h in find_pii(lines)} == {"Смирнова Анна Павловна", "Петров А. В.", "Ирина Сергеевна"}
+
+
+def test_person_finder_runs_per_line() -> None:
+    seen: list[str] = []
+    find_pii(words("Группа ЭК-21", "Студент Смирнова"), lambda text: seen.append(text) or [])
+    assert seen == ["Группа ЭК-21", "Студент Смирнова"]
+
+
 def test_person_names_go_through_the_finder() -> None:
-    boxes = words("Студент: Смирнова Анна Павловна", "Группа ЭК-21")
-    [hit] = find_pii(boxes, lambda text: [(text.index("Смирнова"), text.index("Павловна") + 8)])
-    assert hit.kind is PiiKind.PERSON and len(hit.boxes) == 3
+    boxes = words("Студент: Смирнова Анна", "Группа ЭК-21")
+
+    def finder(text: str) -> list[tuple[int, int]]:
+        return [(text.index("Смирнова"), text.index("Анна") + 4)] if "Смирнова" in text else []
+
+    [hit] = find_pii(boxes, finder)
+    assert hit.kind is PiiKind.PERSON and len(hit.boxes) == 2
 
 
 def test_fixture_frame_phone_email_and_name_are_blurred(tmp_path: Path) -> None:

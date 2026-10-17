@@ -1,7 +1,8 @@
 """Personal data on a screenshot (SPEC 7.6.1): which OCR word boxes to blur.
 
-Regular expressions run over each text line (OCR splits «+7 (912) 345-67-89» into several words);
-names come from an injected NER function, so this module stays pure and testable.
+Regular expressions run over each text line (OCR splits «+7 (912) 345-67-89» into several words).
+Names: patterns of Russian full names plus an injected NER function (natasha in the app), run per
+line on words cleaned of OCR noise — on UI text NER alone misses names and glues neighbouring lines.
 """
 
 import re
@@ -49,13 +50,22 @@ PersonFinder = Callable[[str], list[tuple[int, int]]]
 _D = r"(?<!\d)"
 _ND = r"(?!\d)"
 PATTERNS: list[tuple[PiiKind, re.Pattern[str]]] = [
-    (PiiKind.EMAIL, re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")),
+    # The domain dot is optional: OCR often reads «student.demo» as «student demo».
+    (PiiKind.EMAIL, re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*")),
     (PiiKind.PHONE, re.compile(_D + r"(?:\+7|8)[\s(-]*\d{3}[\s)-]*\d{3}[\s-]*\d{2}[\s-]*\d{2}" + _ND)),
     (PiiKind.SNILS, re.compile(_D + r"\d{3}-\d{3}-\d{3}[\s-]\d{2}" + _ND)),
     (PiiKind.CARD, re.compile(_D + r"(?:\d[ -]?){15}\d" + _ND)),
     (PiiKind.PASSPORT, re.compile(_D + r"\d{2}\s?\d{2}\s?\d{6}" + _ND)),
     (PiiKind.INN, re.compile(_D + r"(?:\d{12}|\d{10})" + _ND)),
 ]
+_NAME = r"[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?"
+# «Смирнова Анна Павловна», «Ирина Сергеевна», «Петров А. В.» — on cleaned words (see `_clean`).
+NAME_PATTERNS = [
+    # (Surname) Name Patronymic: the patronymic ending marks a name even without a surname.
+    re.compile(rf"\b(?:{_NAME} )?{_NAME} [А-ЯЁ][а-яё]+(?:вич|вна|чна|ична|оглы|кызы)\b"),
+    re.compile(rf"\b{_NAME} [А-ЯЁ]\. ?[А-ЯЁ]\.(?!\w)"),
+]
+_EDGE_NOISE = " \t‘’'\"«»“”`,;:|()[]{}"
 
 
 def luhn_ok(digits: str) -> bool:
@@ -95,17 +105,28 @@ def group_lines(boxes: Sequence[Box]) -> list[list[int]]:
     return [sorted(line, key=lambda i: boxes[i].x) for line in grouped]
 
 
-def _join(boxes: Sequence[Box], line: list[int]) -> tuple[str, list[tuple[int, int, int]]]:
+def _clean(word: str) -> str:
+    """«‘Смирнова» → «Смирнова», «Павловна.» → «Павловна» (keeps the dot of an initial: «А.»)."""
+    word = word.strip(_EDGE_NOISE)
+    if len(word) > 2 and word.endswith("."):
+        word = word[:-1]
+    return word
+
+
+def _join(
+    boxes: Sequence[Box], line: list[int], clean: bool = False
+) -> tuple[str, list[tuple[int, int, int]]]:
     """Line text and (start, end, box index) for every word in it."""
     parts: list[str] = []
     spans: list[tuple[int, int, int]] = []
     pos = 0
     for i in line:
+        word = _clean(boxes[i].text) if clean else boxes[i].text
         if parts:
             pos += 1
-        spans.append((pos, pos + len(boxes[i].text), i))
-        parts.append(boxes[i].text)
-        pos += len(boxes[i].text)
+        spans.append((pos, pos + len(word), i))
+        parts.append(word)
+        pos += len(word)
     return " ".join(parts), spans
 
 
@@ -115,20 +136,16 @@ def _covered(spans: list[tuple[int, int, int]], start: int, end: int) -> tuple[i
 
 def find_pii(boxes: Sequence[Box], find_persons: PersonFinder | None = None) -> list[PiiHit]:
     hits: list[PiiHit] = []
-    texts: list[str] = []
-    all_spans: list[tuple[int, int, int]] = []
-    offset = 0
     for line in group_lines(boxes):
         text, spans = _join(boxes, line)
         for kind, pattern in PATTERNS:
             for m in pattern.finditer(text):
                 if _valid(kind, m.group()):
                     hits.append(PiiHit(kind, m.group(), _covered(spans, m.start(), m.end())))
-        texts.append(text)
-        all_spans += [(s + offset, e + offset, i) for s, e, i in spans]
-        offset += len(text) + 1  # "\n" between lines
-    if find_persons is not None and any(texts):
-        page = "\n".join(texts)
-        for start, end in find_persons(page):
-            hits.append(PiiHit(PiiKind.PERSON, page[start:end], _covered(all_spans, start, end)))
+        names, name_spans = _join(boxes, line, clean=True)
+        found = [(m.start(), m.end()) for p in NAME_PATTERNS for m in p.finditer(names)]
+        if find_persons is not None and names.strip():
+            found += find_persons(names)
+        for start, end in found:
+            hits.append(PiiHit(PiiKind.PERSON, names[start:end], _covered(name_spans, start, end)))
     return [h for h in hits if h.boxes]
