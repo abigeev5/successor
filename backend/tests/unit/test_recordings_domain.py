@@ -153,8 +153,8 @@ def test_frame_time_and_markdown() -> None:
     assert frame_at(s) == 4_500 and frame_at(step("Короткий", 1_000, 1_200)) == 1_000
     assert timecode(75_000) == "01:15"
     assert procedure_markdown([s], ["/api/assets/a1"]) == (
-        "1. **Открыть карточку студента.** Нажать «Найти»\n"
-        "   _Почему так:_ так быстрее\n"
+        "1. **Открыть карточку студента.** Нажать «Найти»\n\n"
+        "   _Почему так:_ так быстрее\n\n"
         "   ![Шаг 1](/api/assets/a1)"
     )
 

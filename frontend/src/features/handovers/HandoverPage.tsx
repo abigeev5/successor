@@ -1,15 +1,29 @@
-import { CalendarClock, ClipboardCheck, MessageSquareText, ShieldAlert } from "lucide-react";
+import {
+  CalendarClock,
+  ClipboardCheck,
+  MessageSquareText,
+  MonitorPlay,
+  ShieldAlert,
+} from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useCards } from "@/api/cards";
 import { useHandover, useMyConsent } from "@/api/handovers";
 import { useCoverage, useSessions, useStartInterview } from "@/api/interviews";
+import { useRecordings } from "@/api/recordings";
 import { ErrorNote } from "@/components/ErrorNote";
 import { FullPageSpinner } from "@/components/Spinner";
 import { AspectBadge, ProgressBar } from "@/components/StatusBadges";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CRITICALITY_LABELS, daysLeft, formatMinutes, REASON_LABELS } from "@/lib/labels";
+import {
+  CRITICALITY_LABELS,
+  daysLeft,
+  formatMinutes,
+  REASON_LABELS,
+  RECORDING_STATUS_LABELS,
+  timecode,
+} from "@/lib/labels";
 
 const SESSION_STATUS: Record<string, string> = {
   active: "идёт",
@@ -27,6 +41,8 @@ export function HandoverPage() {
   const coverage = useCoverage(id);
   const sessions = useSessions(id, canSeeSessions);
   const drafts = useCards(role && role !== "successor" ? id : undefined, "draft");
+  const canSeeRecordings = canSeeSessions || role === "manager";
+  const recordings = useRecordings(id, canSeeRecordings);
   const start = useStartInterview();
   const navigate = useNavigate();
 
@@ -61,13 +77,13 @@ export function HandoverPage() {
       </div>
 
       {isExpert && consent.data === null && (
-        <Card className="flex flex-wrap items-center gap-3 bg-warning-light">
+        <div className="flex flex-wrap items-center gap-3 rounded-lg bg-warning-light p-6">
           <ShieldAlert className="size-5 text-amber-700" aria-hidden />
           <p className="flex-1 text-sm">
             Перед интервью нужно прочитать и принять согласие на запись и обработку рабочих бесед.
           </p>
           <Button onClick={() => navigate(`/consent/${h.id}`)}>Прочитать согласие</Button>
-        </Card>
+        </div>
       )}
 
       {isExpert && consent.data && (
@@ -78,6 +94,10 @@ export function HandoverPage() {
           >
             <MessageSquareText className="size-4" aria-hidden />
             {unfinished ? "Продолжить интервью" : "Начать интервью"}
+          </Button>
+          <Button variant="secondary" onClick={() => navigate(`/recordings/new?handover=${h.id}`)}>
+            <MonitorPlay className="size-4" aria-hidden />
+            Записать экран
           </Button>
           <Button variant="secondary" onClick={() => navigate(`/review?handover=${h.id}`)}>
             <ClipboardCheck className="size-4" aria-hidden />
@@ -129,31 +149,58 @@ export function HandoverPage() {
           ))}
         </div>
 
-        {canSeeSessions && (
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold">Сессии интервью</h2>
-            {sessions.data?.length === 0 && (
-              <p className="text-sm text-ink-muted">Интервью ещё не проводилось.</p>
-            )}
-            <ul className="space-y-2">
-              {sessions.data?.map((s) => (
-                <li key={s.id}>
-                  <Link to={`/interview/${s.id}`} className="block">
-                    <Card className="p-3 text-sm hover:bg-primary-light/60">
-                      <p className="font-medium">
-                        {new Date(s.started_at).toLocaleDateString("ru-RU")} ·{" "}
-                        {SESSION_STATUS[s.status]}
-                      </p>
-                      <p className="text-ink-muted">
-                        {s.messages_count} реплик · {formatMinutes(s.active_seconds)}
-                      </p>
-                    </Card>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="space-y-6">
+          {canSeeSessions && (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold">Сессии интервью</h2>
+              {sessions.data?.length === 0 && (
+                <p className="text-sm text-ink-muted">Интервью ещё не проводилось.</p>
+              )}
+              <ul className="space-y-2">
+                {sessions.data?.map((s) => (
+                  <li key={s.id}>
+                    <Link to={`/interview/${s.id}`} className="block">
+                      <Card className="p-3 text-sm hover:bg-primary-light/60">
+                        <p className="font-medium">
+                          {new Date(s.started_at).toLocaleDateString("ru-RU")} ·{" "}
+                          {SESSION_STATUS[s.status]}
+                        </p>
+                        <p className="text-ink-muted">
+                          {s.messages_count} реплик · {formatMinutes(s.active_seconds)}
+                        </p>
+                      </Card>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {canSeeRecordings && (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold">Записи экрана</h2>
+              {recordings.data?.length === 0 && (
+                <p className="text-sm text-ink-muted">
+                  Записей пока нет. Эксперт записывает экран, когда выполняет задачу и комментирует.
+                </p>
+              )}
+              <ul className="space-y-2">
+                {recordings.data?.map((r) => (
+                  <li key={r.id}>
+                    <Link to={`/recordings/${r.id}`} className="block">
+                      <Card className="p-3 text-sm hover:bg-primary-light/60">
+                        <p className="font-medium">{r.title}</p>
+                        <p className="text-ink-muted">
+                          {RECORDING_STATUS_LABELS[r.status]}
+                          {r.duration_ms !== null && ` · ${timecode(r.duration_ms)}`}
+                        </p>
+                      </Card>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

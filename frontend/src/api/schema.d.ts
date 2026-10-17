@@ -736,6 +736,75 @@ export interface paths {
     patch: operations["reassign_api_gaps__gap_id__patch"];
     trace?: never;
   };
+  "/api/recordings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Recordings */
+    get: operations["list_recordings_api_recordings_get"];
+    put?: never;
+    /** Upload */
+    post: operations["upload_api_recordings_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/recordings/{recording_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Recording */
+    get: operations["get_recording_api_recordings__recording_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/recordings/{recording_id}/retry": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Retry */
+    post: operations["retry_api_recordings__recording_id__retry_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/assets/{asset_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Asset */
+    get: operations["get_asset_api_assets__asset_id__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -829,6 +898,20 @@ export interface components {
     Body_audio_api_interviews__session_id__audio_post: {
       /** File */
       file: string;
+    };
+    /** Body_upload_api_recordings_post */
+    Body_upload_api_recordings_post: {
+      /** Video */
+      video: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Title */
+      title: string;
+      /** Process Id */
+      process_id?: string | null;
     };
     /** CandidateDecision */
     CandidateDecision: {
@@ -1396,6 +1479,84 @@ export interface components {
       /** Criticality */
       criticality?: number | null;
     };
+    /** RecordingBrief */
+    RecordingBrief: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Process Id */
+      process_id: string | null;
+      /** Title */
+      title: string;
+      status: components["schemas"]["RecordingStatus"];
+      stage: components["schemas"]["RecordingStage"] | null;
+      /** Error */
+      error: string | null;
+      /** Duration Ms */
+      duration_ms: number | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** RecordingOut */
+    RecordingOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Handover Id
+       * Format: uuid
+       */
+      handover_id: string;
+      /** Process Id */
+      process_id: string | null;
+      /** Title */
+      title: string;
+      status: components["schemas"]["RecordingStatus"];
+      stage: components["schemas"]["RecordingStage"] | null;
+      /** Error */
+      error: string | null;
+      /** Duration Ms */
+      duration_ms: number | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /**
+       * Video Asset Id
+       * Format: uuid
+       */
+      video_asset_id: string;
+      /** Steps */
+      steps: components["schemas"]["StepOut"][];
+      /** Card Id */
+      card_id: string | null;
+      /** Card Status */
+      card_status: string | null;
+    };
+    /**
+     * RecordingStage
+     * @description What the worker is doing now; the page shows it instead of a job progress bar (D-060).
+     * @enum {string}
+     */
+    RecordingStage: "audio" | "speech" | "steps" | "screenshots";
+    /**
+     * RecordingStatus
+     * @enum {string}
+     */
+    RecordingStatus: "uploaded" | "processing" | "ready" | "failed";
     /** RejectIn */
     RejectIn: {
       /** Reason */
@@ -1528,6 +1689,30 @@ export interface components {
        * Format: uuid
        */
       handover_id: string;
+    };
+    /** StepOut */
+    StepOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Idx */
+      idx: number;
+      /** Title */
+      title: string;
+      /** Action */
+      action: string;
+      /** Rationale */
+      rationale: string | null;
+      /** Start Ms */
+      start_ms: number;
+      /** End Ms */
+      end_ms: number;
+      /** Screenshot Asset Id */
+      screenshot_asset_id: string | null;
+      /** Screenshot Blurred */
+      screenshot_blurred: boolean;
     };
     /** TurnIn */
     TurnIn: {
@@ -3181,6 +3366,161 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["GapOut"];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_recordings_api_recordings_get: {
+    parameters: {
+      query: {
+        handover_id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecordingBrief"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  upload_api_recordings_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_upload_api_recordings_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecordingOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_recording_api_recordings__recording_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        recording_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecordingOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  retry_api_recordings__recording_id__retry_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        recording_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RecordingOut"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_asset_api_assets__asset_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        asset_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Validation Error */
       422: {

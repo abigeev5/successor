@@ -4,6 +4,8 @@ import type {
   GapStatus,
   HandoverReason,
   ProcessFrequency,
+  RecordingStage,
+  RecordingStatus,
   Verification,
 } from "@/api/client";
 
@@ -88,3 +90,24 @@ export const VERIFICATION_NOTES: Record<Verification, string | null> = {
   degraded: null, // the answer itself says that the model is unavailable
   none: null,
 };
+
+export const RECORDING_STATUS_LABELS: Record<RecordingStatus, string> = {
+  uploaded: "В очереди на обработку",
+  processing: "Обрабатывается",
+  ready: "Готова",
+  failed: "Не обработана",
+};
+
+/** What the worker is doing (the page shows it instead of a progress bar, D-060). */
+export const RECORDING_STAGE_LABELS: Record<RecordingStage, string> = {
+  audio: "Извлекаю звук",
+  speech: "Распознаю речь",
+  steps: "Выделяю шаги",
+  screenshots: "Готовлю скриншоты и скрываю персональные данные",
+};
+
+/** 75 000 → «01:15». */
+export function timecode(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+}

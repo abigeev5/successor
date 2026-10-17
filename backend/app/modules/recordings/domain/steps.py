@@ -49,12 +49,13 @@ def timecode(ms: int) -> str:
 
 def procedure_markdown(steps: list[StepDraft], screenshot_urls: list[str | None]) -> str:
     """Card body: numbered steps with the reason and a screenshot (SPEC 7.6, step 7)."""
-    lines = []
+    items = []
     for n, (step, url) in enumerate(zip(steps, screenshot_urls, strict=True), start=1):
         action = f" {step.action}" if step.action and step.action != step.title else ""
-        lines.append(f"{n}. **{step.title.rstrip('.')}.**{action}")
+        parts = [f"{n}. **{step.title.rstrip('.')}.**{action}"]
         if step.rationale:
-            lines.append(f"   _Почему так:_ {step.rationale}")
+            parts.append(f"   _Почему так:_ {step.rationale}")
         if url:
-            lines.append(f"   ![Шаг {n}]({url})")
-    return "\n".join(lines)
+            parts.append(f"   ![Шаг {n}]({url})")
+        items.append("\n\n".join(parts))  # separate paragraphs inside the list item
+    return "\n\n".join(items)

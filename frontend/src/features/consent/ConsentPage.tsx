@@ -6,7 +6,6 @@ import { useAcceptConsent, useConsentText } from "@/api/handovers";
 import { ErrorNote } from "@/components/ErrorNote";
 import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 export function ConsentPage() {
   const { handoverId = "" } = useParams();
@@ -20,9 +19,9 @@ export function ConsentPage() {
 
   return (
     <section className="mx-auto max-w-2xl space-y-4">
-      <Card className="prose-sm space-y-3 bg-white p-0 [&_h1]:text-xl [&_h1]:font-semibold [&_p]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:text-sm [&_blockquote]:text-xs [&_blockquote]:text-ink-muted">
+      <div className="prose-sm space-y-3 rounded-lg bg-white [&_h1]:text-xl [&_h1]:font-semibold [&_p]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:text-sm [&_blockquote]:text-xs [&_blockquote]:text-ink-muted">
         <Markdown>{text.data.text}</Markdown>
-      </Card>
+      </div>
       <p className="text-xs text-ink-muted">Версия текста: {text.data.version}</p>
       <label className="flex items-start gap-2 text-sm">
         <input type="checkbox" checked={read} onChange={(e) => setRead(e.target.checked)} />Я

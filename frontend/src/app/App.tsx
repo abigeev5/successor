@@ -12,6 +12,8 @@ import { HandoverPage } from "@/features/handovers/HandoverPage";
 import { HandoversPage } from "@/features/handovers/HandoversPage";
 import { InterviewPage } from "@/features/interview/InterviewPage";
 import { KnowledgePage } from "@/features/knowledge/KnowledgePage";
+import { NewRecordingPage } from "@/features/recordings/NewRecordingPage";
+import { RecordingPage } from "@/features/recordings/RecordingPage";
 import { ReviewPage } from "@/features/review/ReviewPage";
 import { SectionPage } from "@/features/sections/SectionPage";
 import { homePath } from "@/lib/roles";
@@ -27,6 +29,8 @@ const PAGES: { path: string; roles: UserRole[]; element: ReactNode }[] = [
   { path: "consent/:handoverId", roles: ["expert"], element: <ConsentPage /> },
   { path: "interview/:sessionId", roles: ["expert", "admin"], element: <InterviewPage /> },
   { path: "review", roles: ["expert", "admin"], element: <ReviewPage /> },
+  { path: "recordings/new", roles: ["expert", "admin"], element: <NewRecordingPage /> },
+  { path: "recordings/:id", roles: ["expert", "manager", "admin"], element: <RecordingPage /> },
   { path: "assistant", roles: ["successor", "manager"], element: <AssistantPage /> },
   { path: "knowledge", roles: ALL, element: <KnowledgePage /> },
   { path: "gaps", roles: ["manager", "expert", "admin"], element: <GapsPage /> },
