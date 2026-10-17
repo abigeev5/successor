@@ -59,6 +59,12 @@ class Settings(BaseSettings):
     vlm_model: str = ""
     ocr_engine: Literal["easyocr", "tesseract", "fake"] = "fake"
 
+    # Assistant search (SPEC 7.8). The threshold is calibrated by `make eval` (D-047).
+    rag_min_similarity: float = 0.45
+    rag_top_k: int = 20
+    rag_top_chunks: int = 8
+    rag_max_cards: int = 5
+
     # Privacy
     offline_mode: bool = False
     retention_days_raw_media: int = 180

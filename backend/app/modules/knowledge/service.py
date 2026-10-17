@@ -16,7 +16,7 @@ from app.modules.identity.models import User
 from app.modules.knowledge import resolvers
 from app.modules.knowledge.domain.card_types import CardType
 from app.modules.knowledge.domain.sources import CardOrigin, SourceType
-from app.modules.knowledge.events import CardApproved, CardArchived, CardRejected
+from app.modules.knowledge.events import CardApproved, CardArchived, CardDrafted, CardRejected
 from app.modules.knowledge.models import CardRevision, CardSource, CardStatus, KnowledgeCard
 from app.modules.knowledge.schemas import CardCreate, CardDetail, CardEdit, CardListItem, SourceOut
 
@@ -290,4 +290,35 @@ async def create_manual(db: AsyncSession, data: CardCreate, user: User) -> Knowl
     await db.flush()
     await audit.record(db, action="card.created", entity="card", entity_id=card.id, user_id=user.id)
     await db.commit()
+    return card
+
+
+async def create_draft_from_source(
+    db: AsyncSession,
+    *,
+    handover_id: uuid.UUID,
+    card_type: CardType,
+    title: str,
+    body_md: str,
+    origin: CardOrigin,
+    source_type: SourceType,
+    source_id: uuid.UUID,
+    quote: str,
+    created_by: uuid.UUID | None,
+) -> KnowledgeCard:
+    """A draft built by another module from its own source (e.g. an answer to a gap). No commit."""
+    card = KnowledgeCard(
+        handover_id=handover_id,
+        type=card_type,
+        title=title.strip()[:300],
+        summary="",
+        body_md=body_md.strip(),
+        status=CardStatus.DRAFT,
+        origin=origin,
+        created_by=created_by,
+    )
+    db.add(card)
+    await db.flush()
+    db.add(CardSource(card_id=card.id, source_type=source_type, source_id=source_id, quote=quote))
+    await bus.publish(db, CardDrafted(card_id=card.id, handover_id=handover_id, origin=origin.value))
     return card

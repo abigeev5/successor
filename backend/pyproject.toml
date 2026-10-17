@@ -18,6 +18,7 @@ dependencies = [
     "faster-whisper>=1.1",
     "rapidfuzz>=3.9",
     "python-multipart>=0.0.9",
+    "pgvector>=0.3",
 ]
 
 [dependency-groups]
@@ -68,7 +69,10 @@ name = "Modules import only downward (docs/architecture.md, 3.2)"
 type = "layers"
 layers = [
     "app.modules.analytics",
+    "app.modules.gaps",
+    "app.modules.assistant",
     "app.modules.interview",
+    "app.modules.search",
     "app.modules.knowledge",
     "app.modules.privacy",
     "app.modules.handovers",

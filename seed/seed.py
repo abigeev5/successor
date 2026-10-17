@@ -34,8 +34,11 @@ from app.modules.knowledge.domain.quotes import find_quote
 from app.modules.knowledge.domain.sources import CardOrigin, SourceType
 from app.modules.knowledge.models import CardSource, CardStatus, KnowledgeCard
 from app.modules.org.models import HolderLevel, OrgUnit, Process, ProcessFrequency, ProcessHolder
+from app.modules.gaps.models import Gap
 from app.modules.privacy.models import Consent
 from app.modules.privacy.service import current_text
+from app.modules.search.indexer import index_card
+from app.providers.registry import build_providers
 from app.wiring import import_models
 
 DATA = Path(__file__).resolve().parent / "data"
@@ -144,9 +147,9 @@ async def _seed_cards(
     processes: dict[str, Process],
     messages: dict[int, InterviewMessage],
     cards: list[dict[str, Any]],
-) -> dict[str, int]:
+) -> list[KnowledgeCard]:
     now = datetime.now(UTC)
-    counts = {"approved": 0, "draft": 0}
+    created: list[KnowledgeCard] = []
     for i, raw in enumerate(cards):
         status = CardStatus(raw["status"])
         card = KnowledgeCard(
@@ -180,9 +183,9 @@ async def _seed_cards(
                     quote=match.text,
                 )
             )
-        counts[status.value] += 1
+        created.append(card)
     await db.flush()
-    return counts
+    return created
 
 
 async def seed(db: AsyncSession) -> dict[str, int]:
@@ -225,15 +228,27 @@ async def seed(db: AsyncSession) -> dict[str, int]:
     db.add(Consent(user_id=expert.id, handover_id=handover.id, text_version=text.version, text_hash=text.hash))
     messages = await _seed_interview(db, handover, expert, successor, interview)
     await _seed_coverage(db, handover, processes, interview["coverage"])
-    counts = await _seed_cards(db, handover, expert, processes, messages, cards["cards"])
+    created = await _seed_cards(db, handover, expert, processes, messages, cards["cards"])
+    approved = [c for c in created if c.status is CardStatus.APPROVED]
+
+    # The assistant searches the index, so approved cards are indexed right away (configured embeddings).
+    providers = build_providers(get_settings())
+    chunks = 0
+    for card in approved:
+        chunks += await index_card(db, providers, card.id)
+
+    for question in demo["open_gaps"]:
+        db.add(Gap(handover_id=handover.id, question=question, asked_by=successor.id, assignee_id=expert.id))
     await db.commit()
     return {
         "users_created": len({u.email for u in users.values()} - existing_users),
         "users_total": len(users),
         "processes": len(processes),
         "messages": len(messages),
-        "cards_approved": counts["approved"],
-        "cards_draft": counts["draft"],
+        "cards_approved": len(approved),
+        "cards_draft": len(created) - len(approved),
+        "chunks": chunks,
+        "open_gaps": len(demo["open_gaps"]),
     }
 
 

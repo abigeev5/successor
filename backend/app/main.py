@@ -11,6 +11,8 @@ from app.core.errors import install_error_handlers
 from app.core.health import router as system_router
 from app.core.http import check_offline_config
 from app.core.logging import setup_logging
+from app.modules.assistant.router import router as assistant_router
+from app.modules.gaps.router import router as gaps_router
 from app.modules.handovers.router import router as handovers_router
 from app.modules.identity.router import admin_router as users_admin_router
 from app.modules.identity.router import auth_router, users_router
@@ -56,6 +58,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         consents_router,
         interviews_router,
         cards_router,
+        assistant_router,
+        gaps_router,
     )
     for router in routers:
         app.include_router(router, prefix="/api")

@@ -18,5 +18,9 @@
     {"key": "certificates", "name": "Ответы на запросы студентов о справках", "frequency": "daily", "criticality": 1,
      "description": "Справки об обучении, для военкомата, архивные.", "also_known_by": ["methodist"]}
   ],
-  "handover": {"reason": "retirement", "deadline_in_days": 21}
+  "handover": {"reason": "retirement", "deadline_in_days": 21},
+  "open_gaps": [
+    "Кто подписывает отчёт о движении контингента, если начальник отдела в отпуске?",
+    "Можно ли выдать направление на пересдачу, если студент на больничном?"
+  ]
 }

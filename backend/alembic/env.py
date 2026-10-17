@@ -2,9 +2,11 @@
 
 import re
 from logging.config import fileConfig
+from typing import Any
 
 from alembic import context
 from alembic.operations import ops
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import CheckConstraint, Column, Enum, create_engine, pool
 
 from app.core.config import get_settings
@@ -36,8 +38,12 @@ def _drop_duplicate_enum_checks(_context, _revision, directives) -> None:  # typ
         ]
 
 
-def _render_item(type_: str, obj: object, _autogen_context: object) -> str | bool:
-    """Render Enum columns without create_constraint: the explicit CHECK in the table is the only copy."""
+def _render_item(type_: str, obj: object, autogen_context: Any) -> str | bool:
+    """Enum: without create_constraint (the explicit CHECK in the table is the only copy, L-001).
+    pgvector: with its import, which autogenerate does not add by itself."""
+    if type_ == "type" and isinstance(obj, Vector):
+        autogen_context.imports.add("import pgvector.sqlalchemy")
+        return f"pgvector.sqlalchemy.Vector({obj.dim})"
     if type_ == "type" and isinstance(obj, Enum):
         values = ", ".join(repr(v) for v in obj.enums)
         return (

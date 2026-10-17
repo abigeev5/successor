@@ -31,6 +31,7 @@ def _not_yet(kind: str, value: str) -> ProviderNotAvailable:
 @dataclass
 class Providers:
     llm: LLMProvider
+    judge_llm: LLMProvider  # checks answers (SPEC 7.8); the same model unless LLM_JUDGE_MODEL differs
     embeddings: EmbeddingsProvider
     asr: ASRProvider
     ocr: OCRProvider
@@ -62,11 +63,20 @@ def _asr(settings: Settings) -> ASRProvider:
     raise _not_yet("ASR", settings.asr_provider)
 
 
+def _judge(settings: Settings, llm: LLMProvider) -> LLMProvider:
+    judge_model = settings.effective_judge_model
+    if settings.llm_provider == "openai_compatible" and judge_model != settings.llm_model:
+        return OpenAICompatibleLLM(settings, model=judge_model)
+    return llm
+
+
 def build_providers(settings: Settings) -> Providers:
     if settings.ocr_engine != "fake":
         raise _not_yet("OCR", settings.ocr_engine)
+    llm = _llm(settings)
     return Providers(
-        llm=_llm(settings),
+        llm=llm,
+        judge_llm=_judge(settings, llm),
         embeddings=_embeddings(settings),
         asr=_asr(settings),
         ocr=FakeOCR(),

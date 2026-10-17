@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.events import EventBus
 from app.modules.analytics.models import ProductEvent
+from app.modules.assistant.events import AnswerFeedback, AnswerRefused, AnswerShown
+from app.modules.gaps.events import GapAnswered, GapCreated
 from app.modules.interview.events import InterviewSessionFinished, InterviewTurnCompleted
 from app.modules.knowledge.events import CardApproved, CardDrafted, CardDropped, CardRejected
 
@@ -57,6 +59,61 @@ async def on_card_rejected(db: AsyncSession, e: CardRejected) -> None:
     _add(db, "card_rejected", user_id=e.user_id, handover_id=e.handover_id, card_id=str(e.card_id))
 
 
+async def on_answer_shown(db: AsyncSession, e: AnswerShown) -> None:
+    _add(db, "question_asked", user_id=e.user_id, handover_id=e.handover_id, qa_id=str(e.qa_id))
+    _add(
+        db,
+        "answer_shown",
+        user_id=e.user_id,
+        handover_id=e.handover_id,
+        qa_id=str(e.qa_id),
+        status=e.status,
+        groundedness=e.groundedness,
+        latency_ms=e.latency_ms,
+    )
+
+
+async def on_answer_refused(db: AsyncSession, e: AnswerRefused) -> None:
+    # The question text stays in qa_logs; events hold numbers and ids only.
+    _add(db, "question_asked", user_id=e.user_id, handover_id=e.handover_id, qa_id=str(e.qa_id))
+    _add(
+        db,
+        "answer_shown",
+        user_id=e.user_id,
+        handover_id=e.handover_id,
+        qa_id=str(e.qa_id),
+        status="refused",
+        groundedness=None,
+        latency_ms=e.latency_ms,
+    )
+
+
+async def on_feedback(db: AsyncSession, e: AnswerFeedback) -> None:
+    _add(
+        db,
+        "answer_feedback",
+        user_id=e.user_id,
+        handover_id=e.handover_id,
+        qa_id=str(e.qa_id),
+        helpful=e.helpful,
+    )
+
+
+async def on_gap_created(db: AsyncSession, e: GapCreated) -> None:
+    _add(
+        db,
+        "gap_created",
+        user_id=e.user_id,
+        handover_id=e.handover_id,
+        gap_id=str(e.gap_id),
+        from_refusal=e.from_refusal,
+    )
+
+
+async def on_gap_answered(db: AsyncSession, e: GapAnswered) -> None:
+    _add(db, "gap_answered", user_id=e.user_id, handover_id=e.handover_id, gap_id=str(e.gap_id))
+
+
 def register(bus: EventBus) -> None:
     bus.subscribe(InterviewTurnCompleted, on_turn)
     bus.subscribe(InterviewSessionFinished, on_session_finished)
@@ -64,3 +121,8 @@ def register(bus: EventBus) -> None:
     bus.subscribe(CardDropped, on_card_dropped)
     bus.subscribe(CardApproved, on_card_approved)
     bus.subscribe(CardRejected, on_card_rejected)
+    bus.subscribe(AnswerShown, on_answer_shown)
+    bus.subscribe(AnswerRefused, on_answer_refused)
+    bus.subscribe(AnswerFeedback, on_feedback)
+    bus.subscribe(GapCreated, on_gap_created)
+    bus.subscribe(GapAnswered, on_gap_answered)

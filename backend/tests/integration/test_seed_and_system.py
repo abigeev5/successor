@@ -35,6 +35,8 @@ async def test_seed_is_idempotent_and_demo_accounts_log_in(
         "messages": 38,
         "cards_approved": 25,
         "cards_draft": 5,
+        "chunks": 25,
+        "open_gaps": 2,
     }
     assert (await seed.seed(db))["users_created"] == 0  # second run: same known state
     assert await db.scalar(select(func.count()).select_from(User)) == 5
