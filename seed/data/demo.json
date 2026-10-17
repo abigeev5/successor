@@ -1,0 +1,10 @@
+{
+  "_comment": "Демо-данные. Всё вымышленное (SPEC, 13.1). Пароль всех демо-учёток задаётся в seed.py.",
+  "org_unit": "Учебный отдел (демо)",
+  "users": [
+    {"email": "manager@demo.local", "full_name": "Ольга Викторовна", "role": "manager"},
+    {"email": "expert@demo.local", "full_name": "Ирина Сергеевна", "role": "expert"},
+    {"email": "successor@demo.local", "full_name": "Дмитрий", "role": "successor"},
+    {"email": "admin@demo.local", "full_name": "Администратор (демо)", "role": "admin"}
+  ]
+}
