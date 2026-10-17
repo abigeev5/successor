@@ -677,12 +677,12 @@ successor/
 │   │   │   ├── llm/                 # base.py, openai_compatible.py, gigachat.py, fake.py, structured.py
 │   │   │   ├── embeddings/          # base.py, sentence_transformers.py, openai_compatible.py, fake.py
 │   │   │   ├── asr/                 # base.py, faster_whisper.py, gigaam.py, fake.py
-│   │   │   ├── ocr/                 # base.py, easyocr.py, tesseract.py, fake.py
+│   │   │   ├── ocr/                 # base.py, tesseract.py, fake.py (D-057)
 │   │   │   └── vlm/                 # base.py, openai_compatible.py, fake.py
 │   │   ├── modules/
 │   │   │   ├── identity/            # models, schemas, repo, service, router
 │   │   │   ├── org/                 # + domain/matching.py (нечёткое сравнение названий процессов)
-│   │   │   ├── handovers/           # + access.py
+│   │   │   ├── handovers/           # + access.py, files.py (GET /assets/{id}, D-061)
 │   │   │   ├── privacy/             # + erasure.py (реестр DataEraser), retention.py, consent_text
 │   │   │   ├── interview/
 │   │   │   │   ├── domain/          # aspects.py, state.py, analysis.py, planner.py, timing.py, fallback.py
@@ -690,12 +690,11 @@ successor/
 │   │   │   │   ├── sources.py       # SourceResolver, build_source_document (DataEraser — M4)
 │   │   │   │   └── models, schemas, repo, service, router, handlers
 │   │   │   ├── recordings/
-│   │   │   │   ├── domain/          # steps.py (валидация интервалов)
-│   │   │   │   ├── pii/             # detectors.py (регулярки, Луна, natasha), blur.py
-│   │   │   │   ├── media.py         # ffmpeg: аудио, кадры, длительность
+│   │   │   │   ├── domain/          # steps.py (исправление интервалов, текст инструкции), pii.py (детекторы)
+│   │   │   │   ├── media.py         # ffmpeg: аудио, кадры
+│   │   │   │   ├── blur.py, ner.py  # размытие (OpenCV), имена (natasha)
 │   │   │   │   ├── pipeline.py      # process_recording
-│   │   │   │   ├── sources.py
-│   │   │   │   └── models, schemas, repo, service, router, handlers
+│   │   │   │   └── models, schemas, service, router, events, handlers (+ SourceResolver шагов)
 │   │   │   ├── knowledge/
 │   │   │   │   ├── domain/          # sources.py (SourceRef/Fragment/Document), card_types.py,
 │   │   │   │   │                    # quotes.py, windows.py, dedup.py
