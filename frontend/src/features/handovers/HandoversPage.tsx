@@ -1,14 +1,15 @@
-import { CalendarClock, FolderKanban, Plus } from "lucide-react";
+import { ArrowUpRight, CalendarClock, FolderKanban, Plus } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
 import { useMe } from "@/api/auth";
 import { useHandovers } from "@/api/handovers";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { ErrorNote } from "@/components/ErrorNote";
 import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Pill } from "@/components/ui/pill";
 import { daysLeft, REASON_LABELS } from "@/lib/labels";
 
 import { CreateHandoverForm } from "./CreateHandoverForm";
@@ -21,22 +22,25 @@ export function HandoversPage() {
 
   if (handovers.isPending) return <FullPageSpinner />;
   if (handovers.isError) return <ErrorNote error={handovers.error} />;
-  // An expert usually has exactly one handover: go straight to it (SPEC 9.1).
   if (me.data?.role === "expert" && handovers.data.length === 1) {
     return <Navigate to={`/handovers/${handovers.data[0].id}`} replace />;
   }
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">Передачи дел</h1>
-        {canCreate && !creating && (
-          <Button onClick={() => setCreating(true)}>
-            <Plus className="size-4" aria-hidden />
-            Новая передача
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title="Передачи дел"
+        description="Эксперт, преемник, процессы и срок: всё, что нужно передать до ухода сотрудника."
+        actions={
+          canCreate &&
+          !creating && (
+            <Button onClick={() => setCreating(true)}>
+              <Plus className="size-4" aria-hidden />
+              Новая передача
+            </Button>
+          )
+        }
+      />
 
       {creating && <CreateHandoverForm onDone={() => setCreating(false)} />}
 
@@ -50,31 +54,33 @@ export function HandoversPage() {
         <ul className="grid gap-4 md:grid-cols-2">
           {handovers.data.map((h) => (
             <li key={h.id}>
-              <Link to={`/handovers/${h.id}`} className="block">
-                <Card className="transition-colors hover:bg-primary-light/60">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">
-                        {h.experts.map((e) => e.full_name).join(", ") || "Эксперт не назначен"}
-                      </p>
-                      <p className="text-sm text-ink-muted">
-                        {REASON_LABELS[h.reason]} ·{" "}
-                        {h.successors.length
-                          ? `преемник: ${h.successors.map((s) => s.full_name).join(", ")}`
-                          : "преемник не назначен"}
-                      </p>
-                    </div>
+              <Link
+                to={`/handovers/${h.id}`}
+                className="group block h-full rounded-[var(--radius-card)] bg-surface p-6 transition-colors hover:bg-primary-faint"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Pill>{REASON_LABELS[h.reason]}</Pill>
                     {h.deadline && (
-                      <span className="flex shrink-0 items-center gap-1 text-xs text-ink-muted">
+                      <Pill tone="white">
                         <CalendarClock className="size-3.5" aria-hidden />
                         {daysLeft(h.deadline)}
-                      </span>
+                      </Pill>
                     )}
                   </div>
-                  <p className="mt-3 text-sm text-ink-muted">
-                    Процессов: {h.processes.length} · {h.org_unit_name}
-                  </p>
-                </Card>
+                  <ArrowUpRight
+                    className="size-5 shrink-0 text-ink-soft transition-colors group-hover:text-primary"
+                    aria-hidden
+                  />
+                </div>
+                <p className="mt-4 text-lg font-semibold tracking-tight">
+                  {h.experts.map((e) => e.full_name).join(", ") || "Эксперт не назначен"}
+                  <span className="font-normal text-ink-soft"> → </span>
+                  {h.successors.map((s) => s.full_name).join(", ") || "преемник не назначен"}
+                </p>
+                <p className="mt-1 text-sm text-ink-muted">
+                  {h.org_unit_name} · процессов: {h.processes.length}
+                </p>
               </Link>
             </li>
           ))}

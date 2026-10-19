@@ -6,13 +6,13 @@ import type { Erased, Handover } from "@/api/client";
 import { useMyData, useDeleteRecording, useEraseMyData, useRevokeConsent } from "@/api/privacy";
 import { useRecordings } from "@/api/recordings";
 import { ErrorNote } from "@/components/ErrorNote";
+import { MiniStat, PageHeader } from "@/components/PageHeader";
 import { HandoverGate } from "@/components/HandoverGate";
 import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatBytes, MY_DATA_LABELS, RECORDING_STATUS_LABELS, timecode } from "@/lib/labels";
 
-/** «Мои данные» (SPEC 7.3, 9.1): consent, what is stored, deleting a recording or everything. */
 export function PrivacyPage() {
   return (
     <HandoverGate
@@ -49,7 +49,7 @@ function Confirm({
   }
   return (
     <div
-      className="space-y-3 rounded-lg bg-danger-light p-4"
+      className="space-y-3 rounded-2xl bg-danger-light p-4"
       role="alertdialog"
       aria-label={question}
     >
@@ -87,13 +87,15 @@ function MyData({ handover, switcher }: { handover: Handover; switcher: ReactNod
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-xl font-semibold">Мои данные</h1>
-        {switcher}
-      </div>
+      <PageHeader
+        eyebrow="Приватность"
+        title="Мои данные"
+        description="Что о вас хранится по этой передаче дел и как это удалить."
+        actions={switcher}
+      />
 
       <Card className="space-y-3">
-        <h2 className="font-semibold">Согласие на запись и обработку</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Согласие на запись и обработку</h2>
         {consent ? (
           <>
             <p className="text-sm">
@@ -120,18 +122,19 @@ function MyData({ handover, switcher }: { handover: Handover; switcher: ReactNod
       </Card>
 
       <Card className="space-y-3">
-        <h2 className="font-semibold">Что хранится</h2>
-        <dl className="grid max-w-md grid-cols-[1fr_auto] gap-x-6 gap-y-1 text-sm">
+        <h2 className="text-lg font-semibold tracking-tight">Что хранится</h2>
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
           {Object.entries(MY_DATA_LABELS).map(([key, label]) => (
-            <div key={key} className="contents">
-              <dt className="text-ink-muted">{label}</dt>
-              <dd className="tabular-nums">
-                {counts[key] ?? 0}
-                {key === "files" && counts.files > 0 && ` (${formatBytes(counts.files_bytes)})`}
-              </dd>
-            </div>
+            <MiniStat
+              key={key}
+              value={counts[key] ?? 0}
+              label={label}
+              note={
+                key === "files" && counts.files > 0 ? formatBytes(counts.files_bytes) : undefined
+              }
+            />
           ))}
-        </dl>
+        </div>
         <p className="text-xs text-ink-muted">
           Всё хранится в контуре организации. Видео и голос удаляются автоматически по истечении
           срока хранения; скриншоты с размытыми персональными данными и карточки остаются.
@@ -139,7 +142,7 @@ function MyData({ handover, switcher }: { handover: Handover; switcher: ReactNod
       </Card>
 
       <Card className="space-y-3">
-        <h2 className="font-semibold">Мои записи экрана</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Мои записи экрана</h2>
         {recordings.data?.length === 0 && <p className="text-sm text-ink-muted">Записей нет.</p>}
         <ul className="space-y-3">
           {recordings.data?.map((r) => (
@@ -173,7 +176,7 @@ function MyData({ handover, switcher }: { handover: Handover; switcher: ReactNod
       </Card>
 
       <Card className="space-y-3">
-        <h2 className="font-semibold">Удалить всё</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Удалить всё</h2>
         <p className="text-sm text-ink-muted">
           Будут удалены интервью, голосовые ответы, записи экрана и ваши ответы на вопросы преемника
           по этой передаче дел. Карточки, у которых не останется источников, уйдут в архив и

@@ -11,10 +11,10 @@ export function EmptyState({
 }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center py-16 text-center">
-      <div className="mb-4 rounded-full bg-primary-light p-3 text-primary">
+      <div className="bg-sky mb-5 grid size-14 place-items-center rounded-2xl text-white shadow-sm">
         <Icon className="size-6" aria-hidden />
       </div>
-      {title && <h2 className="mb-2 text-lg font-semibold">{title}</h2>}
+      {title && <h2 className="mb-2 text-lg font-semibold tracking-tight">{title}</h2>}
       <p className="text-sm text-ink-muted">{children}</p>
     </div>
   );

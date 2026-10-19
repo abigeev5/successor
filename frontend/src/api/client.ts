@@ -57,7 +57,6 @@ export const api = createClient<paths>({
   fetch: (request) => globalThis.fetch(request),
 });
 
-/** Backend error: {"detail": "<text in Russian>", "code": "..."}. */
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -77,7 +76,6 @@ export function toApiError(status: number, body: ErrorBody): ApiError {
   return new ApiError(status, code, detail);
 }
 
-/** Unwraps an openapi-fetch result: returns data or throws ApiError. */
 export function unwrap<T>(result: { data?: T; error?: unknown; response: Response }): T {
   if (result.error !== undefined || result.data === undefined) {
     throw toApiError(result.response.status, result.error as ErrorBody);

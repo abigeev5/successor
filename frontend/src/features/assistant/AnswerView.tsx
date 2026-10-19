@@ -99,19 +99,13 @@ function VerificationNote({ answer }: { answer: Answer }) {
   const ok = answer.verification === "verified";
   const Icon = ok ? CircleCheck : CircleAlert;
   return (
-    <p
-      className={cn(
-        "flex items-center gap-1.5 text-xs",
-        ok ? "text-emerald-700" : "text-amber-700",
-      )}
-    >
+    <p className={cn("flex items-center gap-1.5 text-xs", ok ? "text-primary" : "text-amber-700")}>
       <Icon className="size-3.5 shrink-0" aria-hidden />
       {note}
     </p>
   );
 }
 
-/** «Помогло / Не помогло» (+ comment); «Спросить эксперта» under an answer that did not help. */
 function Feedback({ answer, handoverId }: { answer: Answer; handoverId: string }) {
   const feedback = useFeedback(handoverId);
   const gaps = useGapActions();
@@ -181,13 +175,13 @@ function Feedback({ answer, handoverId }: { answer: Answer; handoverId: string }
     <div className="flex flex-wrap items-center gap-2">
       <Button
         variant="ghost"
-        className="px-2 py-1 text-xs"
+        size="sm"
         disabled={feedback.isPending}
         onClick={() => feedback.mutate({ qaId: answer.qa_id, helpful: true })}
       >
         <ThumbsUp className="size-3.5" aria-hidden /> Помогло
       </Button>
-      <Button variant="ghost" className="px-2 py-1 text-xs" onClick={() => setOpen(true)}>
+      <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
         <ThumbsDown className="size-3.5" aria-hidden /> Не помогло
       </Button>
     </div>
@@ -205,7 +199,7 @@ export function AnswerView({
 }) {
   if (answer.status === "refused" || !answer.answer) {
     return (
-      <div className="space-y-1 rounded-lg bg-surface p-4 text-sm">
+      <div className="space-y-1 rounded-2xl bg-surface p-4 text-sm">
         <p className="flex items-start gap-2">
           <MessageCircleQuestion className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
           <span>
@@ -220,7 +214,7 @@ export function AnswerView({
     );
   }
   return (
-    <div className="space-y-3 rounded-lg bg-surface p-4">
+    <div className="space-y-3 rounded-2xl bg-surface p-4">
       <AnswerText answer={answer.answer} sources={answer.sources} onOpen={onOpen} />
       <SourceChips sources={answer.sources} onOpen={onOpen} />
       <VerificationNote answer={answer} />

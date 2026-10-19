@@ -2,16 +2,20 @@ import { forwardRef, type SelectHTMLAttributes, type TextareaHTMLAttributes } fr
 
 import { cn } from "@/lib/cn";
 
-const FIELD =
-  "w-full rounded-md border border-black/15 bg-white px-3 py-2 text-sm text-ink focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-light";
+import { fieldClass, type FieldOptions } from "./input";
 
-export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select className={cn(FIELD, className)} {...props} />;
+export function Select({
+  fit,
+  compact,
+  className,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & FieldOptions) {
+  return <select className={cn(fieldClass({ fit, compact }), className)} {...props} />;
 }
 
 export const Textarea = forwardRef<
   HTMLTextAreaElement,
   TextareaHTMLAttributes<HTMLTextAreaElement>
 >(function Textarea({ className, ...props }, ref) {
-  return <textarea ref={ref} className={cn(FIELD, "resize-y", className)} {...props} />;
+  return <textarea ref={ref} className={cn(fieldClass(), "resize-y", className)} {...props} />;
 });

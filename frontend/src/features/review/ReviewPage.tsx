@@ -6,6 +6,7 @@ import { useCards } from "@/api/cards";
 import type { CardListItem } from "@/api/client";
 import { useHandover, useHandovers } from "@/api/handovers";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { ErrorNote } from "@/components/ErrorNote";
 import { FullPageSpinner } from "@/components/Spinner";
 import { cn } from "@/lib/cn";
@@ -75,11 +76,8 @@ function ReviewQueue({ handoverId }: { handoverId: string }) {
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-xl font-semibold">Проверка карточек</h1>
-        <span className="text-sm text-ink-muted">На проверке: {ordered.length}</span>
-      </div>
-      <p className="flex items-center gap-2 rounded-md bg-primary-light px-3 py-2 text-sm">
+      <PageHeader eyebrow={`На проверке: ${ordered.length}`} title="Проверка карточек" />
+      <p className="flex items-center gap-2 rounded-xl bg-primary-faint px-4 py-3 text-sm text-primary-deep">
         <Info className="size-4 shrink-0 text-primary" aria-hidden />В базу знаний попадёт только
         то, что вы подтвердите. Горячие клавиши: A — подтвердить, R — отклонить, J / K — следующая /
         предыдущая.
@@ -105,7 +103,7 @@ function ReviewQueue({ handoverId }: { handoverId: string }) {
                         onClick={() => setSelectedId(card.id)}
                         aria-current={card.id === currentId}
                         className={cn(
-                          "w-full rounded-md px-3 py-2 text-left text-sm",
+                          "w-full rounded-xl px-3 py-2 text-left text-sm",
                           card.id === currentId
                             ? "bg-primary text-white"
                             : "bg-surface hover:bg-primary-light",

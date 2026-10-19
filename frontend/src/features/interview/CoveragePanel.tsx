@@ -25,7 +25,7 @@ export function CoveragePanel({
           <details
             key={p.process_id}
             open={current}
-            className={cn("rounded-md bg-white p-3", current && "ring-2 ring-primary")}
+            className={cn("rounded-xl bg-white p-3", current && "ring-2 ring-primary")}
           >
             <summary className="cursor-pointer list-none text-sm">
               <span className="font-medium">{p.name}</span>

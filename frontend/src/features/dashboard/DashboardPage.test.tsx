@@ -115,7 +115,8 @@ describe("DashboardPage", () => {
       </QueryClientProvider>,
     );
 
-    const table = (await screen.findByText("Карта рисков")).closest("div")!.parentElement!;
+    expect(await screen.findByText("Карта рисков")).toBeTruthy();
+    const [table] = screen.getAllByRole("table");
     const rows = within(table).getAllByRole("row");
     expect(within(rows[1]).getByText("Отчёт о движении контингента")).toBeTruthy();
     expect(within(rows[1]).getByText("Высокий")).toBeTruthy();

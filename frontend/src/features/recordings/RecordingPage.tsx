@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import type { Recording, RecordingStep } from "@/api/client";
 import { useRecording, useRetryRecording } from "@/api/recordings";
 import { ErrorNote } from "@/components/ErrorNote";
+import { PageHeader } from "@/components/PageHeader";
 import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -29,21 +30,22 @@ export function RecordingPage() {
   }
 
   return (
-    <section className="space-y-5">
-      <div>
-        <p className="text-sm text-ink-muted">
+    <section className="space-y-6">
+      <PageHeader
+        eyebrow={
           <Link to={`/handovers/${r.handover_id}`} className="hover:underline">
-            Передача дел
-          </Link>{" "}
-          / Запись экрана
-        </p>
-        <h1 className="mt-1 text-xl font-semibold">{r.title}</h1>
-        <p className="mt-1 text-sm text-ink-muted">
-          {RECORDING_STATUS_LABELS[r.status]}
-          {r.duration_ms !== null && ` · ${timecode(r.duration_ms)}`}
-          {r.status === "ready" && ` · шагов: ${r.steps.length}`}
-        </p>
-      </div>
+            Передача дел · запись экрана
+          </Link>
+        }
+        title={r.title}
+        description={
+          <>
+            {RECORDING_STATUS_LABELS[r.status]}
+            {r.duration_ms !== null && ` · ${timecode(r.duration_ms)}`}
+            {r.status === "ready" && ` · шагов: ${r.steps.length}`}
+          </>
+        }
+      />
 
       <Status recording={r} onRetry={() => retry.mutate(r.id)} retrying={retry.isPending} />
       <ErrorNote error={retry.error} />
@@ -56,10 +58,10 @@ export function RecordingPage() {
               src={`/api/assets/${r.video_asset_id}`}
               controls
               preload="metadata"
-              className="w-full rounded-lg bg-black"
+              className="w-full rounded-2xl bg-black"
             />
           ) : (
-            <p className="rounded-lg bg-surface p-6 text-sm text-ink-muted">
+            <p className="rounded-2xl bg-surface p-6 text-sm text-ink-muted">
               Видео удалено по сроку хранения. Шаги и скриншоты остались.
             </p>
           )}
@@ -111,7 +113,7 @@ function Status({
 }) {
   if (r.status === "uploaded" || r.status === "processing") {
     return (
-      <Card className="flex items-center gap-3 p-4 text-sm" role="status">
+      <Card padding="sm" className="flex items-center gap-3 text-sm" role="status">
         <LoaderCircle className="size-5 animate-spin text-primary" aria-hidden />
         <span>
           {r.stage ? RECORDING_STAGE_LABELS[r.stage] : "Запись ждёт обработки"}… Страницу можно
@@ -123,7 +125,7 @@ function Status({
   if (r.status === "failed") {
     return (
       <div
-        className="flex flex-wrap items-center gap-3 rounded-lg bg-danger-light p-4 text-sm"
+        className="flex flex-wrap items-center gap-3 rounded-2xl bg-danger-light p-4 text-sm"
         role="alert"
       >
         <TriangleAlert className="size-5 text-danger" aria-hidden />
@@ -139,13 +141,15 @@ function Status({
 
 function StepCard({ step: s, onSeek }: { step: RecordingStep; onSeek: (ms: number) => void }) {
   return (
-    <Card className="space-y-2 p-4">
-      <div className="flex items-baseline gap-2">
-        <span className="font-semibold text-primary-dark">{s.idx}.</span>
+    <Card padding="sm" className="space-y-2">
+      <div className="flex items-center gap-3">
+        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary-light text-xs font-semibold text-primary-dark">
+          {s.idx}
+        </span>
         <h3 className="flex-1 font-medium">{s.title}</h3>
         <Button
           variant="ghost"
-          className="px-2 py-1 text-xs"
+          size="sm"
           onClick={() => onSeek(s.start_ms)}
           title="Показать этот шаг в видео"
         >
@@ -165,7 +169,7 @@ function StepCard({ step: s, onSeek }: { step: RecordingStep; onSeek: (ms: numbe
             src={`/api/assets/${s.screenshot_asset_id}`}
             alt={`Скриншот шага ${s.idx}`}
             loading="lazy"
-            className="w-full rounded-md border border-black/10"
+            className="w-full rounded-xl border border-line"
           />
         </a>
       ) : (

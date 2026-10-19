@@ -83,7 +83,6 @@ export const GAP_STATUS_LABELS: Record<GapStatus, string> = {
   dismissed: "Закрыт без ответа",
 };
 
-/** The note under an answer (SPEC 7.8). */
 export const VERIFICATION_NOTES: Record<Verification, string | null> = {
   verified: "Все утверждения подтверждены источниками",
   partially_removed: "Часть ответа удалена: не нашлось подтверждения",
@@ -99,7 +98,6 @@ export const RECORDING_STATUS_LABELS: Record<RecordingStatus, string> = {
   failed: "Не обработана",
 };
 
-/** What the worker is doing (the page shows it instead of a progress bar, D-060). */
 export const RECORDING_STAGE_LABELS: Record<RecordingStage, string> = {
   audio: "Извлекаю звук",
   speech: "Распознаю речь",
@@ -119,7 +117,7 @@ export const RISK_LEVEL_LABELS: Record<RiskLevel, string> = {
   low: "Низкий",
 };
 
-/** Audit actions (SPEC 12) in plain words. Unknown actions are shown as is. */
+/** Unknown actions are shown as is. */
 export const AUDIT_ACTION_LABELS: Record<string, string> = {
   "auth.login": "Вход",
   "auth.login_failed": "Неудачный вход",
@@ -147,7 +145,6 @@ export const AUDIT_ACTION_LABELS: Record<string, string> = {
   "media.purged": "Удалены медиа по сроку хранения",
 };
 
-/** What is stored about an expert (the «Мои данные» page). */
 export const MY_DATA_LABELS: Record<string, string> = {
   interview_messages: "Сообщения интервью",
   recordings: "Записи экрана",

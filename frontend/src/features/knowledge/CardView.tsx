@@ -9,7 +9,7 @@ import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { CARD_TYPE_LABELS } from "@/lib/labels";
 
-/** Right-hand panel; full screen on a phone (SPEC 9.2: the assistant must work on a phone). */
+/** Full screen on a phone: the assistant must work there too. */
 export function SidePanel({
   title,
   onClose,
@@ -22,11 +22,11 @@ export function SidePanel({
   return (
     <aside
       aria-label={title}
-      className="fixed inset-0 z-20 overflow-y-auto bg-white p-4 lg:sticky lg:top-4 lg:z-auto lg:max-h-[calc(100vh-2rem)] lg:rounded-lg lg:bg-surface"
+      className="fixed inset-0 z-20 overflow-y-auto bg-white p-4 lg:sticky lg:top-4 lg:z-auto lg:max-h-[calc(100vh-2rem)] lg:rounded-2xl lg:bg-surface"
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-ink-muted">{title}</h2>
-        <Button variant="ghost" className="px-2" onClick={onClose} title="Закрыть">
+        <Button variant="ghost" size="icon" onClick={onClose} title="Закрыть">
           <X className="size-4" aria-hidden />
           <span className="sr-only">Закрыть</span>
         </Button>
@@ -36,7 +36,6 @@ export function SidePanel({
   );
 }
 
-/** The whole card and its original sources (SPEC 7.8: a citation opens the card and its source). */
 export function CardView({ cardId, processName }: { cardId: string; processName?: string }) {
   const card = useCard(cardId);
   if (card.isPending) return <FullPageSpinner />;

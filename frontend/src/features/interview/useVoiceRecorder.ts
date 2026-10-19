@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export const MAX_SECONDS = 120; // D-036
+export const MAX_SECONDS = 120;
 
 type State = "idle" | "recording" | "unsupported";
 
-/** Records voice with MediaRecorder (webm/opus) for at most 2 minutes. */
 export function useVoiceRecorder(onRecorded: (audio: Blob) => void) {
   const [state, setState] = useState<State>(
     typeof MediaRecorder === "undefined" || !navigator.mediaDevices ? "unsupported" : "idle",

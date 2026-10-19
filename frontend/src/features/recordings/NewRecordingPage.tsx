@@ -6,6 +6,7 @@ import type { ApiError } from "@/api/client";
 import { useHandover, useMyConsent } from "@/api/handovers";
 import { uploadRecording } from "@/api/recordings";
 import { ErrorNote } from "@/components/ErrorNote";
+import { PageHeader } from "@/components/PageHeader";
 import { FullPageSpinner } from "@/components/Spinner";
 import { ProgressBar } from "@/components/StatusBadges";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import { timecode } from "@/lib/labels";
 
 import { MAX_MINUTES, useScreenRecorder } from "./useScreenRecorder";
 
-const MAX_FILE_BYTES = 1024 * 1024 * 1024; // SPEC 7.6: up to 1 GB
+const MAX_FILE_BYTES = 1024 * 1024 * 1024;
 
 export function NewRecordingPage() {
   const [params] = useSearchParams();
@@ -89,19 +90,15 @@ export function NewRecordingPage() {
   const uploading = progress !== null;
   return (
     <section className="mx-auto max-w-3xl space-y-5">
-      <div>
-        <p className="text-sm text-ink-muted">
+      <PageHeader
+        eyebrow={
           <Link to={`/handovers/${h.id}`} className="hover:underline">
-            Передача дел
-          </Link>{" "}
-          / Новая запись экрана
-        </p>
-        <h1 className="mt-1 text-xl font-semibold">Запись экрана с комментарием</h1>
-        <p className="mt-1 text-sm text-ink-muted">
-          Выполните задачу как обычно и рассказывайте вслух, что и зачем делаете. Из записи
-          получится пошаговая инструкция со скриншотами — её вы проверите перед публикацией.
-        </p>
-      </div>
+            Передача дел · новая запись
+          </Link>
+        }
+        title="Запись экрана с комментарием"
+        description="Выполните задачу как обычно и рассказывайте вслух, что и зачем делаете. Из записи получится пошаговая инструкция со скриншотами — её вы проверите перед публикацией."
+      />
 
       <Card className="space-y-3">
         <div>
@@ -133,7 +130,7 @@ export function NewRecordingPage() {
             <h2 className="flex items-center gap-2 font-semibold">
               <MonitorPlay className="size-5 text-primary" aria-hidden /> Записать экран
             </h2>
-            <p className="rounded-md bg-warning-light px-3 py-2 text-sm">
+            <p className="rounded-xl bg-warning-light px-3 py-2 text-sm">
               Перед началом закройте вкладки и окна с личной информацией: почту, мессенджеры, банк.
               Телефоны, email и ФИО на скриншотах размываются автоматически, но видео сохраняется
               как есть.
@@ -187,7 +184,7 @@ export function NewRecordingPage() {
 
       {video && preview && (
         <Card className="space-y-3">
-          <video src={preview} controls className="w-full rounded-md bg-black" />
+          <video src={preview} controls className="w-full rounded-xl bg-black" />
           {uploading ? (
             <ProgressBar value={progress} label="Загрузка записи" />
           ) : (

@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { timecode } from "@/lib/labels";
 
-/** A step of a screen recording: the video opens at the step's start (SPEC 7.7, 13.3). */
 function RecordingClip({ videoId, startMs }: { videoId: string; startMs: number }) {
   const [open, setOpen] = useState(false);
   if (!open) {
     return (
-      <Button variant="secondary" className="px-3 py-1 text-xs" onClick={() => setOpen(true)}>
+      <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
         <Play className="size-3.5" aria-hidden /> Смотреть с {timecode(startMs)}
       </Button>
     );
@@ -22,18 +21,18 @@ function RecordingClip({ videoId, startMs }: { videoId: string; startMs: number 
       controls
       autoPlay
       preload="metadata"
-      className="w-full rounded-md bg-black"
+      className="w-full rounded-xl bg-black"
     />
   );
 }
 
-/** The quote highlighted inside its source (SPEC 7.7); successors see the quote only. */
+/** Successors get no context, only the quote. */
 export function SourceView({ source }: { source: Source }) {
   const context = source.context ?? "";
   const at = context.indexOf(source.quote);
   const videoId = source.link?.video_asset_id;
   return (
-    <Card className="space-y-2 p-3 text-sm">
+    <Card padding="sm" className="space-y-2 text-sm">
       <p className="text-xs text-ink-muted">{source.label}</p>
       {at >= 0 ? (
         <p className="whitespace-pre-line">

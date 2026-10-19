@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { CRITICALITY_LABELS, FREQUENCY_LABELS } from "@/lib/labels";
 
-/** «Карта обязанностей» (SPEC 7.4, phase map): the expert confirms processes found in the answers. */
 export function CandidatesPanel({
   candidates,
   pending,
@@ -31,7 +30,7 @@ export function CandidatesPanel({
   }
 
   return (
-    <section aria-labelledby="map-title" className="space-y-3 rounded-md bg-primary-light/60 p-3">
+    <section aria-labelledby="map-title" className="space-y-3 rounded-xl bg-primary-light/60 p-3">
       <h2 id="map-title" className="text-sm font-semibold">
         Карта обязанностей
       </h2>
@@ -40,7 +39,7 @@ export function CandidatesPanel({
       </p>
       <ul className="space-y-3">
         {items.map((item, i) => (
-          <li key={item.name} className="space-y-1.5 rounded-md bg-white p-2">
+          <li key={item.name} className="space-y-1.5 rounded-xl bg-white p-2">
             <label className="flex items-center gap-2 text-sm font-medium">
               <input
                 type="checkbox"
@@ -52,7 +51,7 @@ export function CandidatesPanel({
             <div className="grid grid-cols-2 gap-1.5">
               <Select
                 aria-label={`Частота: ${item.name}`}
-                className="px-2 py-1 text-xs"
+                compact
                 value={item.frequency}
                 onChange={(e) => update(i, { frequency: e.target.value as ProcessFrequency })}
               >
@@ -64,7 +63,7 @@ export function CandidatesPanel({
               </Select>
               <Select
                 aria-label={`Важность: ${item.name}`}
-                className="px-2 py-1 text-xs"
+                compact
                 value={item.criticality}
                 onChange={(e) => update(i, { criticality: Number(e.target.value) })}
               >

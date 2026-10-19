@@ -25,7 +25,7 @@ import { Layout } from "./Layout";
 
 const ALL: UserRole[] = ["admin", "manager", "expert", "successor"];
 
-/** Pages by role (SPEC 9.1). Access to a specific handover is checked by the backend. */
+/** Access to a specific handover is checked by the backend; here only the global role. */
 const PAGES: { path: string; roles: UserRole[]; element: ReactNode }[] = [
   { path: "handovers", roles: ["admin", "manager", "expert"], element: <HandoversPage /> },
   { path: "handovers/:id", roles: ALL, element: <HandoverPage /> },
@@ -40,7 +40,6 @@ const PAGES: { path: string; roles: UserRole[]; element: ReactNode }[] = [
   { path: "dashboard", roles: ["manager"], element: <DashboardPage /> },
   { path: "privacy", roles: ["expert"], element: <PrivacyPage /> },
   { path: "audit", roles: ["manager", "admin"], element: <AuditPage /> },
-  // Placeholder until its milestone (docs/plan.md).
   { path: "admin", roles: ["admin"], element: <SectionPage section="admin" /> },
 ];
 

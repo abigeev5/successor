@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export const MAX_MINUTES = 30; // SPEC 7.6
+export const MAX_MINUTES = 30;
 
 type State = "idle" | "recording" | "unsupported";
 
@@ -15,8 +15,8 @@ function pickMime(): string {
 }
 
 /**
- * Screen + microphone in one MediaRecorder (SPEC 7.6). Stops at 30 minutes or when the user ends
- * sharing in the browser. The finished video is handed to `onRecorded`.
+ * Screen and microphone go into one MediaRecorder. Recording stops at MAX_MINUTES or when the user
+ * ends sharing in the browser.
  */
 export function useScreenRecorder(onRecorded: (video: Blob) => void) {
   const [state, setState] = useState<State>(

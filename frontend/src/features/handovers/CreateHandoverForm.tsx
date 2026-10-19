@@ -60,7 +60,7 @@ export function CreateHandoverForm({ onDone }: { onDone: () => void }) {
   return (
     <Card>
       <form onSubmit={submit} className="space-y-5">
-        <h2 className="text-lg font-semibold">Новая передача дел</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Новая передача дел</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <Label htmlFor="expert">Эксперт (кто передаёт дела)</Label>
@@ -158,7 +158,7 @@ export function CreateHandoverForm({ onDone }: { onDone: () => void }) {
             </div>
             <Select
               aria-label="Частота"
-              className="w-auto"
+              fit
               value={newFrequency}
               onChange={(e) => setNewFrequency(e.target.value as ProcessFrequency)}
             >
@@ -170,7 +170,7 @@ export function CreateHandoverForm({ onDone }: { onDone: () => void }) {
             </Select>
             <Select
               aria-label="Важность"
-              className="w-auto"
+              fit
               value={newCriticality}
               onChange={(e) => setNewCriticality(Number(e.target.value))}
             >

@@ -14,6 +14,7 @@ import type { ApiError, Gap, GapStatus, Handover } from "@/api/client";
 import { uploadGapAudio, useGapActions, useGaps } from "@/api/gaps";
 import { useUsers } from "@/api/handovers";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { ErrorNote } from "@/components/ErrorNote";
 import { HandoverGate } from "@/components/HandoverGate";
 import { FullPageSpinner } from "@/components/Spinner";
@@ -51,14 +52,12 @@ function Gaps({ handover, switcher }: { handover: Handover; switcher: React.Reac
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-xl font-semibold">Пробелы</h1>
-        {switcher}
-      </div>
-      <p className="text-sm text-ink-muted">
-        Вопросы преемника, на которые ассистент не нашёл ответа. Ответ эксперта станет черновиком
-        карточки и попадёт в базу после проверки.
-      </p>
+      <PageHeader
+        eyebrow="Вопросы преемника"
+        title="Пробелы"
+        description="Вопросы, на которые ассистент не нашёл ответа. Ответ эксперта станет черновиком карточки и попадёт в базу после проверки."
+        actions={switcher}
+      />
       <div role="tablist" aria-label="Статус" className="flex flex-wrap gap-1">
         {TABS.map((t, i) => (
           <button
@@ -68,7 +67,7 @@ function Gaps({ handover, switcher }: { handover: Handover; switcher: React.Reac
             aria-selected={i === tab}
             onClick={() => setTab(i)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm",
+              "rounded-full px-3.5 py-1.5 text-sm transition-colors",
               i === tab
                 ? "bg-primary-light font-medium text-primary-dark"
                 : "text-ink-muted hover:bg-surface",
@@ -109,7 +108,7 @@ function Gaps({ handover, switcher }: { handover: Handover; switcher: React.Reac
 function StatusLine({ gap }: { gap: Gap }) {
   const view =
     gap.status === "answered"
-      ? { icon: CircleCheck, className: "text-emerald-700" }
+      ? { icon: CircleCheck, className: "text-primary" }
       : gap.status === "dismissed"
         ? { icon: MinusCircle, className: "text-ink-muted" }
         : { icon: Clock, className: "text-amber-700" };
@@ -137,7 +136,7 @@ function GapItem({
 }) {
   const open = gap.status === "open";
   return (
-    <Card className="space-y-3 p-4">
+    <Card padding="sm" className="space-y-3">
       <div className="space-y-1">
         <p className="font-medium">{gap.question}</p>
         <p className="flex flex-wrap gap-x-3 text-xs text-ink-muted">
@@ -262,7 +261,7 @@ function GapActions({
           <>
             <Select
               aria-label="Назначить другого эксперта"
-              className="w-auto"
+              fit
               value={assignee}
               onChange={(e) => setAssignee(e.target.value)}
             >

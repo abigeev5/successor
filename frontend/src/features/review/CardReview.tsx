@@ -46,7 +46,7 @@ function diff(card: CardDetail, form: Form): CardEdit | null {
   return Object.keys(edits).length ? edits : null;
 }
 
-/** Seconds the card was open while the tab was visible (SPEC 7.7, review_seconds). */
+/** Seconds the card was open while the tab was visible. */
 function useVisibleSeconds() {
   const seconds = useRef(0);
   useEffect(() => {
@@ -147,7 +147,7 @@ function CardEditor({
     <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
       <Card className="space-y-4">
         {duplicate && (
-          <p className="rounded-md bg-warning-light px-3 py-2 text-sm">
+          <p className="rounded-xl bg-warning-light px-3 py-2 text-sm">
             Возможный дубль карточки «{duplicate.title}». Если это одно и то же — объедините их.
           </p>
         )}
@@ -221,7 +221,7 @@ function CardEditor({
             </button>
           </div>
           {preview ? (
-            <div className="min-h-32 rounded-md border border-black/10 bg-white px-3 py-2 text-sm [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5">
+            <div className="min-h-32 rounded-xl border border-line bg-white px-3 py-2 text-sm [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5">
               <Markdown>{form.body_md}</Markdown>
             </div>
           ) : (
@@ -236,7 +236,7 @@ function CardEditor({
 
         <ErrorNote error={error} />
         {rejecting ? (
-          <div className="space-y-2 rounded-md bg-danger-light p-3">
+          <div className="space-y-2 rounded-xl bg-danger-light p-3">
             <Label htmlFor="reason">Почему отклоняете? (необязательно)</Label>
             <Input
               id="reason"
@@ -246,7 +246,7 @@ function CardEditor({
               onKeyDown={(e) => e.key === "Enter" && reject()}
             />
             <div className="flex gap-2">
-              <Button onClick={reject} disabled={busy} className="bg-danger hover:bg-danger/90">
+              <Button variant="danger" onClick={reject} disabled={busy}>
                 Отклонить
               </Button>
               <Button variant="ghost" onClick={() => setRejecting(false)}>
@@ -266,7 +266,8 @@ function CardEditor({
             <div className="flex items-center gap-2">
               <Select
                 aria-label="Объединить с карточкой"
-                className="w-auto max-w-56"
+                fit
+                className="max-w-56"
                 value={mergeInto}
                 onChange={(e) => setMergeInto(e.target.value)}
               >

@@ -1,17 +1,22 @@
 @import "tailwindcss";
 
-/* Palette from SPEC 9.2 (hackathon presentation template). */
+/* Palette and type from the hackathon presentation template. */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-primary: #0a86e0;
-  --color-primary-dark: #0870bb;
+  --color-primary-dark: #0a6cc0;
+  --color-primary-deep: #0a4f9e;
   --color-primary-light: #cfe9fe;
+  --color-primary-faint: #eef7ff;
   --color-surface: #f4f4f4;
+  --color-line: #e6e8eb;
   --color-ink: #1a1a1a;
   --color-ink-muted: #434343;
+  --color-ink-soft: #7b7f86;
   --color-danger: #c62828;
   --color-danger-light: #fdecea;
   --color-warning-light: #fff4d6;
+  --radius-card: 1.25rem;
 }
 
 html,
@@ -22,4 +27,41 @@ body,
 
 body {
   @apply bg-white font-sans text-ink antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Soft sky gradient with thin vertical stripes, as on the template's title slides. */
+@utility bg-sky {
+  background-color: #7cc0ff;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.13) 0 1px,
+      transparent 1px 3px,
+      rgb(255 255 255 / 0) 3px 46px
+    ),
+    radial-gradient(45% 55% at 88% 8%, rgb(255 255 255 / 0.95), transparent 70%),
+    radial-gradient(50% 55% at 8% 95%, rgb(255 255 255 / 0.8), transparent 70%),
+    radial-gradient(55% 65% at 25% 25%, #3fa6ff, transparent 72%),
+    radial-gradient(60% 70% at 75% 75%, #1e8ff2, transparent 70%),
+    radial-gradient(40% 50% at 55% 40%, #9fd3ff, transparent 75%),
+    linear-gradient(135deg, #b9e0ff, #4ba8f6);
+}
+
+/* Deep blue panel for the main call to action. */
+@utility bg-sky-deep {
+  background-color: #1784e6;
+  background-image:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.06) 0 1px, transparent 1px 44px),
+    radial-gradient(70% 90% at 15% 10%, rgb(255 255 255 / 0.35), transparent 70%),
+    linear-gradient(120deg, #3aa2f8, #0a6cc0);
+}
+
+@utility eyebrow {
+  @apply text-[11px] font-semibold tracking-[0.08em] text-primary uppercase;
 }

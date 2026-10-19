@@ -12,7 +12,7 @@ import type { AspectCell, RiskLevel } from "@/api/client";
 import { cn } from "@/lib/cn";
 import { RISK_LEVEL_LABELS } from "@/lib/labels";
 
-/** Aspect coverage: always icon + text, not only color (SPEC 9.2). */
+/** Statuses are always icon + text, never color alone. */
 export function AspectBadge({
   label,
   status,
@@ -25,7 +25,7 @@ export function AspectBadge({
   const view = notApplicable
     ? { icon: MinusCircle, text: "не относится", className: "text-ink-muted" }
     : status === "covered"
-      ? { icon: CheckCircle2, text: "раскрыто", className: "text-emerald-700" }
+      ? { icon: CheckCircle2, text: "раскрыто", className: "text-primary" }
       : status === "partial"
         ? { icon: CircleDot, text: "частично", className: "text-amber-700" }
         : { icon: Circle, text: "нет", className: "text-ink-muted/70" };
@@ -44,7 +44,7 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
   return (
     <div className="flex items-center gap-2" title={label}>
       <div
-        className="h-2 flex-1 overflow-hidden rounded-full bg-black/10"
+        className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/[0.08]"
         role="progressbar"
         aria-valuenow={percent}
         aria-valuemin={0}
@@ -59,17 +59,21 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
 }
 
 const RISK_VIEW: Record<RiskLevel, { icon: typeof Circle; className: string }> = {
-  high: { icon: AlertTriangle, className: "text-danger" },
-  medium: { icon: CircleAlert, className: "text-amber-700" },
-  low: { icon: ShieldCheck, className: "text-emerald-700" },
+  high: { icon: AlertTriangle, className: "bg-danger-light text-danger" },
+  medium: { icon: CircleAlert, className: "bg-warning-light text-amber-800" },
+  low: { icon: ShieldCheck, className: "bg-primary-faint text-primary-dark" },
 };
 
-/** Risk level: icon + word (SPEC 7.9, 9.2). */
 export function RiskBadge({ level }: { level: RiskLevel }) {
   const { icon: Icon, className } = RISK_VIEW[level];
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-sm font-medium", className)}>
-      <Icon className="size-4 shrink-0" aria-hidden />
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap",
+        className,
+      )}
+    >
+      <Icon className="size-3.5 shrink-0" aria-hidden />
       {RISK_LEVEL_LABELS[level]}
     </span>
   );
@@ -82,7 +86,7 @@ const CELL_VIEW: Record<
   covered: {
     icon: CheckCircle2,
     text: "есть подтверждённая карточка",
-    className: "text-emerald-700",
+    className: "text-primary",
   },
   partial: { icon: CircleDot, text: "рассказано, карточки пока нет", className: "text-amber-700" },
   missing: { icon: Circle, text: "нет", className: "text-ink-muted/60" },

@@ -9,7 +9,6 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 
 export type NavItem = { to: string; label: string };
 
-/** Sections per role (SPEC 9.1). */
 export const NAV: Record<UserRole, NavItem[]> = {
   manager: [
     { to: "/dashboard", label: "Панель" },
@@ -37,7 +36,6 @@ export const NAV: Record<UserRole, NavItem[]> = {
   ],
 };
 
-/** Where "/" leads after login (SPEC 9.1). Experts get /handovers/:id once handovers exist (M1). */
 export function homePath(role: UserRole): string {
   return NAV[role][0].to;
 }

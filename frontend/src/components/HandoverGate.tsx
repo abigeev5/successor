@@ -57,7 +57,8 @@ export function HandoverGate({
     list.length > 1 ? (
       <Select
         aria-label="Передача дел"
-        className="w-auto max-w-xs"
+        fit
+        className="max-w-xs"
         value={current.id}
         onChange={(event) => navigate(`${location.pathname}?handover=${event.target.value}`)}
       >

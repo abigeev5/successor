@@ -6,6 +6,7 @@ import { useCards } from "@/api/cards";
 import type { Gap, Handover } from "@/api/client";
 import { useGaps } from "@/api/gaps";
 import { ErrorNote } from "@/components/ErrorNote";
+import { PageHeader } from "@/components/PageHeader";
 import { HandoverGate } from "@/components/HandoverGate";
 import { FullPageSpinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
@@ -102,15 +103,12 @@ function Assistant({ handover, switcher }: { handover: Handover; switcher: React
   return (
     <section className="grid gap-6 lg:grid-cols-[1fr_380px]">
       <div className="flex min-h-[60vh] flex-col gap-4">
-        <div className="flex flex-wrap items-baseline gap-3">
-          <h1 className="text-xl font-semibold">Ассистент</h1>
-          {switcher}
-        </div>
+        <PageHeader eyebrow="Ответы со ссылкой на источник" title="Ассистент" actions={switcher} />
 
         {notices.unseen.length > 0 && (
           <div
             role="status"
-            className="flex items-start gap-2 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-900"
+            className="flex items-start gap-2 rounded-xl bg-primary-faint px-3 py-2 text-sm text-primary-deep"
           >
             <BellRing className="mt-0.5 size-4 shrink-0" aria-hidden />
             <p className="flex-1">
@@ -118,7 +116,7 @@ function Assistant({ handover, switcher }: { handover: Handover; switcher: React
               {notices.unseen.map((g) => `«${g.question}»`).join(", ")}. Ответ уже в базе знаний —
               спросите ещё раз или откройте его в «Мои вопросы эксперту».
             </p>
-            <Button variant="ghost" className="px-1 py-0" onClick={notices.dismiss} title="Скрыть">
+            <Button variant="ghost" size="icon" onClick={notices.dismiss} title="Скрыть">
               <X className="size-4" aria-hidden />
               <span className="sr-only">Скрыть</span>
             </Button>
@@ -129,20 +127,25 @@ function Assistant({ handover, switcher }: { handover: Handover; switcher: React
           {history.isPending && <FullPageSpinner />}
           <ErrorNote error={history.error} />
           {count === 0 && !pending && !history.isPending && (
-            <div className="space-y-3 py-6 text-center">
-              <p className="text-sm text-ink-muted">
-                Спросите о работе — я отвечу только по проверенным экспертом карточкам и покажу
-                источники. Если ответа нет, передам вопрос эксперту.
+            <div className="bg-sky rounded-[28px] px-6 py-8 text-white sm:px-10 sm:py-10">
+              <p className="text-2xl font-semibold tracking-tight drop-shadow-sm sm:text-3xl">
+                Спросите о работе
+              </p>
+              <p className="mt-2 max-w-xl text-sm text-white/90">
+                Я отвечу только по проверенным экспертом карточкам и покажу источники. Если ответа
+                нет, передам вопрос эксперту.
               </p>
               {examples.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-xs text-ink-muted">Например, о чём есть карточки:</p>
-                  <ul className="flex flex-wrap justify-center gap-2">
+                <div className="mt-6 space-y-2.5">
+                  <p className="text-xs font-medium text-white/85">
+                    Например, о чём есть карточки:
+                  </p>
+                  <ul className="flex flex-wrap gap-2">
                     {examples.map((c) => (
                       <li key={c.id}>
                         <button
                           type="button"
-                          className="rounded-full bg-surface px-3 py-1.5 text-sm hover:bg-primary-light"
+                          className="rounded-full bg-white px-4 py-2 text-sm text-ink shadow-sm transition-colors hover:bg-primary-faint hover:text-primary-dark"
                           onClick={() => {
                             setText(c.title);
                             input.current?.focus();
@@ -204,7 +207,7 @@ function Assistant({ handover, switcher }: { handover: Handover; switcher: React
               <span className="sr-only sm:not-sr-only">Спросить</span>
             </Button>
           </div>
-          <p className="text-xs text-ink-muted">Enter — отправить, Shift+Enter — новая строка</p>
+          <p className="text-xs text-ink-soft">Enter — отправить, Shift+Enter — новая строка</p>
         </form>
       </div>
       <div>{panel}</div>
@@ -214,7 +217,7 @@ function Assistant({ handover, switcher }: { handover: Handover; switcher: React
 
 function Question({ text }: { text: string }) {
   return (
-    <p className="ml-auto w-fit max-w-[85%] rounded-lg bg-primary px-4 py-2 text-sm whitespace-pre-line text-white">
+    <p className="ml-auto w-fit max-w-[85%] rounded-2xl bg-primary px-4 py-2 text-sm whitespace-pre-line text-white">
       {text}
     </p>
   );

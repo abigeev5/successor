@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useCards } from "@/api/cards";
 import type { CardType, Handover } from "@/api/client";
 import { EmptyState } from "@/components/EmptyState";
+import { PageHeader } from "@/components/PageHeader";
 import { ErrorNote } from "@/components/ErrorNote";
 import { HandoverGate } from "@/components/HandoverGate";
 import { FullPageSpinner } from "@/components/Spinner";
@@ -63,13 +64,12 @@ function Knowledge({ handover, switcher }: { handover: Handover; switcher: React
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-xl font-semibold">База знаний</h1>
-        {switcher}
-      </div>
-      <p className="text-sm text-ink-muted">
-        Только подтверждённые экспертом карточки. Ассистент отвечает по ним же.
-      </p>
+      <PageHeader
+        eyebrow="Проверено экспертом"
+        title="База знаний"
+        description="Только подтверждённые экспертом карточки. Ассистент отвечает по ним же."
+        actions={switcher}
+      />
       <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
         <label className="relative">
           <span className="sr-only">Поиск</span>
@@ -78,7 +78,7 @@ function Knowledge({ handover, switcher }: { handover: Handover; switcher: React
             aria-hidden
           />
           <Input
-            className="pl-9"
+            withIcon
             placeholder="Поиск по названию и сути"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -138,7 +138,7 @@ function Knowledge({ handover, switcher }: { handover: Handover; switcher: React
                       onClick={() => open(c.id)}
                       aria-current={c.id === selected}
                       className={cn(
-                        "h-full w-full rounded-lg p-4 text-left",
+                        "h-full w-full rounded-2xl p-4 text-left",
                         c.id === selected
                           ? "bg-primary-light ring-2 ring-primary"
                           : "bg-surface hover:bg-primary-light",

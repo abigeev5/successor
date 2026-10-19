@@ -98,11 +98,11 @@ export function InterviewPage() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <section className="flex min-h-[70vh] flex-col">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <h1 className="mr-auto text-xl font-semibold">Интервью</h1>
-          <span className="text-xs text-ink-muted">
-            Активное время: {formatMinutes(s.active_seconds)}
-          </span>
+        <div className="mb-5 flex flex-wrap items-end gap-2">
+          <div className="mr-auto space-y-1">
+            <p className="eyebrow">Активное время: {formatMinutes(s.active_seconds)}</p>
+            <h1 className="text-[28px] leading-tight font-semibold tracking-tight">Интервью</h1>
+          </div>
           {!finished && (
             <>
               {paused ? (
@@ -139,14 +139,14 @@ export function InterviewPage() {
         </div>
 
         <ol
-          className="flex-1 space-y-3 overflow-y-auto rounded-lg bg-surface p-4"
+          className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-surface p-4"
           aria-live="polite"
         >
           {s.messages.map((m) => (
             <li
               key={m.id}
               className={cn(
-                "max-w-[85%] whitespace-pre-line rounded-lg px-4 py-2.5 text-sm",
+                "max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm",
                 m.role === "interviewer" ? "bg-white" : "ml-auto bg-primary text-white",
               )}
             >
@@ -159,7 +159,7 @@ export function InterviewPage() {
           ))}
           {sentText && (
             <>
-              <li className="ml-auto max-w-[85%] whitespace-pre-line rounded-lg bg-primary/70 px-4 py-2.5 text-sm text-white">
+              <li className="ml-auto max-w-[85%] whitespace-pre-line rounded-2xl bg-primary/70 px-4 py-2.5 text-sm text-white">
                 {sentText}
               </li>
               <li className="flex items-center gap-2 text-sm text-ink-muted" role="status">
@@ -172,7 +172,7 @@ export function InterviewPage() {
 
         <ErrorNote error={actionError} />
         {finished ? (
-          <div className="mt-3 flex flex-wrap items-center gap-3 rounded-lg bg-primary-light p-4 text-sm">
+          <div className="mt-3 flex flex-wrap items-center gap-3 rounded-2xl bg-primary-light p-4 text-sm">
             <CheckCircle2 className="size-5 text-primary" aria-hidden />
             <span className="flex-1">
               Сессия завершена. Черновики карточек появятся на проверке через несколько минут.
@@ -238,7 +238,7 @@ export function InterviewPage() {
         )}
       </section>
 
-      <aside className="space-y-4 rounded-lg bg-surface p-4">
+      <aside className="space-y-4 rounded-2xl bg-surface p-4">
         {s.candidates.length > 0 && !finished && (
           <CandidatesPanel
             key={s.candidates.map((c) => c.name).join("|")}

@@ -16,7 +16,6 @@ export function useRecordings(handoverId: string | undefined, enabled = true) {
   });
 }
 
-/** Polls while the worker processes the recording. */
 export function useRecording(id: string | undefined) {
   return useQuery<Recording>({
     queryKey: ["recording", id],
@@ -47,7 +46,7 @@ export function useRetryRecording() {
 
 export type UploadFields = { handoverId: string; title: string; processId: string; video: Blob };
 
-/** XMLHttpRequest, not fetch: only it reports upload progress (SPEC 7.6: progress bar). */
+/** XMLHttpRequest, not fetch: only it reports upload progress. */
 export function uploadRecording(
   fields: UploadFields,
   onProgress: (share: number) => void,
