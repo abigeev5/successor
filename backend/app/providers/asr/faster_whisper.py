@@ -1,4 +1,4 @@
-"""Speech recognition with faster-whisper (D-031, model `small` by default).
+"""Speech recognition with faster-whisper (model `small` by default).
 
 The model is loaded lazily on the first call, so the app starts without it. Weights are
 downloaded by faster-whisper on first use; in a closed contour set ASR_MODEL to a local directory.

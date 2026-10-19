@@ -1,4 +1,4 @@
-"""Bus-factor risk of a process (SPEC 7.9). Pure: no database.
+"""Bus-factor risk of a process. Pure: no database.
 
 holder_factor   = 1.0 if nobody else knows the process; 0.6 one person; 0.3 two; 0.1 more
 deadline_factor = 1.0 if ≤ 14 days left (or overdue); 0.7 if ≤ 30; 0.4 otherwise or no deadline

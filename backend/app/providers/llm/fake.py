@@ -1,12 +1,12 @@
-"""FakeLLM for tests and demo without a model (SPEC, 5.3).
+"""FakeLLM for tests and demo without a model.
 
 Answers come from rules: {"match": "<substring>", "response": "<text>" | ["<1st call>", "<2nd call>", ...]}
 or {"match": ..., "response_json": {...}}. A rule matches if its substring occurs in any message.
 Rules are passed directly or loaded from *.json files (each file holds a list of rules).
 A list of responses is returned one by one; the last one repeats.
 
-Unknown text prompts get a deterministic stub (SPEC 5.3). With `unknown_text_raises=True`
-(the app without a model, D-045) they raise LLMError instead, so callers use their fixed fallbacks.
+Unknown text prompts get a deterministic stub. With `unknown_text_raises=True`
+(the app without a model) they raise LLMError instead, so callers use their fixed fallbacks.
 """
 
 import json

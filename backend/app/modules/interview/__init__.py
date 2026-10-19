@@ -1,1 +1,1 @@
-"""AI interviewer (SPEC 7.4)."""
+"""AI interviewer."""

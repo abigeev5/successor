@@ -1,4 +1,4 @@
-"""Duplicate detection by embedding similarity (SPEC 7.5: cosine >= 0.9)."""
+"""Duplicate detection by embedding similarity (cosine >= 0.9)."""
 
 import uuid
 

@@ -1,4 +1,4 @@
-"""Expert review of cards (SPEC 7.7). Only approved cards reach the knowledge base."""
+"""Expert review of cards. Only approved cards reach the knowledge base."""
 
 import uuid
 from collections import defaultdict
@@ -28,7 +28,7 @@ _EDITABLE = ("type", "process_id", "title", "summary", "body_md", "applies_when"
 
 
 def visible_statuses(role: HandoverRole) -> set[CardStatus]:
-    """Successors see approved cards only (SPEC 7.1)."""
+    """Successors see approved cards only."""
     return {CardStatus.APPROVED} if role is HandoverRole.SUCCESSOR else set(CardStatus)
 
 
@@ -160,7 +160,7 @@ async def edit_card(db: AsyncSession, card: KnowledgeCard, edits: CardEdit, user
         for field, value in changes.items():
             setattr(card, field, value)
     else:
-        # Editing an approved card creates a new version and re-indexes it (SPEC 7.7).
+        # Editing an approved card creates a new version and re-indexes it.
         await _apply_edits(db, card, changes, user)
         await bus.publish(
             db,

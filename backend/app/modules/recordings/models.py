@@ -15,7 +15,7 @@ class RecordingStatus(StrEnum):
 
 
 class RecordingStage(StrEnum):
-    """What the worker is doing now; the page shows it instead of a job progress bar (D-060)."""
+    """What the worker is doing now; the page shows it instead of a job progress bar."""
 
     AUDIO = "audio"
     SPEECH = "speech"

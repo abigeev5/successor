@@ -1,4 +1,4 @@
-"""Interview state (decision D-040).
+"""Interview state.
 
 Aspect coverage lives in the `process_aspects` table (shared by all sessions of a handover).
 `interview_sessions.state_json` keeps only per-session things: phase, current process, candidates, probes.
@@ -75,7 +75,7 @@ class Snapshot:
 
 
 def coverage(aspects: dict[str, AspectState]) -> float:
-    """(covered + 0.5·partial) / 11; «not applicable» counts as covered (SPEC 7.4)."""
+    """(covered + 0.5·partial) / 11; «not applicable» counts as covered."""
     score = 0.0
     for key in ASPECT_KEYS:
         state = aspects.get(key, AspectState())

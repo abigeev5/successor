@@ -1,6 +1,6 @@
-"""Splitting a source document into LLM windows (SPEC 7.5: ~3000 tokens, overlap of one fragment)."""
+"""Splitting a source document into LLM windows (~3000 tokens, overlap of one fragment)."""
 
-CHARS_PER_TOKEN = 4  # rough estimate, no tokenizer (D-038)
+CHARS_PER_TOKEN = 4  # rough estimate, no tokenizer
 WINDOW_CHARS = 3000 * CHARS_PER_TOKEN
 
 

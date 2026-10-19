@@ -1,4 +1,4 @@
-"""plan_next and friends (SPEC 15: vague, map, process switch, wrapup, repeat limit)."""
+"""plan_next and friends (vague, map, process switch, wrapup, repeat limit)."""
 
 import uuid
 
@@ -50,9 +50,6 @@ def deepen_state(
     )
 
 
-# --- session start ---
-
-
 def test_first_session_starts_with_intro() -> None:
     step, state = first_step(snap(), first_session=True)
     assert step.kind is StepKind.INTRO
@@ -64,9 +61,6 @@ def test_later_session_skips_covered_processes() -> None:
     step, state = first_step(snap(aspects={REPORT.id: eight}), first_session=False)
     assert (step.kind, step.process_id) == (StepKind.WALKTHROUGH, RETAKES.id)
     assert REPORT.id in state.done_process_ids
-
-
-# --- duty map ---
 
 
 def test_after_intro_asks_for_the_duty_map_once() -> None:
@@ -110,9 +104,6 @@ def test_confirmed_processes_start_the_walkthrough() -> None:
     step, new_state = after_processes_confirmed(snap(state))
     assert step.kind is StepKind.WALKTHROUGH
     assert new_state.candidates == []
-
-
-# --- deepening ---
 
 
 def test_walkthrough_answer_leads_to_the_most_important_missing_aspect() -> None:

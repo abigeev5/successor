@@ -1,4 +1,4 @@
-"""Active expert time (SPEC 7.4): sum of gaps between messages, pauses longer than 5 minutes dropped."""
+"""Active expert time: sum of gaps between messages, pauses longer than 5 minutes dropped."""
 
 from datetime import datetime
 

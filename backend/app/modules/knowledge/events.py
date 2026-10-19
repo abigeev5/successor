@@ -13,7 +13,7 @@ class CardDrafted(Event):
 
 @dataclass(frozen=True)
 class CardDropped(Event):
-    """A candidate card without valid evidence (SPEC 7.5, step 3)."""
+    """A candidate card without valid evidence."""
 
     handover_id: uuid.UUID
     origin: str
@@ -28,7 +28,7 @@ class CardApproved(Event):
     origin: str
     edited: bool
     user_id: uuid.UUID | None
-    review_seconds: int = 0  # time the expert spent on this review (SPEC 7.10, `review_time`)
+    review_seconds: int = 0  # time the expert spent on this review (`review_time`)
 
 
 @dataclass(frozen=True)

@@ -1,6 +1,6 @@
 """Logging setup.
 
-Rule (SPEC, 12): logs never contain user texts — questions, answers, transcripts, messages.
+Rule: logs never contain user texts — questions, answers, transcripts, messages.
 Log ids, statuses and timings only.
 """
 

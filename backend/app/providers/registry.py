@@ -1,4 +1,4 @@
-"""The only place where settings turn into provider implementations (docs/architecture.md, 5.4)."""
+"""The only place where settings turn into provider implementations."""
 
 from dataclasses import dataclass
 
@@ -32,7 +32,7 @@ def _not_yet(kind: str, value: str) -> ProviderNotAvailable:
 @dataclass
 class Providers:
     llm: LLMProvider
-    judge_llm: LLMProvider  # checks answers (SPEC 7.8); the same model unless LLM_JUDGE_MODEL differs
+    judge_llm: LLMProvider  # checks answers; the same model unless LLM_JUDGE_MODEL differs
     embeddings: EmbeddingsProvider
     asr: ASRProvider
     ocr: OCRProvider
@@ -41,7 +41,7 @@ class Providers:
 
 def _llm(settings: Settings) -> LLMProvider:
     if settings.llm_provider == "fake":
-        # Without a model the interviewer asks its fixed probe questions (D-045).
+        # Without a model the interviewer asks its fixed probe questions.
         return FakeLLM(unknown_text_raises=True)
     if settings.llm_provider == "openai_compatible":
         return OpenAICompatibleLLM(settings, model=settings.llm_model)

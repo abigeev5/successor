@@ -1,4 +1,4 @@
-"""Pure access policy for a handover (SPEC, 7.1; decisions D-017, D-018).
+"""Pure access policy for a handover.
 
 admin     — every handover;
 manager   — the handover's manager, or a manager of the handover's org unit;

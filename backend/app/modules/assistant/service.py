@@ -40,7 +40,7 @@ def to_out(log: QaLog, forwarded_to: str | None = None) -> AnswerOut:
 
 
 async def _forwarded_to(db: AsyncSession, handover_id: uuid.UUID) -> str:
-    """The expert who will see the gap, or the manager if there is no expert (SPEC 7.8)."""
+    """The expert who will see the gap, or the manager if there is no expert."""
     experts = await member_ids(db, handover_id, MemberRole.EXPERT)
     user = await db.get(User, experts[0]) if experts else None
     if user is None:

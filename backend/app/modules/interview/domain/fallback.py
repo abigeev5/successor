@@ -1,4 +1,4 @@
-"""Fixed interviewer texts: steps that need no LLM, and fallbacks when the LLM fails (D-041)."""
+"""Fixed interviewer texts: steps that need no LLM, and fallbacks when the LLM fails."""
 
 from app.modules.interview.domain.aspects import BY_KEY
 from app.modules.interview.domain.planner import NextStep, StepKind

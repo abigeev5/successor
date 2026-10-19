@@ -1,4 +1,4 @@
-"""Deleting an expert's answers to gaps (SPEC 7.3). The question stays and waits for a new answer."""
+"""Deleting an expert's answers to gaps. The question stays and waits for a new answer."""
 
 import uuid
 

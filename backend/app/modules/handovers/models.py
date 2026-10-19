@@ -43,7 +43,7 @@ class Handover(UUIDPk, Timestamps, Base):
 
 
 class HandoverMember(Base):
-    """Experts and successors of a handover (decision D-002). Composite PK (D-021)."""
+    """Experts and successors of a handover. Composite PK."""
 
     __tablename__ = "handover_members"
 

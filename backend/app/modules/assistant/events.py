@@ -16,7 +16,7 @@ class AnswerShown(Event):
 
 @dataclass(frozen=True)
 class AnswerRefused(Event):
-    """The base had no answer: the question becomes a gap for the expert (SPEC 7.8)."""
+    """The base had no answer: the question becomes a gap for the expert."""
 
     qa_id: uuid.UUID
     handover_id: uuid.UUID

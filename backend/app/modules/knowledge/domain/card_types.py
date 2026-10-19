@@ -21,7 +21,7 @@ CARD_TYPE_LABELS: dict[CardType, str] = {
     CardType.TERM: "Термин / жаргон",
 }
 
-# Which interview aspects a card type covers (SPEC 7.5); used for coverage by approved cards.
+# Which interview aspects a card type covers; used for coverage by approved cards.
 CARD_TYPE_ASPECTS: dict[CardType, tuple[str, ...]] = {
     CardType.PROCEDURE: ("steps", "tools", "inputs", "trigger"),
     CardType.RULE: ("done_criteria", "rationale", "purpose"),

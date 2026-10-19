@@ -1,4 +1,4 @@
-"""Gap lifecycle (SPEC 7.8): open → the expert answers → a gap_answer draft → approved → answered."""
+"""Gap lifecycle: open → the expert answers → a gap_answer draft → approved → answered."""
 
 import uuid
 from datetime import UTC, datetime
@@ -125,7 +125,7 @@ async def answer(db: AsyncSession, user: User, gap_id: uuid.UUID, text: str) -> 
 async def transcribe(
     db: AsyncSession, settings: Settings, providers: Providers, user: User, gap_id: uuid.UUID, data: bytes
 ) -> AudioOut:
-    """Voice answer to a gap (SPEC 7.8): recognized text goes to the answer field for editing."""
+    """Voice answer to a gap: recognized text goes to the answer field for editing."""
     gap = await _load(db, user, gap_id, ANSWERERS)
     if gap.status is not GapStatus.OPEN:
         raise Conflict("На этот вопрос уже ответили или он закрыт", code="gap_closed")
@@ -143,7 +143,7 @@ async def dismiss(db: AsyncSession, user: User, gap_id: uuid.UUID) -> Gap:
 
 
 async def reassign(db: AsyncSession, user: User, gap_id: uuid.UUID, assignee_id: uuid.UUID) -> Gap:
-    """The expert has left: the manager gives the question to another employee (SPEC 7.8)."""
+    """The expert has left: the manager gives the question to another employee."""
     gap = await _load(db, user, gap_id, MANAGERS)
     handover = await get_handover(db, gap.handover_id)
     assignee = await db.get(User, assignee_id)

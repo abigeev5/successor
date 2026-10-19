@@ -1,8 +1,8 @@
-"""Splitting an approved card into chunks for the index (SPEC 7.7: ~500 tokens, by paragraphs / steps)."""
+"""Splitting an approved card into chunks for the index (~500 tokens, by paragraphs / steps)."""
 
 import re
 
-CHUNK_CHARS = 2000  # ≈ 500 tokens at ~4 characters per token (D-038)
+CHUNK_CHARS = 2000  # ≈ 500 tokens at ~4 characters per token
 _BLOCKS = re.compile(r"\n\s*\n|\n(?=\s*(?:\d+[.)]|[-*•])\s)")
 
 

@@ -26,7 +26,7 @@ async def ask(
     settings: Settings = Depends(get_settings),
     p: Providers = Depends(providers),
 ) -> AnswerOut:
-    """The full answer after the groundedness check (no streaming, D-012)."""
+    """The full answer after the groundedness check (no streaming)."""
     return await service.ask(db, p, settings, user, data.handover_id, data.question)
 
 

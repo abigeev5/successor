@@ -1,4 +1,4 @@
-"""`make eval` (SPEC 11.2): runs the assistant over eval/datasets/demo_qa.jsonl and writes a report.
+"""`make eval`: runs the assistant over eval/datasets/demo_qa.jsonl and writes a report.
 
 Nothing is stored: the demo handover's approved cards are re-indexed with the chosen embeddings
 inside a transaction that is rolled back, so the index always matches the query embeddings.
@@ -45,7 +45,7 @@ ROOT = Path(__file__).resolve().parent
 DATASET = ROOT / "datasets" / "demo_qa.jsonl"
 REPORTS = ROOT / "reports"
 DEMO = ROOT.parent / "seed" / "data" / "demo.json"
-SWEEP = [round(0.30 + 0.05 * i, 2) for i in range(9)]  # RAG_MIN_SIMILARITY 0.30 … 0.70 (SPEC 11.2)
+SWEEP = [round(0.30 + 0.05 * i, 2) for i in range(9)]  # RAG_MIN_SIMILARITY 0.30 … 0.70
 COVERAGE_SWEEP = [round(0.3 + 0.1 * i, 1) for i in range(6)]  # RAG_MIN_TEXT_COVERAGE 0.3 … 0.8
 JUDGE_PROMPT = "eval_correctness"
 

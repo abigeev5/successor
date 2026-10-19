@@ -101,7 +101,7 @@ async def my_data(
 async def erase_my_data(
     db: AsyncSession, settings: Settings, user: User, handover_id: uuid.UUID
 ) -> erasure.Erased:
-    """`DELETE /privacy/my-data` (SPEC 7.3): files, transcripts, interview messages, recording steps,
+    """`DELETE /privacy/my-data`: files, transcripts, interview messages, recording steps,
     gap answers; cards without sources are archived. The consent record stays as a legal trace."""
     await ensure_handover_access(db, user, handover_id, [HandoverRole.EXPERT])
     erased = await erasure.erase(db, settings, user_id=user.id, handover_id=handover_id)

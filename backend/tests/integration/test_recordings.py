@@ -1,4 +1,4 @@
-"""Screen recordings (SPEC 7.6): upload → worker → steps, blurred screenshots, procedure draft."""
+"""Screen recordings: upload → worker → steps, blurred screenshots, procedure draft."""
 
 import os
 import shutil

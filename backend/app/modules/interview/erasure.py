@@ -1,4 +1,4 @@
-"""Deleting an expert's interviews (SPEC 7.3): sessions, messages and voice files are removed for good."""
+"""Deleting an expert's interviews: sessions, messages and voice files are removed for good."""
 
 import uuid
 from typing import Any

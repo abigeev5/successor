@@ -22,7 +22,7 @@ PROCESS_JOB = "process_recording"
 
 
 class RecordingStepResolver:
-    """A step opens the video at its start (SPEC 7.7); successors also see the video (SPEC 7.1)."""
+    """A step opens the video at its start; successors also see the video."""
 
     source_type = SourceType.RECORDING_STEP
 

@@ -43,7 +43,7 @@ async def list_processes(db: AsyncSession, handover_id: uuid.UUID) -> list[Proce
 
 
 async def link_processes(db: AsyncSession, handover: Handover, process_ids: list[uuid.UUID]) -> None:
-    """Links processes to the handover; experts become owners, successors learners (SPEC 7.2)."""
+    """Links processes to the handover; experts become owners, successors learners."""
     processes = await org.get_processes(db, process_ids)
     if len(processes) != len(set(process_ids)) or any(
         p.org_unit_id != handover.org_unit_id for p in processes

@@ -1,4 +1,4 @@
-"""Deterministic embeddings (SPEC, 5.3): same text → same vector; shared words → closer vectors.
+"""Deterministic embeddings: same text → same vector; shared words → closer vectors.
 
 Hashing trick: every word goes to a bucket with a sign; the vector is then L2-normalized.
 """

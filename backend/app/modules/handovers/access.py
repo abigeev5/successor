@@ -1,4 +1,4 @@
-"""The single place that checks access to a handover (docs/architecture.md, 5.6)."""
+"""The single place that checks access to a handover."""
 
 import uuid
 from collections.abc import Awaitable, Callable, Iterable

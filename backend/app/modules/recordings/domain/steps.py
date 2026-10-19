@@ -1,4 +1,4 @@
-"""Steps of a recording from the LLM, fixed by code (SPEC 7.6: inside the duration, ordered, no overlaps)."""
+"""Steps of a recording from the LLM, fixed by code (inside the duration, ordered, no overlaps)."""
 
 from dataclasses import dataclass, replace
 
@@ -48,7 +48,7 @@ def timecode(ms: int) -> str:
 
 
 def procedure_markdown(steps: list[StepDraft], screenshot_urls: list[str | None]) -> str:
-    """Card body: numbered steps with the reason and a screenshot (SPEC 7.6, step 7)."""
+    """Card body: numbered steps with the reason and a screenshot."""
     items = []
     for n, (step, url) in enumerate(zip(steps, screenshot_urls, strict=True), start=1):
         action = f" {step.action}" if step.action and step.action != step.title else ""

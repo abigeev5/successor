@@ -1,4 +1,4 @@
-"""Manager dashboard (SPEC 7.9, 7.10): risk map, handover progress, product metrics, audit log.
+"""Manager dashboard: risk map, handover progress, product metrics, audit log.
 
 Read-only: SQL over the tables of other modules and the `events` table.
 """
@@ -73,7 +73,7 @@ async def process_rows(
     only: set[uuid.UUID] | None = None,
     today: date | None = None,
 ) -> list[ProcessRiskOut]:
-    """Risk and approved coverage of the unit's processes, highest risk first (SPEC 7.9)."""
+    """Risk and approved coverage of the unit's processes, highest risk first."""
     today = today or date.today()
     processes = [p for p in await org.list_processes(db, org_unit_id) if only is None or p.id in only]
     ids = [p.id for p in processes]
@@ -204,7 +204,7 @@ async def _count(db: AsyncSession, model: Any, *conditions: Any) -> int:
 async def progress(
     db: AsyncSession, settings: Settings, user: User, handover_id: uuid.UUID
 ) -> HandoverProgressOut:
-    """`GET /handovers/{id}/progress` (SPEC 7.9, «Прогресс передачи дел»)."""
+    """`GET /handovers/{id}/progress` («Прогресс передачи дел»)."""
     await ensure_handover_access(db, user, handover_id, PROGRESS_READERS)
     handover = await get_handover(db, handover_id)
     sessions, interview_seconds = (
@@ -264,7 +264,7 @@ async def metrics(
     date_from: date | None,
     date_to: date | None,
 ) -> MetricsOut:
-    """`GET /dashboard/metrics` (SPEC 7.10): one handover or all handovers of the unit, for a period."""
+    """`GET /dashboard/metrics`: one handover or all handovers of the unit, for a period."""
     if handover_id is not None:
         await ensure_handover_access(db, user, handover_id, MANAGERS)
         handover = await get_handover(db, handover_id)
@@ -349,7 +349,7 @@ async def metrics(
         cards_approved=await distinct_cards(),
         cards_approved_edited=await distinct_cards(props["edited"].astext == "true"),
         cards_rejected=await total("card_rejected"),
-        # Manual cards are not generated; events written before M4 have no origin.
+        # Manual cards are not generated; older events have no origin.
         approved_share=share(
             await distinct_cards(func.coalesce(props["origin"].astext, "") != "manual"), generated
         ),
@@ -379,7 +379,7 @@ async def audit_log(
     entity_id: uuid.UUID | None,
     limit: int,
 ) -> list[AuditEntryOut]:
-    """`GET /audit` (SPEC 8): admin sees everything, a manager — actions of their unit's employees."""
+    """`GET /audit`: admin sees everything, a manager — actions of their unit's employees."""
     stmt = (
         select(AuditLog, User.full_name)
         .outerjoin(User, User.id == AuditLog.user_id)

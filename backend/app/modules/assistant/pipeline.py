@@ -1,4 +1,4 @@
-"""Answering a question (SPEC 7.8): search → refuse or answer → verify claims → assemble.
+"""Answering a question: search → refuse or answer → verify claims → assemble.
 
 No writes here: the service stores the result, eval calls this directly.
 """
@@ -99,7 +99,7 @@ async def _load_sources(db: AsyncSession, card_ids: list[uuid.UUID]) -> list[Sou
 
 
 def degraded_answer(sources: list[Source]) -> str:
-    """Without a model: the found cards as excerpts with citations (D-049)."""
+    """Without a model: the found cards as excerpts with citations."""
     lines = [DEGRADED_LEAD]
     for s in sources:
         summary = s.text.splitlines()[0] if s.text else ""

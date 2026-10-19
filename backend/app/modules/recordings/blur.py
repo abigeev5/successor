@@ -1,4 +1,4 @@
-"""Gaussian blur of rectangles on an image, in place (SPEC 7.6.1: 4 px margin, no original kept)."""
+"""Gaussian blur of rectangles on an image, in place (4 px margin, no original kept)."""
 
 from pathlib import Path
 

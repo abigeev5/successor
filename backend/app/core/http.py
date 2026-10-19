@@ -1,4 +1,4 @@
-"""HTTP client for model providers with the OFFLINE_MODE guard (SPEC, 12).
+"""HTTP client for model providers with the OFFLINE_MODE guard.
 
 In offline mode only local addresses are allowed: localhost, private / loopback / link-local IPs,
 single-label hostnames (docker compose service names) and names that resolve to private IPs only.

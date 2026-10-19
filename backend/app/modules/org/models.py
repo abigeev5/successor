@@ -44,7 +44,7 @@ class HolderLevel(StrEnum):
 
 
 class ProcessHolder(Base):
-    """Who knows a process — the input for the bus factor (SPEC, 7.9). Composite PK (D-021)."""
+    """Who knows a process — the input for the bus factor. Composite PK."""
 
     __tablename__ = "process_holders"
 

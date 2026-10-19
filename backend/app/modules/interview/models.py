@@ -35,7 +35,7 @@ class InterviewSession(UUIDPk, Timestamps, Base):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_activity_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     active_seconds: Mapped[int] = mapped_column(default=0)
-    extracted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))  # D-043
+    extracted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class InterviewMessage(UUIDPk, Base):
@@ -52,7 +52,7 @@ class InterviewMessage(UUIDPk, Base):
 
 
 class ProcessAspect(Base):
-    """Coverage of a process aspect within a handover, shared by all sessions (D-003, D-040)."""
+    """Coverage of a process aspect within a handover, shared by all sessions."""
 
     __tablename__ = "process_aspects"
 

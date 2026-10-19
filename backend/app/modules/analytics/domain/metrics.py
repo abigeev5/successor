@@ -1,4 +1,4 @@
-"""Metrics export (SPEC 7.10): the order and Russian names of the CSV rows. Pure."""
+"""Metrics export: the order and Russian names of the CSV rows. Pure."""
 
 from collections.abc import Mapping
 from typing import Any, Literal

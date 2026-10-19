@@ -15,7 +15,7 @@ from app.modules.knowledge.domain.sources import SourceType
 @dataclass(frozen=True)
 class ResolvedSource:
     label: str  # «Реплика 12 · интервью 17.10»
-    context: str | None  # full text around the quote; hidden from successors (SPEC 7.1)
+    context: str | None  # full text around the quote; hidden from successors
     link: dict[str, str] | None = None  # where the UI can open it, e.g. {"session_id": "..."}
 
 

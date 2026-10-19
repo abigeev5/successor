@@ -1,4 +1,4 @@
-"""Embeddings over an OpenAI-compatible API: `llama-server --embeddings` with a bge-m3 GGUF (D-035).
+"""Embeddings over an OpenAI-compatible API: `llama-server --embeddings` with a bge-m3 GGUF.
 
 POST {base_url}/embeddings. Synchronous by design (EmbeddingsProvider), call it via asyncio.to_thread.
 """

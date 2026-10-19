@@ -1,6 +1,6 @@
-"""Hybrid search (SPEC 7.8): vector top-k and full-text top-k within a handover, fused by RRF.
+"""Hybrid search: vector top-k and full-text top-k within a handover, fused by RRF.
 
-Full text uses OR between query words (D-047): `websearch_to_tsquery` requires every word,
+Full text uses OR between query words: `websearch_to_tsquery` requires every word,
 so natural questions rarely match at all. Because OR matches on any shared word, the search also
 reports text coverage — the largest share of the question's words found in one chunk.
 """

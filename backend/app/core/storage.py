@@ -1,7 +1,7 @@
 """File storage for media (audio, video, images) under STORAGE_DIR.
 
 Files never get public URLs; paths are generated here (never taken from the client), so there is
-no path traversal. The type is detected from the first bytes (D-037).
+no path traversal. The type is detected from the first bytes.
 """
 
 import hashlib

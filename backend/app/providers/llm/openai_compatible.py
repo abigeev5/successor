@@ -1,6 +1,6 @@
-"""LLM over an OpenAI-compatible HTTP API: llama.cpp `llama-server` (D-032), vLLM, Ollama, LM Studio.
+"""LLM over an OpenAI-compatible HTTP API: llama.cpp `llama-server`, vLLM, Ollama, LM Studio.
 
-POST {base_url}/chat/completions. Structured output uses `response_format` (D-034), so the server
+POST {base_url}/chat/completions. Structured output uses `response_format`, so the server
 constrains generation with a grammar; the answer is still validated by Pydantic with retries.
 """
 

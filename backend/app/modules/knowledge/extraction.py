@@ -1,4 +1,4 @@
-"""Card extraction from any SourceDocument (SPEC 7.5): windows → LLM → quote validation →
+"""Card extraction from any SourceDocument: windows → LLM → quote validation →
 process matching → deduplication → drafts with sources."""
 
 import asyncio

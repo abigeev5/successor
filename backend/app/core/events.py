@@ -1,4 +1,4 @@
-"""In-process domain event bus (docs/architecture.md, 5.3).
+"""In-process domain event bus.
 
 - `subscribe` — handler runs inside the publisher's transaction (cheap work: audit, metrics, status changes).
 - `subscribe_job` — a row is added to `jobs` in the same transaction; the worker does the heavy work later.

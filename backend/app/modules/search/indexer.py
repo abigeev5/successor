@@ -1,4 +1,4 @@
-"""Index of approved cards (SPEC 7.7): chunks + embeddings + tsvector. Idempotent: rebuilds the card."""
+"""Index of approved cards: chunks + embeddings + tsvector. Idempotent: rebuilds the card."""
 
 import asyncio
 import logging

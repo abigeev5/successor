@@ -17,7 +17,7 @@ class AnswerStatus(StrEnum):
 
 
 class QaLog(UUIDPk, Base):
-    """Every question and what the assistant did with it (SPEC 6, 7.8; D-009)."""
+    """Every question and what the assistant did with it."""
 
     __tablename__ = "qa_logs"
     __table_args__ = (Index("ix_qa_logs_handover_created", "handover_id", "created_at"),)

@@ -1,4 +1,4 @@
-"""Structured output with validation and retries (SPEC, 5.2): shared by all LLM providers."""
+"""Structured output with validation and retries: shared by all LLM providers."""
 
 import json
 from collections.abc import Awaitable, Callable

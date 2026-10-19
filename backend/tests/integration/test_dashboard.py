@@ -1,4 +1,4 @@
-"""Manager dashboard (SPEC 7.9, 7.10) and the audit log (SPEC 12): risk changes after approval (M4)."""
+"""Manager dashboard and the audit log: risk changes after approval."""
 
 from datetime import date, timedelta
 from typing import Any
@@ -90,7 +90,7 @@ async def _approve(client: httpx.AsyncClient, card_id: Any) -> None:
 async def test_risk_map_and_its_change_after_approval(
     client: httpx.AsyncClient, world: dict[str, Any]
 ) -> None:
-    """M4 acceptance: the process risk changes after the expert approves cards."""
+    """The process risk changes after the expert approves cards."""
     w = world
     await login(client, w["manager"])
     response = await client.get("/api/dashboard/risk")

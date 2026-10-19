@@ -1,4 +1,4 @@
-"""`make eval` (SPEC 11.2): the script runs on the demo data and derives refusals for every threshold."""
+"""`make eval`: the script runs on the demo data and derives refusals for every threshold."""
 
 import importlib.util
 import sys

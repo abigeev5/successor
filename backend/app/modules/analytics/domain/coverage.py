@@ -1,6 +1,6 @@
-"""Coverage of a process by approved cards (SPEC 7.9) and the «processes × aspects» matrix. Pure.
+"""Coverage of a process by approved cards and the «processes × aspects» matrix. Pure.
 
-An aspect is covered when there is at least one approved card of a type that covers it (SPEC 7.5).
+An aspect is covered when there is at least one approved card of a type that covers it.
 coverage_approved = covered aspects / applicable aspects (aspects marked `not_applicable` are excluded).
 """
 

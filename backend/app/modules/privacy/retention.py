@@ -1,4 +1,4 @@
-"""Raw media retention (SPEC 7.3, UC-43): videos and voice older than RETENTION_DAYS_RAW_MEDIA are deleted.
+"""Raw media retention: videos and voice older than RETENTION_DAYS_RAW_MEDIA are deleted.
 
 Screenshots (already blurred), steps, transcripts and cards stay. The worker enqueues the job every
 RETENTION_CHECK_INTERVAL_S; `dedup_key` keeps one job in the queue.

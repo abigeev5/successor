@@ -10,7 +10,7 @@ from app.core.db import Base, UUIDPk
 
 
 class ProductEvent(UUIDPk, Base):
-    """Product metrics (SPEC 7.10). Props hold numbers and ids, never user texts."""
+    """Product metrics. Props hold numbers and ids, never user texts."""
 
     __tablename__ = "events"
     __table_args__ = (Index("ix_events_name_at", "name", "at"),)

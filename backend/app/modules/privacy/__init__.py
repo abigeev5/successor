@@ -1,1 +1,1 @@
-"""Consents, data deletion, retention (SPEC 7.3)."""
+"""Consents, data deletion, retention."""

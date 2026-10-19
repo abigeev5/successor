@@ -1,4 +1,4 @@
-"""Knowledge sources in general (docs/architecture.md, 5.1).
+"""Knowledge sources in general.
 
 Extraction, quote validation, the review screen and assistant citations work with these types,
 not with interviews or recordings directly. A new kind of source = a new module that builds a

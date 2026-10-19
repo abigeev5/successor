@@ -1,4 +1,4 @@
-"""The deterministic interview planner (SPEC 7.4, step [3]). Pure functions, no I/O.
+"""The deterministic interview planner. Pure functions, no I/O.
 
 Each function takes a Snapshot (after the expert's answer was applied) and returns the next step
 and the new session state. The LLM only phrases the question for the chosen step.

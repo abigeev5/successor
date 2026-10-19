@@ -1,8 +1,8 @@
-"""Splitting an answer into claims and assembling it back without unsupported ones (SPEC 7.8).
+"""Splitting an answer into claims and assembling it back without unsupported ones.
 
 A claim is a sentence (or a list item) with citations [n]. Sentences without citations are
 unsupported — except notes: a lead-in ending with «:» or a remark about what the base lacks
-(«В базе нет сведений о …»), which the answer prompt asks for in partial answers (D-048).
+(«В базе нет сведений о …»), which the answer prompt asks for in partial answers.
 """
 
 import re

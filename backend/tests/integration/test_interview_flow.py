@@ -217,7 +217,7 @@ async def test_full_interview_and_extraction(
         "card_dropped_no_evidence": 1,
     }
 
-    # Running the job again does nothing (idempotent, D-043).
+    # Running the job again does nothing (idempotent).
     async with get_sessionmaker()() as other:
         await extract_cards_from_session(
             JobContext(db=other, settings=get_settings(), providers=app.state.providers), {"session_id": sid}
@@ -232,7 +232,7 @@ async def test_transcript_access(client: httpx.AsyncClient, db: AsyncSession, se
     sid = (await client.post("/api/interviews", json={"handover_id": str(setup["handover"].id)})).json()["id"]
 
     await login(client, setup["successor"])
-    assert (await client.get(f"/api/interviews/{sid}")).status_code == 403  # no raw transcripts (SPEC 7.1)
+    assert (await client.get(f"/api/interviews/{sid}")).status_code == 403  # no raw transcripts
     coverage = await client.get("/api/interviews/coverage", params={"handover_id": str(setup["handover"].id)})
     assert coverage.status_code == 200
 

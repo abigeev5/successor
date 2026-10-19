@@ -1,4 +1,4 @@
-"""Interview subscriptions: finishing a session starts card extraction (SPEC 7.4 → 7.5)."""
+"""Interview subscriptions: finishing a session starts card extraction."""
 
 import uuid
 from datetime import UTC, datetime
@@ -21,7 +21,7 @@ EXTRACT_JOB = "extract_cards_from_session"
 
 async def extract_cards_from_session(ctx: JobContext, payload: dict[str, Any]) -> None:
     session = await ctx.db.get(InterviewSession, uuid.UUID(payload["session_id"]))
-    if session is None or session.extracted_at is not None:  # deleted or already done (D-043)
+    if session is None or session.extracted_at is not None:  # deleted or already done
         return
     document = await build_source_document(ctx.db, session)
     processes = [(p.id, p.name) for p in await list_processes(ctx.db, session.handover_id)]

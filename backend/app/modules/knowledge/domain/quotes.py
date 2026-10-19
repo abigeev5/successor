@@ -1,4 +1,4 @@
-"""Quote validation — the guard against hallucinated evidence (SPEC 7.5, D-044).
+"""Quote validation — the guard against hallucinated evidence.
 
 A quote from the LLM is searched in the referenced fragment after normalization
 (lower case, ё→е, collapsed spaces, no punctuation at the edges) with

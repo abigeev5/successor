@@ -14,7 +14,7 @@ class GapCreated(Event):
 
 @dataclass(frozen=True)
 class GapAnswered(Event):
-    """The answer card was approved: the successor gets the answer (SPEC 7.8)."""
+    """The answer card was approved: the successor gets the answer."""
 
     gap_id: uuid.UUID
     handover_id: uuid.UUID

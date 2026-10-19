@@ -43,7 +43,7 @@ def has_audio(video: Path) -> bool:
 
 
 def extract_audio(video: Path, wav: Path) -> int:
-    """16 kHz mono WAV for ASR (SPEC 7.6); returns its duration in ms.
+    """16 kHz mono WAV for ASR; returns its duration in ms.
 
     The duration comes from the WAV: browser webm files often have no duration in the header.
     """

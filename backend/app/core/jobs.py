@@ -31,7 +31,7 @@ class JobStatus(StrEnum):
     FAILED = "failed"
 
 
-# Partial unique index: one unfinished job per dedup_key (decision D-008).
+# Partial unique index: one unfinished job per dedup_key.
 _UNFINISHED = text("status IN ('queued', 'running')")
 
 

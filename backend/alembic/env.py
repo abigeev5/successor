@@ -23,7 +23,7 @@ target_metadata = Base.metadata
 
 def _drop_duplicate_enum_checks(_context, _revision, directives) -> None:  # type: ignore[no-untyped-def]
     """Enum(create_constraint=True) creates its CHECK itself; autogenerate also renders it explicitly,
-    and the migration fails with DuplicateObject (docs/lessons.md, L-001). Drop the explicit copies."""
+    and the migration fails with DuplicateObject. Drop the explicit copies."""
     for op_ in directives[0].upgrade_ops.ops:
         if not isinstance(op_, ops.CreateTableOp):
             continue
@@ -39,7 +39,7 @@ def _drop_duplicate_enum_checks(_context, _revision, directives) -> None:  # typ
 
 
 def _render_item(type_: str, obj: object, autogen_context: Any) -> str | bool:
-    """Enum: without create_constraint (the explicit CHECK in the table is the only copy, L-001).
+    """Enum: without create_constraint (the explicit CHECK in the table is the only copy).
     pgvector: with its import, which autogenerate does not add by itself."""
     if type_ == "type" and isinstance(obj, Vector):
         autogen_context.imports.add("import pgvector.sqlalchemy")

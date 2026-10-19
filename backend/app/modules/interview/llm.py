@@ -50,7 +50,7 @@ def _clean_question(text: str) -> str:
 async def next_question(
     llm: LLMProvider, step: NextStep, *, process_name: str | None, turns: list[tuple[str, str]]
 ) -> tuple[str, bool]:
-    """Returns (question, from_llm). Steps without LLM and LLM failures use fixed texts (D-041)."""
+    """Returns (question, from_llm). Steps without LLM and LLM failures use fixed texts."""
     fallback = fallback_question(step, process_name)
     if step.kind not in LLM_STEPS:
         return fallback, False

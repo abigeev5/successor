@@ -18,7 +18,7 @@ class LLMError(Exception):
 
 
 class LLMStructuredOutputError(LLMError):
-    """The model did not return valid JSON for the schema after all attempts (SPEC, 5.2)."""
+    """The model did not return valid JSON for the schema after all attempts."""
 
 
 class LLMProvider(Protocol):

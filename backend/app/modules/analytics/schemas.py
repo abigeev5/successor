@@ -61,7 +61,7 @@ class OpenGapOut(BaseModel):
 
 
 class MetricsOut(BaseModel):
-    """Product metrics for a period (SPEC 7.10). Shares are 0..1 or null when there is nothing to divide."""
+    """Product metrics for a period. Shares are 0..1 or null when there is nothing to divide."""
 
     handover_id: uuid.UUID | None
     org_unit_id: uuid.UUID

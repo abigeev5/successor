@@ -58,7 +58,7 @@ class CardSource(UUIDPk, Base):
 
 
 class CardRevision(UUIDPk, Base):
-    """Snapshot of a card before an edit (decision D-004)."""
+    """Snapshot of a card before an edit."""
 
     __tablename__ = "card_revisions"
 

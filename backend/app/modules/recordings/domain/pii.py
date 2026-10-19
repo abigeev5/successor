@@ -1,4 +1,4 @@
-"""Personal data on a screenshot (SPEC 7.6.1): which OCR word boxes to blur.
+"""Personal data on a screenshot: which OCR word boxes to blur.
 
 Regular expressions run over each text line (OCR splits «+7 (912) 345-67-89» into several words).
 Names: patterns of Russian full names plus an injected NER function (natasha in the app), run per

@@ -1,6 +1,6 @@
 """Integration tests run against a real PostgreSQL (+pgvector).
 
-No database → tests are skipped with a reason; with REQUIRE_DB=1 (CI) → they fail (decision D-023).
+No database → tests are skipped with a reason; with REQUIRE_DB=1 (CI) → they fail.
 """
 
 import os

@@ -1,4 +1,4 @@
-"""Knowledge reacts to deleted sources (SPEC 7.3, step 3; docs/architecture.md, 6.6)."""
+"""Knowledge reacts to deleted sources."""
 
 import uuid
 from collections import defaultdict

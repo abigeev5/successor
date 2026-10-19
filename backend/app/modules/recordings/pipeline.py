@@ -1,4 +1,4 @@
-"""Job `process_recording` (SPEC 7.6): audio → speech → steps → screenshots with personal data blurred
+"""Job `process_recording`: audio → speech → steps → screenshots with personal data blurred
 → a `procedure` draft. The page polls the recording's status and stage.
 """
 
@@ -131,7 +131,7 @@ async def _screenshot(
 ) -> tuple[Asset | None, bool]:
     """A frame with personal data blurred.
 
-    If OCR fails, there is no screenshot: frames not checked for personal data are not kept (D-058).
+    If OCR fails, there is no screenshot: frames not checked for personal data are not kept.
     """
     with tempfile.TemporaryDirectory() as tmp:
         png = Path(tmp) / "frame.png"
@@ -264,7 +264,7 @@ async def process_recording(ctx: JobContext, payload: dict[str, Any]) -> None:
     except Exception:
         log.exception("recording %s failed", recording_id)
         message = GENERIC_ERROR
-    # Failures are final for the job: the expert sees the reason and can start it again (D-060).
+    # Failures are final for the job: the expert sees the reason and can start it again.
     await ctx.db.rollback()
     recording = await ctx.db.get(Recording, recording_id)
     if recording is not None:

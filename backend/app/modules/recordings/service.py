@@ -93,7 +93,7 @@ async def _load(
 
 
 async def delete_recording(db: AsyncSession, settings: Settings, user: User, recording_id: uuid.UUID) -> None:
-    """`DELETE /recordings/{id}` (SPEC 7.3): the expert deletes their own recording; admin — any."""
+    """`DELETE /recordings/{id}`: the expert deletes their own recording; admin — any."""
     recording = await _load(db, user, recording_id, UPLOADERS)
     if user.role is not UserRole.ADMIN and recording.created_by != user.id:
         raise Forbidden("Удалить запись может только тот, кто её сделал", code="recording_forbidden")

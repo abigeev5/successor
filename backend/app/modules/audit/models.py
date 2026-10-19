@@ -10,7 +10,7 @@ from app.core.db import Base, UUIDPk
 
 
 class AuditLog(UUIDPk, Base):
-    """Audit trail of significant actions (SPEC, 12). Never stores user texts — ids and short meta only."""
+    """Audit trail of significant actions. Never stores user texts — ids and short meta only."""
 
     __tablename__ = "audit_log"
     __table_args__ = (Index("ix_audit_log_entity", "entity", "entity_id"),)

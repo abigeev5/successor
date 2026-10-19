@@ -1,4 +1,4 @@
-"""Process aspects of the interview (SPEC 7.4): what a successor must know about every process."""
+"""Process aspects of the interview: what a successor must know about every process."""
 
 from dataclasses import dataclass
 
@@ -7,7 +7,7 @@ from dataclasses import dataclass
 class Aspect:
     key: str
     label: str
-    example: str  # sample probe question from the SPEC; also the fallback question (D-041)
+    example: str  # sample probe question, also asked when the LLM fails
     probe_type: str  # walkthrough | cue | exception | counterfactual | contact | timing
 
 
@@ -48,7 +48,7 @@ ASPECTS: tuple[Aspect, ...] = (
 BY_KEY: dict[str, Aspect] = {a.key: a for a in ASPECTS}
 ASPECT_KEYS: tuple[str, ...] = tuple(BY_KEY)
 
-# Which missing aspect to ask about first (SPEC 7.4).
+# Which missing aspect to ask about first.
 PRIORITY: tuple[str, ...] = (
     "steps",
     "done_criteria",

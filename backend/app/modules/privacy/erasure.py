@@ -1,4 +1,4 @@
-"""Deleting an employee's data (SPEC 7.3; docs/architecture.md, 5.2 and 6.6).
+"""Deleting an employee's data.
 
 privacy does not know what other modules store: each module that keeps an employee's data registers
 a DataEraser. Erasers delete their rows and files and report which knowledge sources are gone;

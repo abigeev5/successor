@@ -1,4 +1,4 @@
-"""Reciprocal Rank Fusion of vector and full-text rankings (SPEC 7.8, k = 60)."""
+"""Reciprocal Rank Fusion of vector and full-text rankings (k = 60)."""
 
 from collections.abc import Hashable, Sequence
 from typing import TypeVar

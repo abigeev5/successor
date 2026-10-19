@@ -1,4 +1,4 @@
-"""Interview sessions (SPEC 7.4). One turn = analyze_turn (LLM) → update coverage → plan_next (code)
+"""Interview sessions. One turn = analyze_turn (LLM) → update coverage → plan_next (code)
 → next question (LLM). Session rows are locked during a turn, so parallel requests do not interleave."""
 
 import asyncio
@@ -63,16 +63,13 @@ from app.modules.privacy.service import require_consent
 from app.providers.asr.base import Transcript
 from app.providers.registry import Providers
 
-MAX_AUDIO_MS = 2 * 60 * 1000  # D-036
+MAX_AUDIO_MS = 2 * 60 * 1000
 MAX_AUDIO_BYTES = 20 * 1024 * 1024
 TRANSCRIPT_READERS = [HandoverRole.EXPERT, HandoverRole.ADMIN]
 
 
 def _now() -> datetime:
     return datetime.now(UTC)
-
-
-# --- loading -------------------------------------------------------------------------------------
 
 
 async def _snapshot(db: AsyncSession, handover_id: uuid.UUID, state: InterviewState) -> Snapshot:
@@ -118,9 +115,6 @@ async def _messages(db: AsyncSession, session_id: uuid.UUID) -> list[InterviewMe
         .order_by(InterviewMessage.seq)
     )
     return list((await db.execute(stmt)).scalars())
-
-
-# --- writing ---------------------------------------------------------------------------------------
 
 
 async def _add_message(
@@ -241,9 +235,6 @@ def _touch(session: InterviewSession) -> None:
     session.last_activity_at = now
 
 
-# --- use cases ---------------------------------------------------------------------------------------
-
-
 async def start(
     db: AsyncSession, providers: Providers, user: User, handover_id: uuid.UUID
 ) -> InterviewSession:
@@ -345,7 +336,7 @@ async def post_message(
 async def confirm_processes(
     db: AsyncSession, providers: Providers, user: User, session_id: uuid.UUID, items: list[CandidateDecision]
 ) -> InterviewSession:
-    """The duty map (phase map): chosen candidates become processes of the handover (SPEC 7.4)."""
+    """The duty map (phase map): chosen candidates become processes of the handover."""
     session = await _own_session(db, user, session_id)
     handover = await handovers.get_handover(db, session.handover_id)
     unit_processes = [(p.id, p.name) for p in await org.list_processes(db, handover.org_unit_id)]
@@ -412,7 +403,7 @@ async def finish(db: AsyncSession, user: User, session_id: uuid.UUID) -> Intervi
 async def transcribe_audio(
     db: AsyncSession, settings: Settings, providers: Providers, user: User, session_id: uuid.UUID, data: bytes
 ) -> AudioOut:
-    """Voice answer (SPEC 7.4): store the audio, recognize it; the expert edits the text and sends it."""
+    """Voice answer: store the audio, recognize it; the expert edits the text and sends it."""
     session = await _own_session(db, user, session_id)
     return await recognize_audio(db, settings, providers, user, session.handover_id, data)
 
@@ -455,9 +446,6 @@ async def recognize_audio(
     asset.duration_ms = transcript.duration_ms
     await db.commit()
     return AudioOut(asset_id=asset.id, text=transcript.text, duration_ms=transcript.duration_ms)
-
-
-# --- reading -------------------------------------------------------------------------------------------
 
 
 def coverage_view(snapshot: Snapshot) -> list[ProcessCoverageOut]:

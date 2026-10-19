@@ -92,7 +92,7 @@ def test_person_names_go_through_the_finder() -> None:
 
 
 def test_fixture_frame_phone_email_and_name_are_blurred(tmp_path: Path) -> None:
-    """Done-criterion of M3: a frame with a phone, an email and a full name gets blurred."""
+    """A frame with a phone, an email and a full name gets blurred."""
     frame = tmp_path / "frame.png"
     shutil.copy(FIXTURE, frame)
     shutil.copy(FIXTURE.with_suffix(".ocr.json"), frame.with_suffix(".ocr.json"))

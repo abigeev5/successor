@@ -8,7 +8,7 @@ from app.core.db import Base, UUIDPk
 
 
 class Consent(UUIDPk, Base):
-    """Consent of an employee to recording within one handover (SPEC 7.3)."""
+    """Consent of an employee to recording within one handover."""
 
     __tablename__ = "consents"
 

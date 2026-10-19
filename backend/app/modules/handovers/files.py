@@ -1,7 +1,7 @@
 """`GET /assets/{id}`: files of a handover (video, screenshots, voice) with access checks and Range.
 
-Files have no public URLs (SPEC 12). Successors see recording videos and screenshots of their
-handover, but not raw interview audio (SPEC 7.1, D-061).
+Files have no public URLs. Successors see recording videos and screenshots of their
+handover, but not raw interview audio.
 """
 
 import uuid
@@ -41,7 +41,7 @@ async def get_asset(
     path = absolute_path(settings, asset)
     if not path.is_file():
         raise NotFound(NOT_FOUND, code="asset_not_found")
-    if asset.kind is AssetKind.VIDEO:  # «просмотр записи экрана» is audited (SPEC 12)
+    if asset.kind is AssetKind.VIDEO:  # «просмотр записи экрана» is audited
         logged = await audit.record_once(
             db,
             action="recording.viewed",

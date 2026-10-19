@@ -1,4 +1,4 @@
-"""Person names with natasha NER (SPEC 7.6.1). Loaded on first use (~4 s), then kept in the process."""
+"""Person names with natasha NER. Loaded on first use (~4 s), then kept in the process."""
 
 from functools import lru_cache
 from typing import Any

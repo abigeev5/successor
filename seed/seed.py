@@ -1,4 +1,4 @@
-"""`make seed-demo`: loads fictional demo data (SPEC 13.1).
+"""`make seed-demo`: loads fictional demo data.
 
 Idempotent in the «known state» sense: demo users and processes are upserted, demo handovers are
 deleted and created again with a finished interview, process coverage and cards.

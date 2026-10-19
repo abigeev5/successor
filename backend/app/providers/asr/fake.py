@@ -1,4 +1,4 @@
-"""FakeASR (SPEC, 5.3): returns the transcript from `<audio name>.transcript.json` next to the audio file."""
+"""FakeASR: returns the transcript from `<audio name>.transcript.json` next to the audio file."""
 
 import json
 from dataclasses import dataclass

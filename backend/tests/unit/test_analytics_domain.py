@@ -1,4 +1,4 @@
-"""Risk formula, coverage by approved cards and the metrics export (SPEC 7.9, 7.10, 15)."""
+"""Risk formula, coverage by approved cards and the metrics export (15)."""
 
 import pytest
 
@@ -55,7 +55,7 @@ def test_thresholds_come_from_config() -> None:
 
 
 def test_a_single_holder_of_a_critical_process_near_the_deadline_is_high_risk() -> None:
-    """The demo case (SPEC 13.3): nobody else knows the report, three weeks left, nothing approved."""
+    """The demo case: nobody else knows the report, three weeks left, nothing approved."""
     score = risk_score(criticality=3, holders=0, coverage_approved=0.0, days_left=21)
     assert risk_level(score, RiskThresholds()) is RiskLevel.HIGH
 

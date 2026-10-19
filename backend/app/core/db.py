@@ -30,7 +30,7 @@ class UUIDPk:
 
 class Timestamps:
     # Server-generated values come back via RETURNING right away. Without it, reading `updated_at`
-    # after an UPDATE triggers a lazy load, which fails in async code (docs/lessons.md, L-006).
+    # after an UPDATE triggers a lazy load, which fails in async code.
     __mapper_args__: ClassVar[dict[str, Any]] = {"eager_defaults": True}
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -40,7 +40,7 @@ class Timestamps:
 
 
 def str_enum(enum_cls: type[StrEnum], name: str) -> Enum:
-    """Enum stored as varchar + CHECK constraint (decision D-016)."""
+    """Enum stored as varchar + CHECK constraint."""
     return Enum(
         enum_cls,
         name=name,

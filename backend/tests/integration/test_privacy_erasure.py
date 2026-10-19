@@ -1,4 +1,4 @@
-"""Deleting data (SPEC 7.3, M4 acceptance): files, steps, messages go; cards without sources are archived."""
+"""Deleting data: files, steps, messages go; cards without sources are archived."""
 
 import uuid
 from datetime import UTC, datetime, timedelta
@@ -191,7 +191,6 @@ async def _asset(db: AsyncSession, asset: Asset) -> Asset:
 async def test_deleting_a_recording_removes_files_steps_and_archives_cards_without_sources(
     client: httpx.AsyncClient, db: AsyncSession, world: dict[str, Any]
 ) -> None:
-    """M4 acceptance criterion."""
     w = world
     video_path, shot_path = (
         absolute_path(get_settings(), w["video"]),

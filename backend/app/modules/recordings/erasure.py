@@ -1,4 +1,4 @@
-"""Deleting screen recordings (SPEC 7.3): video, screenshots, transcript and steps are removed for good."""
+"""Deleting screen recordings: video, screenshots, transcript and steps are removed for good."""
 
 import uuid
 

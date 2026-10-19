@@ -1,4 +1,4 @@
-"""Assistant (SPEC 7.8): index → hybrid search → answer with citations → verification; refusal → gap."""
+"""Assistant: index → hybrid search → answer with citations → verification; refusal → gap."""
 
 from typing import Any
 

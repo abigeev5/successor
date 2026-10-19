@@ -76,7 +76,7 @@ async def test_meta(client: httpx.AsyncClient) -> None:
 
 
 async def test_migrations_match_models(db: AsyncSession) -> None:
-    """Catches a model change without a migration (and broken migrations, see docs/lessons.md L-001)."""
+    """Catches a model change without a migration (and broken migrations)."""
 
     def diff(sync_conn):  # type: ignore[no-untyped-def]
         context = MigrationContext.configure(sync_conn, opts={"compare_type": True})

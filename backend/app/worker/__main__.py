@@ -35,7 +35,7 @@ async def main() -> None:
     next_purge = loop.time()
     while not stop.is_set():
         try:
-            if loop.time() >= next_purge:  # raw media retention (SPEC 7.3)
+            if loop.time() >= next_purge:  # raw media retention
                 async with sessionmaker() as db:
                     await retention.schedule(db)
                     await db.commit()

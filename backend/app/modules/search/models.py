@@ -8,12 +8,12 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base, UUIDPk
 
-# The column size is fixed by the migration; another model needs a migration + reindex (D-006).
+# The column size is fixed by the migration; another model needs a migration + reindex.
 EMBEDDING_DIM = 1024
 
 
 class CardChunk(UUIDPk, Base):
-    """Index of approved cards only (SPEC 6). Rebuilt on every approval of a new card version."""
+    """Index of approved cards only. Rebuilt on every approval of a new card version."""
 
     __tablename__ = "card_chunks"
     __table_args__ = (
