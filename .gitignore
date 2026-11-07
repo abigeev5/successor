@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+node_modules/
+dist/
+.DS_Store
+*.tsbuildinfo
+/data/
+backend/data/
+
+# eval: fake-run reports are CI checks, not results
+/eval/reports/*_fake.md
+
+# GGUF model files for the local-llm profile
+/models/

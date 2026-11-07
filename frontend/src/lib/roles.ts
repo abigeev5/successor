@@ -1,0 +1,41 @@
+import type { UserRole } from "@/api/client";
+
+export const ROLE_LABELS: Record<UserRole, string> = {
+  admin: "Администратор",
+  manager: "Руководитель",
+  expert: "Эксперт",
+  successor: "Преемник",
+};
+
+export type NavItem = { to: string; label: string };
+
+export const NAV: Record<UserRole, NavItem[]> = {
+  manager: [
+    { to: "/dashboard", label: "Панель" },
+    { to: "/handovers", label: "Передачи дел" },
+    { to: "/gaps", label: "Пробелы" },
+    { to: "/knowledge", label: "База знаний" },
+    { to: "/assistant", label: "Ассистент" },
+    { to: "/audit", label: "Журнал" },
+  ],
+  expert: [
+    { to: "/handovers", label: "Передачи дел" },
+    { to: "/review", label: "Проверка карточек" },
+    { to: "/gaps", label: "Пробелы" },
+    { to: "/knowledge", label: "База знаний" },
+    { to: "/privacy", label: "Мои данные" },
+  ],
+  successor: [
+    { to: "/assistant", label: "Ассистент" },
+    { to: "/knowledge", label: "База знаний" },
+  ],
+  admin: [
+    { to: "/handovers", label: "Передачи дел" },
+    { to: "/audit", label: "Журнал" },
+    { to: "/admin", label: "Администрирование" },
+  ],
+};
+
+export function homePath(role: UserRole): string {
+  return NAV[role][0].to;
+}
